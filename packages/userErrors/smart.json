@@ -1,0 +1,6 @@
+{
+    "name": "userErrors",
+    "description": "Display Errors to the User for Meteor",
+    "author": "Tom Coleman and Sacha Grief (Modified by Lingliang Zhang)",
+    "version": "1.0.0"
+}

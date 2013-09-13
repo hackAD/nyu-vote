@@ -1,0 +1,14 @@
+<template name="userErrors">
+  <div class="errors row-fluid">
+    {{#each userErrors}}
+      {{> userError}}
+    {{/each}}
+  </div>
+</template>
+
+<template name="userError">
+  <div class="alert alert-error">
+    <button class="close" type="button" data-dismiss="alert">&times;</button>
+    {{message}}
+  </div>
+</template>
