@@ -8,7 +8,7 @@ Meteor.startup( () ->
     console.log(process.env.ROOT_URL)
     console.log(Meteor.users.find().count())
     if isDevEnv() and Meteor.users.find().count() == 0
-        console.log("adding devadmin")
+        console.log("adding devAdmin")
         Accounts.createUser(
             username:"devAdmin"
             password:"password"
@@ -21,23 +21,23 @@ Meteor.startup( () ->
             name: "global"
             description: "This is the initial group."
             creator: "devAdmin"
-            admins: ["devadmin"]
-            netIds: ["devadmin"]
+            admins: ["devAdmin"]
+            netIds: ["devAdmin"]
         )
         Groups.insert(
             name: "nyuad_2016"
             description: "NYUAD Class of 2016."
             creator: "devAdmin"
-            admins: ["devadmin", "random_admin_1", "random_admin_2"]
-            netIds: ["devadmin", "random_admin_1", "2016_rep_candidate_1", 
-            "2016_rep_candidate_2", "nyuad_2016_student_1", "nyuad_2016_student_2"]
+            admins: ["devAdmin", "random_admin_1", "random_admin_2"]
+            netIds: ["devAdmin", "random_admin_1", "2016_rep_candidate_1",
+            "2016_rep_candidate_2", "nyuad_2016_student_1", "nyuad_2016_student_2", "devadmin"]
         )
         Groups.insert(
             name: "nyu_2015"
             description: "NYU Class of 2015."
             creator: "random_admin_1"
             admins: ["random_admin_3"]
-            netIds: ["random_admin_2", "nyu_2015_student_1", "nyu_2015_student_2", "nyu_2015_student_3"]
+            netIds: ["random_admin_2", "nyu_2015_student_1", "nyu_2015_student_2", "nyu_2015_student_3", "devAdmin"]
         )
 
         Elections.insert(
@@ -76,7 +76,7 @@ Meteor.startup( () ->
             name: "awesomest_election"
             descripton: "Who is the awesomest?"
             status: "closed"
-            creator: "devadmin"
+            creator: "devAdmin"
             groups: [Groups.findOne({name:"nyuad_2016"})._id, Groups.findOne({name:"nyu_2015"})._id]
             voters: ["random_admin_1","random_admin_2","nyu_2015_student_3", 
             "nyu_2015_student_1", "nyuad_2016_student_2"]
@@ -93,8 +93,7 @@ Meteor.startup( () ->
         Elections.update(
             {"questions.choices._id": id},
             $push:
-                "questions.0.choices.0.votes": 
+                "questions.0.choices.0.votes":
                     $each:voters
         )
-        
 )

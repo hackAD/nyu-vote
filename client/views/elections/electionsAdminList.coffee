@@ -1,2 +1,3 @@
-Template.elcetionsAdminList.helpers
-  elections: Elections.find()
+Template.electionsAdminList.helpers
+  elections: () ->
+    return Elections.find()

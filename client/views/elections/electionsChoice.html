@@ -1,5 +1,7 @@
 <template name="electionsChoice">
-  {{name}}
-  <img src="{{image}}" alt="{{name}}" />
-  {{description}}
+  Choice: {{name}}<br/>
+  {{#if imageExists}}
+    <img src="{{image}}" alt="{{name}}" /><br/>
+  {{/if}}
+  Description: {{description}}<br/>
 </template>

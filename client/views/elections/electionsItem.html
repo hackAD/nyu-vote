@@ -1,7 +1,8 @@
 <template name="electionItem">
-{{title}}
-{{description}}
+Election Title: {{name}}<br/>
+Election Description: {{description}}<br/>
+Questions: <br/>
 {{#each questions}}
-  {{> electionsQuestions}}
+  {{> electionsQuestions}}<br/>
 {{/each}}
 </template>

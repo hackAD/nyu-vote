@@ -1,7 +1,8 @@
 <template name="electionsQuestions">
-  {{question}}
-  {{description}}
+  Question: {{name}}<br/>
+  Question Description: {{description}}<br/>
+  Choices: <br/>
   {{#each choices}}
-    {{>electionsChoice}}
+    {{>electionsChoice}}<br/>
   {{/each}}
 </template>
