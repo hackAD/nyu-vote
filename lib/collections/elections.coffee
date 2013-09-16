@@ -47,12 +47,17 @@ root.createChoice = (name, description, question_id, image="") ->
     return id
 
 Meteor.methods(
-    vote: (choices_id) ->
+    vote: (election_id, choice_ids) ->
+        questions = Elections.findOne(election_id)
+        increment(choice) for choice in choices in questions when choice._id in choice_ids
+        increment = (choice) ->
+            choice.votes.push(Meteor.user().profile.userId)
         Elections.update(
-            {"questions.choices._id": choices_id},
+            {_id: election_id},
             $push:
-                voters: Meteor.user().profile.netId
-                "questions.choices.$.votes": Meteor.user().profile.netId
+                voters: Meteor.user().profile.userId
+            $set:
+                questions: questions
         )
         return true
 

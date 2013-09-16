@@ -5,10 +5,7 @@ isDevEnv = () ->
         return false
 
 Meteor.startup( () ->
-    console.log(process.env.ROOT_URL)
-    console.log(Meteor.users.find().count())
     if isDevEnv() and Meteor.users.find().count() == 0
-        console.log("adding devadmin")
         Accounts.createUser(
             username:"devAdmin"
             password:"password"
@@ -21,15 +18,15 @@ Meteor.startup( () ->
             name: "global"
             description: "This is the initial group."
             creator: "devAdmin"
-            admins: ["devadmin"]
-            netIds: ["devadmin"]
+            admins: ["devAdmin"]
+            netIds: ["devAdmin"]
         )
         Groups.insert(
             name: "nyuad_2016"
             description: "NYUAD Class of 2016."
             creator: "devAdmin"
-            admins: ["devadmin", "random_admin_1", "random_admin_2"]
-            netIds: ["devadmin", "random_admin_1", "2016_rep_candidate_1", 
+            admins: ["devAdmin", "random_admin_1", "random_admin_2"]
+            netIds: ["devAdmin", "random_admin_1", "2016_rep_candidate_1", 
             "2016_rep_candidate_2", "nyuad_2016_student_1", "nyuad_2016_student_2"]
         )
         Groups.insert(
@@ -76,7 +73,7 @@ Meteor.startup( () ->
             name: "awesomest_election"
             descripton: "Who is the awesomest?"
             status: "closed"
-            creator: "devadmin"
+            creator: "devAdmin"
             groups: [Groups.findOne({name:"nyuad_2016"})._id, Groups.findOne({name:"nyu_2015"})._id]
             voters: ["random_admin_1","random_admin_2","nyu_2015_student_3", 
             "nyu_2015_student_1", "nyuad_2016_student_2"]
@@ -88,8 +85,6 @@ Meteor.startup( () ->
         createChoice("awesomest_choice_1", "Moiri Gamboni",question)
         id = Elections.findOne({"questions.choices.name":"awesomest_choice_1"}, {fields:{"questions.choices.$._id": 1}}).questions[0].choices[0]._id
         voters = Elections.findOne({name:"awesomest_election"}).voters
-        console.log(voters)
-        console.log(id)
         Elections.update(
             {"questions.choices._id": id},
             $push:
