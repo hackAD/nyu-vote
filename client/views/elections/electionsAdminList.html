@@ -1,12 +1,15 @@
 <template name="electionsAdminList">
   {{#each elections}}
-    {{name}}
+    Election:<br/>
+    Election Name: {{name}}<br/>
+    Questions: <br/>
     {{#each questions}}
-      {{name}}
+      Question Name: {{name}}<br/>
+      Choices: <br/>
       {{#each choices}}
-        {{name}}
+        {{name}}<br/>
       {{/each}}
     {{/each}}
-    <a href="#">Edit this Election</a>
+    <a href="#">Edit this Election</a><br/><br/>
   {{/each}}
 </template>
