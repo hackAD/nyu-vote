@@ -26,7 +26,7 @@ root.createQuestion = (name, description, election_id) ->
       questions:
         _id: id
         name: name
-        descripton: description
+        description: description
         choices: []
   )
   return id
@@ -40,7 +40,7 @@ root.createChoice = (name, description, question_id, image="") ->
       "questions.$.choices":
         _id: id
         name: name
-        descripton: description
+        description: description
         image: image
         votes: []
       )
@@ -70,7 +70,7 @@ Meteor.methods(
       throw new Meteor.Error(500, "Error: Not a group admin!")
     Elections.insert(
       name: name
-      descripton: description
+      description: description
       status: "closed"
       creator: Meteor.user().profile.netId
       groups: group_ids
@@ -78,8 +78,8 @@ Meteor.methods(
       questions: []
       options:
         voting_style: voting_style
-        ,
-        (err, resp) -> throw new Metor.Error(500, err.reason) if err?
+      ,
+      (err, resp) -> throw new Metor.Error(500, err.reason) if err?
     )
     return true
 )

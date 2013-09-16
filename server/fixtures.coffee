@@ -39,7 +39,7 @@ Meteor.startup( () ->
 
     Elections.insert(
       name: "nyuad_2016_rep_election"
-      descripton: "Election for class representatives of NYUAD students of class 2016."
+      description: "Election for class representatives of NYUAD students of class 2016."
       status: "open"
       creator: "random_admin_1"
       groups: [Groups.findOne({name:"nyuad_2016"})._id]
@@ -54,7 +54,7 @@ Meteor.startup( () ->
 
     Elections.insert(
       name: "gnu_best_election"
-      descripton: "Election for the best in everything."
+      description: "Election for the best in everything."
       status: "open"
       creator: "random_admin_3"
       groups: [Groups.findOne({name:"nyuad_2016"})._id, Groups.findOne({name:"nyu_2015"})._id]
@@ -71,7 +71,7 @@ Meteor.startup( () ->
 
     Elections.insert(
       name: "awesomest_election"
-      descripton: "Who is the awesomest?"
+      description: "Who is the awesomest?"
       status: "closed"
       creator: "devAdmin"
       groups: [Groups.findOne({name:"nyuad_2016"})._id, Groups.findOne({name:"nyu_2015"})._id]

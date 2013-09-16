@@ -18,5 +18,5 @@ Meteor.publish("Elections", () ->
     return Elections.find(
       groups: {$in: if groups.length > 0 then _.map(groups, (g) -> g._id) else []},
       status:"open",
-      voters: {$ne: user.profile.netId})
+      voters: {$ne: if user? then user.profile.netId else ""})
 )
