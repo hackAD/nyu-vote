@@ -1,2 +1,3 @@
 Template.electionsList.helpers
-  electionItems: Elections.find().fetch()
+  electionItems: () ->
+    return Elections.find()
