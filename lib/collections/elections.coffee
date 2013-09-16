@@ -1,98 +1,80 @@
 root = global ? window
 root.Elections = new Meteor.Collection("elections")
 
+root.electionRule = (userId, doc) ->
+    if Meteor.isServer
+        return Meteor.call("isGroupAdminOf", _.map(Groups.find({_id: {$in: doc.groups }}).fetch(), (o) -> o._id))
+    else
+        return true
+
 root.Elections.allow(
-    update: root.isAGroupAdmin
-    insert: root.isAGroupAdmin
-    remove: root.isAGroupAdmin
+    update: root.electionRule
+    remove: root.electionRule
 )
 
 root.Elections.deny(
     update: (userId, doc, fieldNames) ->
-        return 'candidates.votes' in fieldNames or 'admins' in fieldNames
+        return 'choices.votes' in fieldNames or 'voters' in fieldNames or 'creator' in fieldNames
 )
 
-root.Elections.deny(
-    update: (userId, doc, fieldNames) ->
-        #FIX DOC ARGUMENT?
-        return !isGroupAdminOf(doc)
-)
-
-root.createElection = (name, description, group_ids = [], voting_style) ->
-    check(name, String)
-    check(description, String)
-    if !isGroupAdminOf(group_ids)
-        throw new Meteor.error(500, "Error: Not group admin!", group_ids)
-    if voting_style != "NYUAD" or "NYU"
-        throw new Meteor.error(500, "Error: Voting style not recognised!", voting_style)
-    Elections.insert(
-        "name": name
-        "descripton": description
-        "status": "closed"
-        "admins": [Meteor.user().profile.netId]
-        "groups": group_ids
-        "voters": []
-        "category": []
-        "options":
-            "voting_style": voting_style
-
-    )
-    #GET ELECTION_ID
-    Meteor.call("updateElectionAdmins", election_id, [Meteor.user().profile.userId])
-    return true
-
-root.createCategory = (name, description, election_id) ->
-    check(name, String)
-    check(description, String)
+root.createQuestion = (name, description, election_id) ->
+    id = new Meteor.Collection.ObjectID()
+    id = id.toHexString()
     Elections.update(
-        "_id": election_id
+        {_id: election_id},
         $push:
-            "category":
-                "_id": ObjectID()
-                "name": name
-                "descripton": description
-                "candidates": []
+            questions:
+                _id: id
+                name: name
+                descripton: description
+                choices: []
     )
-    return true
+    return id
 
-root.createCandidate = (name, description, category_id, image="") ->
-    check(name, String)
-    check(description, String)
+root.createChoice = (name, description, question_id, image="") ->
+    id = new Meteor.Collection.ObjectID()
+    id = id.toHexString()
     Elections.update(
-        "category._id": category_id
+        {"questions._id": question_id},
         $push:
-            "category.$.candidates":
-                "_id": ObjectID()
-                "name": name
-                "descripton": description
-                "image": image
-                "votes": []
+            "questions.$.choices":
+                _id: id
+                name: name
+                descripton: description
+                image: image
+                votes: []
     )
-    return true
+    return id
 
 Meteor.methods(
-    vote: (candidates_id) ->
+    vote: (choices_id) ->
         Elections.update(
-            "category.candidates._id": candidates_id
+            {"questions.choices._id": choices_id},
             $push:
-                "voters": Meteor.user().profile.netId
-                "category.candidates.$.votes": Meteor.user().profile.netId
+                voters: Meteor.user().profile.netId
+                "questions.choices.$.votes": Meteor.user().profile.netId
         )
         return true
 
-    updateElectionAdmins: (election_id, admins) ->
-        founder = Groups.findOne({"_id":group_id})
-        if founder?
-            Groups.update(
-                "_id": group_id
-                $set:
-                    "admins": [founder]
-            )
-        Groups.update(
-             "_id": group_id
-            $addToSet:
-                "admins": 
-                    $each: admins
+    createElection: (name, description, group_ids = [], voting_style) ->
+        if voting_style != "NYUAD" and voting_style != "NYU"
+            throw new Meteor.Error(500, "Error: Voting style not recognised!")
+        if typeof(group_ids) == "string"
+            group_ids = [group_ids]
+        if Meteor.isServer and !Meteor.call("isGroupAdminOf", group_ids)
+            throw new Meteor.Error(500, "Error: Not a group admin!")
+        Elections.insert(
+            name: name
+            descripton: description
+            status: "closed"
+            creator: Meteor.user().profile.netId
+            groups: group_ids
+            voters: []
+            questions: []
+            options:
+                voting_style: voting_style
+            ,
+            (err, resp) -> throw new Metor.Error(500, err.reason) if err?
         )
         return true
 )

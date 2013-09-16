@@ -1,2 +1,4 @@
-Meteor.Router.add
+Meteor.Router.add(
   "/": "home"
+  "/admin": "admin"
+)
