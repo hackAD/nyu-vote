@@ -14,9 +14,9 @@ root.Groups.deny(
 
 root.addGroup = (name, description, admins) ->
     Groups.insert(
-        "name": name
-        "description": description
-        "admins": admins
+        name: name
+        description: description
+        admins: admins
     )
     return true
 
@@ -28,14 +28,14 @@ Meteor.methods(
     updateGroupAdmins: (group_id, admins) ->
         founder = Groups.findOne({"_id":group_id})
         Groups.update(
-            "_id": group_id
+            _id: group_id
             $set:
-                "admins": [founder]
+                admins: [founder]
         )
         Groups.update(
-             "_id": group_id
+             _id: group_id
             $addToSet:
-                "admins": 
+                admins: 
                     $each: admins
         )
         return true

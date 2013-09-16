@@ -8,3 +8,5 @@ preserve-inputs
 router
 userErrors
 coffeescript
+accounts-base
+accounts-password
