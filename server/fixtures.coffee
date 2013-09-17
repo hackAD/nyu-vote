@@ -1,9 +1,3 @@
-isDevEnv = () ->
-  if process.env.ROOT_URL == "http://localhost:3000/"
-    return true
-  else
-    return false
-
 Meteor.startup( () ->
   if isDevEnv() and Meteor.users.find().count() == 0
     Accounts.createUser(

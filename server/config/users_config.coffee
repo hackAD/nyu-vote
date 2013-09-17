@@ -8,6 +8,8 @@ Accounts.loginServiceConfiguration.insert
 
 Accounts.onCreateUser( (options, user) ->
   if user.username == "devAdmin" && isDevEnv()
+    user.profile =
+      netId: "devAdmin"
     return user
   if !user.services?.googleApps?.email
     throw new Meteor.Error("Not Google Apps account detected")
