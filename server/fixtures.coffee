@@ -57,7 +57,7 @@ Meteor.startup( () ->
       description: "Election for the best in everything."
       status: "open"
       creator: "random_admin_3"
-      groups: [Groups.findOne({name:"nyuad_2016"})._id, Groups.findOne({name:"nyu_2015"})._id]
+      groups: [Groups.findOne({name:"nyu_2015"})._id]
       voters: []
       questions: []
       options:
