@@ -7,5 +7,14 @@ Accounts.loginServiceConfiguration.insert
   domain: "nyu.edu"
 
 Accounts.onCreateUser( (options, user) ->
+  if user.username == "devAdmin" && isDevEnv()
+    return user
+  if !user.services?.googleApps?.email
+    throw new Meteor.Error("Not Google Apps account detected")
+  netId = /([A-Za-z]+[0-9]+)@nyu.edu/.exec user.services.googleApps.email
+  if !netId
+    throw new Meteor.Error("Account does not have valid netId")
+  user.profile =
+    netId: netId[1]
   return user
   )
