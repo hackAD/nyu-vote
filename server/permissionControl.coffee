@@ -9,4 +9,10 @@ Meteor.methods(
     return Groups.find({"_id": {$in:group_ids}, "admins": Meteor.user().profile.netId}).count() == group_ids.length
   'isAGroupAdmin': () ->
     return Groups.find({"admins": Meteor.user().profile.netId}).count() > 0
+  'hasNotVoted': (election_id) ->
+    return Elections.find(
+      _id:election_id,
+      status:"open",
+      voters: {$ne: if Meteor.user()?.profile?.netId? then Meteor.user().profile.netId else ""},
+    ).count() == 1
 )
