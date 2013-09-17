@@ -8,7 +8,7 @@ Accounts.loginServiceConfiguration.insert
 
 Accounts.onCreateUser( (options, user) ->
   if user.username == "devAdmin" && isDevEnv()
-    user.profile = 
+    user.profile =
       netId: "devAdmin"
     return user
   if !user.services?.googleApps?.email
