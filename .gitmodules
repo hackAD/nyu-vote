@@ -1,0 +1,6 @@
+[submodule "packages/googleapps"]
+	path = packages/googleapps
+	url = https://github.com/lingz/googleapps-meteor.git
+[submodule "packages/accounts-googleapps"]
+	path = packages/accounts-googleapps
+	url = https://github.com/lingz/accounts-googleapps-meteor.git
