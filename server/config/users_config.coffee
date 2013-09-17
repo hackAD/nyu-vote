@@ -6,6 +6,6 @@ Accounts.loginServiceConfiguration.insert
   secret: process.env.googleSecret,
   domain: "nyu.edu"
 
-Accounts.onCreateUser( () ->
-
+Accounts.onCreateUser( (options, user) ->
+  return user
   )
