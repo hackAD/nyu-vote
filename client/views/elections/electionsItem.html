@@ -1,8 +1,11 @@
 <template name="electionItem">
-Election Title: {{name}}<br/>
-Election Description: {{description}}<br/>
-Questions: <br/>
-{{#each questions}}
-  {{> electionsQuestions}}<br/>
-{{/each}}
+  <div class="election">
+    Election Title: {{name}}<br/>
+    Election Description: {{description}}<br/>
+    Questions: <br/>
+    {{#each questions}}
+      {{> electionsQuestions}}<br/>
+    {{/each}}
+    <button class="vote">Cast Vote</button><br/><br/>
+  </div>
 </template>
