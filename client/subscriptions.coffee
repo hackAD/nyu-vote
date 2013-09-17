@@ -1,3 +1,7 @@
-Meteor.subscribe("adminGroups")
-Meteor.subscribe("adminElections")
-Meteor.subscribe("Elections")
+Deps.autorun(() ->
+  if Meteor.Router.page() == "admin"
+    Meteor.subscribe("adminElections")
+    Meteor.subscribe("adminGroups")
+  else
+    Meteor.subscribe("Elections")
+)

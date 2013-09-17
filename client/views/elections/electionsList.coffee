@@ -18,5 +18,9 @@ Template.electionsList.events
   "click .vote": (e) ->
     e.preventDefault()
     election_id = this._id
-    console.log $(e.target).parent()
+    choices = $(e.target).parent()
       .children(".chosen").map(() -> $(this).attr("data-id")).toArray()
+    Meteor.call("vote", election_id, choices, (err, resp) ->
+      if (err)
+        Meteor.userError.throwError(err.reason)
+      console.log resp)

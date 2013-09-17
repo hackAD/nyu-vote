@@ -48,22 +48,28 @@ root.createChoice = (name, description, question_id, image="") ->
 
 Meteor.methods(
   vote: (election_id, choice_ids) ->
+    console.log "voting"
+    console.log election_id
+    console.log choice_ids
     if Meteor.isServer and !Meteor.call("hasNotVoted", election_id)
       throw new Meteor.Error(500, "Error: Has already voted!")
     if typeof(choice_ids) == "string"
       choice_ids = [choice_ids]
     questions = Elections.findOne(election_id).questions
+    console.log "old questions"
+    console.log questions
     for question in questions
       for choice in question.choices when choice._id in choice_ids
         choice.votes.push(Meteor.user().profile.netId)
-    Elections.update(
+    console.log "new questions"
+    console.log questions
+    return Elections.update(
       {_id: election_id}
       $set:
         questions: questions
       $addToSet:
         voters: Meteor.user().profile.netId
     )
-    return true
 
   createElection: (name, description, group_ids = [], voting_style) ->
     if voting_style != "NYUAD" and voting_style != "NYU"
