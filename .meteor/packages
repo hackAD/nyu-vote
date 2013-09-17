@@ -11,3 +11,5 @@ coffeescript
 accounts-base
 accounts-password
 stylus
+accounts-googleapps
+googleapps

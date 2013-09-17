@@ -5,4 +5,7 @@ Template.electionsList.helpers
 Template.electionsList.events
   "click a": (e) ->
     e.preventDefault()
-    console.log("working")
+    Meteor.loginWithGoogleApps
+      requestPermissions: ["email"]
+      requestOfflineToken: true,
+
