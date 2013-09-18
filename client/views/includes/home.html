@@ -1,7 +1,33 @@
 <template name="home">
-  You have {{ballotCount}} open ballots.
-  <br/>
-  {{> electionsList}}
-  <br/>
-  You have {{ballotCount}} open ballots.
+  {{#if loggedIn}}
+    {{> electionsList}}
+    <div class="ballots">
+      You have {{ballotCount}} open ballots.
+    </div>
+  {{else}}
+    <div class="row">
+      <div class="splash col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4">
+        <div class="profileblur"></div>
+        <p>
+          Welcome to NYU Vote.
+        </p>
+        <p>
+          NYU Vote is a flexible, multi-purpose voting system that can be used
+          for everything from school wide elections to instant polls at
+          meetings. 
+        </p>
+        <p>
+          Login to cast your votes!
+        </p>
+        <button type="button" id="login" href="#">Login with NYU</button><br/>
+        <p class="text-muted">
+          <small>
+            If you would like to use NYU Vote for your program, just reach out
+            to the <a href="/about"> system administrator.</a>
+          </small>
+        </p>
+      </div>
+    </div>
+  {{/if}}
+
 </template>

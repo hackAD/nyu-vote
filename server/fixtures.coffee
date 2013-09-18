@@ -44,7 +44,7 @@ Meteor.startup( () ->
     )
     question = createQuestion("rep_question", "Class rep.", Elections.findOne({name:"nyuad_2016_rep_election"})._id)
     createChoice("2016_rep_choice_1", "I am the best candidate because I am the first candidate. Logic.",question,"repPic.jpg")
-    createChoice("2016_rep_choice_2", "I am the best candidate because I don't rely on stupid numbering.",question)
+    createChoice("2016_rep_choice_2", "I am the best candidate because I don't rely on stupid numbering.",question,"repPic.jpg")
 
     Elections.insert(
       name: "gnu_best_election"
