@@ -82,7 +82,7 @@ Meteor.startup( () ->
     Elections.update(
       {"questions.choices._id": id},
       $push:
-        "questions.0.choices.0.votes": 
+        "questions.0.choices.0.votes":
           $each:voters
     )
       
