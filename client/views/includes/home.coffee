@@ -5,6 +5,9 @@ Template.home.helpers
     return Meteor.userId()
   noMoreVotes: () ->
     return Elections.find().count() == 0
+  electionsReady: () ->
+    return electionHandle.ready()
+
 
 Template.home.events
   "click #login": (e) ->

@@ -1,14 +1,23 @@
 <template name="home">
   {{#if loggedIn}}
-    {{> electionsList}}
-    {{#if noMoreVotes}}
-      <div class="ballots">
-        You have {{ballotCount}} open ballots.
-      </div>
-      <button id="logout" type="button" class="account" id="logout" href="#">Logout</button><br/>
+    {{#if electionsReady}}
+      {{> electionsList}}
+      {{#if noMoreVotes}}
+        <div class="ballots">
+          You have {{ballotCount}} open ballots.
+        </div>
+        <button id="logout" type="button" class="account" id="logout" href="#">Logout</button><br/>
+      {{else}}
+        <div class="ballots">
+          You have {{ballotCount}} open ballots.
+        </div>
+      {{/if}}
     {{else}}
-      <div class="ballots">
-        You have {{ballotCount}} open ballots.
+      <div class="bigLoad">
+        <h1>
+          Loading...
+        </h1>
+        <img src="/loader.gif" alt="" />
       </div>
     {{/if}}
   {{else}}
