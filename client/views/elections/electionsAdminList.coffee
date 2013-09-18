@@ -4,7 +4,7 @@ Template.electionsAdminList.helpers
   groups: () ->
     return Groups.find({_id:{$in:this.groups}})
   notModifying: () ->
-    return Session.get("modifying") != this._id
+    return Session.get("modifyingElection") != this._id
   openCloseElection: () ->
     if this.status == "open" then return "Close" else return "Open"
   allowAbstain: () ->
@@ -15,4 +15,4 @@ Template.electionsAdminList.helpers
 Template.electionsAdminList.events
   "click .modifyElection": (e) ->
     e.preventDefault()
-    Session.set("modifying", this._id)
+    Session.set("modifyingElection", this._id)

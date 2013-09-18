@@ -1,9 +1,22 @@
 <template name="groupsList">
-  <br/>
-  Groups: <br/>
+  Groups: </br>
+  <table border="1">
   {{#each groups}}
-    Group Item: <br/>
-    {{> groupsItem}}<br/>
+    <tr>
+      <td>Group Item: </td>
+      <td><button class="modifyGroup" href="#">Modify group</button></td>
+    </tr>
+    {{#if notModifying}}
+      {{> groupsItem}}
+    {{else}}
+      {{> groupsModify}}
+    {{/if}}
   {{/each}}
-  <a href="#">Create new group</a>
+  </table>
+  <button class="createGroup" href="#">Create group</button>
+  {{#if creating}}
+    <table border="1">
+    {{> groupsCreate}}
+    </table>
+  {{/if}}
 </template>

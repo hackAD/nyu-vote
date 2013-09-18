@@ -20,17 +20,17 @@
           </td></tr>
           <tr><td>Questions: </td></tr>
           {{#each questions}}
-            <tr><td>*</td><td>{{name}}</td></tr>
-            <tr><td>*</td><td>{{description}}</td></tr>
+            <tr><td></td><td>{{name}}</td></tr>
+            <tr><td></td><td>{{description}}</td></tr>
             <tr>
               <td></td><td>{{allowAbstain}} Abstention</td>
               <td>{{multi}} Choice</td>
             </tr>
-            <tr><td>*</td><td>Choices: </td></tr>
+            <tr><td></td><td>Choices: </td></tr>
             {{#each choices}}
-              <tr><td>*</td><td>*</td><td>{{name}}</td></tr>
-              <tr><td>*</td><td>*</td><td>{{description}}</td></tr>
-              <tr><td>*</td><td>*</td><td>Image URL: {{image}}</td></tr>
+              <tr><td></td><td></td><td>{{name}}</td></tr>
+              <tr><td></td><td></td><td>{{description}}</td></tr>
+              <tr><td></td><td></td><td>Image URL: {{image}}</td></tr>
             {{/each}}
           {{/each}}
         </form>
