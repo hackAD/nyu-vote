@@ -1,9 +1,3 @@
-isDevEnv = () ->
-  if process.env.ROOT_URL == "http://localhost:3000/"
-    return true
-  else
-    return false
-
 Meteor.startup( () ->
   if isDevEnv() and Meteor.users.find().count() == 0
     Accounts.createUser(
@@ -57,7 +51,7 @@ Meteor.startup( () ->
       description: "Election for the best in everything."
       status: "open"
       creator: "random_admin_3"
-      groups: [Groups.findOne({name:"nyuad_2016"})._id, Groups.findOne({name:"nyu_2015"})._id]
+      groups: [Groups.findOne({name:"nyu_2015"})._id]
       voters: []
       questions: []
       options:
@@ -75,7 +69,7 @@ Meteor.startup( () ->
       status: "closed"
       creator: "devAdmin"
       groups: [Groups.findOne({name:"nyuad_2016"})._id, Groups.findOne({name:"nyu_2015"})._id]
-      voters: ["random_admin_1","random_admin_2","nyu_2015_student_3", 
+      voters: ["random_admin_1","random_admin_2","nyu_2015_student_3",
       "nyu_2015_student_1", "nyuad_2016_student_2"]
       questions: []
       options:
