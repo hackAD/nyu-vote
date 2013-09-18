@@ -51,6 +51,9 @@ root.createChoice = (name, description="", question_id, image="") ->
 
 Meteor.methods(
   vote: (election_id, choice_ids) ->
+    console.log "voting"
+    console.log election_id
+    console.log choice_ids
     if Meteor.isServer and !Meteor.call("hasNotVoted", election_id)
       throw new Meteor.Error(500, "Error: Has already voted!")
     if typeof(choice_ids) == "string"
@@ -74,7 +77,6 @@ Meteor.methods(
       $push:
         voters: Meteor.user().profile.netId
     )
-    return true
 
   createElection: (name, description="", group_ids = []) ->
     if typeof(group_ids) == "string"

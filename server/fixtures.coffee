@@ -69,7 +69,7 @@ Meteor.startup( () ->
       status: "closed"
       creator: "devAdmin"
       groups: [Groups.findOne({name:"nyuad_2016"})._id, Groups.findOne({name:"nyu_2015"})._id]
-      voters: ["random_admin_1","random_admin_2","nyu_2015_student_3", 
+      voters: ["random_admin_1","random_admin_2","nyu_2015_student_3",
       "nyu_2015_student_1", "nyuad_2016_student_2"]
       questions: []
       options:
