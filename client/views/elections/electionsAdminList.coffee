@@ -1,7 +1,7 @@
 Template.electionsAdminList.helpers
   elections: () ->
     return Elections.find()
-  findGroups: () ->
+  groups: () ->
     return Groups.find({_id:{$in:this.groups}})
   notModifying: () ->
     return Session.get("modifying") != this._id

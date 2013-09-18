@@ -53,7 +53,7 @@ root.createChoice = (name, description="", question_id, image="") ->
   return id
 
 Meteor.methods(
-  vote: (election_id, choice_ids) ->
+  vote: (election_id, choice_ids=[]) ->
     console.log "voting"
     console.log election_id
     console.log choice_ids
