@@ -13,17 +13,14 @@ Template.electionsAdminList.helpers
     if this.options.multi then return "Multiple" else return "Single"
   voteCountTotal: () ->
     return this.voters.length
-  #voteCountChoice: () ->
-    #if adminElectionsHandle.ready()
-      #return this.voters.length
-  #voteCountQuestion: () ->
-    #count = 0
-    #if this.choices?.length > 0
-      #for choice in this.choices
-        #console.log choice
-        #count += choice.votes.length
-    #console.log count
-    #return count
+  voteCountQuestion: () ->
+    count = 0
+    if this.choices?.length > 0
+      for choice in this.choices
+        count += choice.votes.length
+    return count
+  voteCountChoice: () ->
+    return this.votes.length
 
 
 Template.electionsAdminList.events
