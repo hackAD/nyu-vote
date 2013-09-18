@@ -11,9 +11,8 @@ Template.electionsAdminList.helpers
     if this.options.allowAbstain then return "Allow" else return "Forbid"
   multi: () ->
     if this.options.multi then return "Multiple" else return "Single"
-  #voteCountTotal: () ->
-    #if adminElectionsHandle.ready()
-      #return this.voters.length
+  voteCountTotal: () ->
+    return this.voters.length
   #voteCountChoice: () ->
     #if adminElectionsHandle.ready()
       #return this.voters.length
