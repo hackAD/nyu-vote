@@ -53,7 +53,7 @@ root.createChoice = (name, description="", question_id, image="") ->
   return id
 
 Meteor.methods(
-  vote: (election_id, choice_ids) ->
+  vote: (election_id, choice_ids=[]) ->
     if Meteor.isServer and !Meteor.call("hasNotVoted", election_id)
       throw new Meteor.Error(500, "Error: Has already voted!")
     if typeof(choice_ids) == "string"

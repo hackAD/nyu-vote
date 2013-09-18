@@ -1,4 +1,50 @@
 <template name="electionsAdminModify">
-    TEST</br>
-    <a class="submitElection" href="#">Submit this Election</a><br/><br/>
+  <table border="1">
+    <form>
+      <tr><td><input class="election name" type="text" placeholder="{{name}}"></td></tr>
+      <tr><td><input class="election description" type="text" placeholder="{{description}}"></td></tr>
+      <tr><td>Creator: {{creator}}</td></tr>
+      <tr><td>Groups: </td></tr>
+      <tr><td>
+      <select multiple="multiple">
+      {{#each groups}}
+        <option value={{_id}}>{{name}}</option>
+      {{/each}}
+      </select>
+      </td></tr>
+      <tr><td>Questions: </td></tr>
+      {{#each questions}}
+        <tr><td></td><td><input class="question name" type="text" placeholder="{{name}}"></td></tr>
+        <tr><td></td><td><input class="question description" type="text" placeholder="{{description}}"></td></tr>
+        <tr>
+          <td></td><td>Allow Abstention<input class="question allowAbstain" type="checkbox" checked="{{allowAbstain}}"></td>
+          <td>Multiple Choice<input class="question multi" type="checkbox" checked="{{multi}}"></td>
+        </tr>
+        <tr><td></td><td>Choices: </td></tr>
+        {{#each choices}}
+          <tr><td></td><td></td><td><input class="choice name" type="text" placeholder="{{name}}"></td></tr>
+          <tr><td></td><td></td><td><input class="choice description" type="text" placeholder="{{description}}"></td></tr>
+          <tr><td></td><td></td><td>Image URL: <input class="choice image" type="text" placeholder="{{image}}"></td></tr>
+        {{/each}}
+        <tr>
+          <td></td><td>New Choice: </td>
+          <td><a class="submitChoice" href="#">Add Choice</a></td>
+        </tr>
+        <tr><td></td><td></td><td><input class="new choice name" type="text" placeholder="Choice Name"></td></tr>
+        <tr><td></td><td></td><td><input class="new choice description" type="text" placeholder="Choice Description"></td></tr>
+        <tr><td></td><td></td><td>Image URL: <input class="new choice image" type="text" placeholder="Choice Image URL"></td></tr>
+      {{/each}}
+      <tr>
+        <td>New Question: </td>
+        <td><a class="submitQuestion" href="#">Add Question</a></td>
+      </tr>
+      <tr><td></td><td><input class="new question name" type="text" placeholder="Question Name"></td></tr>
+      <tr><td></td><td><input class="new question description" type="text" placeholder="Question Description"></td></tr>
+      <tr>
+        <td></td><td>Allow Abstention<input class="new question allowAbstain" type="checkbox" value="allowAbstain"></td>
+        <td>Multiple Choice<input class="new question multi" type="checkbox" value="multi"></td>
+      </tr>
+    </form>
+  </table>
+  <a class="submitElection" href="#">Submit this Election</a><br/><br/>
 </template>
