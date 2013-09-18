@@ -7,6 +7,10 @@ Meteor.methods(
     if typeof(group_ids) == "string"
       group_ids = [group_ids]
     return Groups.find({"_id": {$in:group_ids}, "admins": Meteor.user().profile.netId}).count() == group_ids.length
+  'isInGroupAdminsOf': (group_ids) ->
+    if typeof(group_ids) == "string"
+      group_ids = [group_ids]
+    return Groups.find({"_id": {$in:group_ids}, "admins": Meteor.user().profile.netId}).count() > 0
   'isAGroupAdmin': () ->
     return Groups.find({"admins": Meteor.user().profile.netId}).count() > 0
   'hasNotVoted': (election_id) ->

@@ -1,28 +1,40 @@
 root = global ? window
 root.Elections = new Meteor.Collection("elections")
 
-root.electionRule = (userId, doc) ->
+root.electionRule = (userId, doc, fieldNames, modifier) ->
   if Meteor.isServer
-    return Meteor.call("isGroupAdminOf", _.map(Groups.find({_id: {$in: doc.groups }}).fetch(), (group) -> group._id))
+    groupModifier = ([operation,operand.groups["$each"]] for operation, operand of modifier when "groups" of operand) 
+    groupModifier = groupModifier[0]
+    if groupModifier == [] then groupModifier = ["",[]]
+    return Meteor.call("isGroupAdminOf", groupModifier[1]) and (groupModifier[0]=="$addToSet" or "groups" not in fieldNames)
+  else
+    return true
+
+root.electionRule2 = (userId, doc, fieldNames, modifier) ->
+  if Meteor.isServer
+    return Meteor.call("isInGroupAdminsOf", doc.groups)
   else
     return true
 
 root.Elections.allow(
-  update: root.electionRule
-  remove: root.electionRule
+  update: root.electionRule2
+  remove: root.electionRule2
 )
 
 root.Elections.deny(
-  update: (userId, doc, fieldNames) ->
+  update: (userId, doc, fieldNames, modifier) ->
+    console.log(fieldNames, modifier)
     return 'questions.choices.votes' in fieldNames or 'voters' in fieldNames or 'creator' in fieldNames
 )
 
 root.createQuestion = (name, description, election_id, options = {}) ->
+  console.log("calling createQuestion")
   options ?= {}
   options.multi ?= true
   options.allowAbstain ?= true
   id = new Meteor.Collection.ObjectID()
   id = id.toHexString()
+  console.log("Finished init")
   Elections.update(
     {_id: election_id},
     $push:
@@ -35,6 +47,7 @@ root.createQuestion = (name, description, election_id, options = {}) ->
           allowAbstain: options.allowAbstain
         choices: []
   )
+  console.log("pushed update")
   return id
 
 root.createChoice = (name, description="", question_id, image="") ->
@@ -54,7 +67,7 @@ root.createChoice = (name, description="", question_id, image="") ->
 
 Meteor.methods(
   createQuestion: (name, description, election_id, options = {}) ->
-    return root.createQuestion(name, description, options)
+    return root.createQuestion(name, description, election_id, options)
   createChoice: (name, description="", question_id, image="") ->
     return root.createChoice(name, description, question_id, image)
   vote: (election_id, choice_ids=[]) ->
