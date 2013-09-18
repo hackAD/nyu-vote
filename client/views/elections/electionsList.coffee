@@ -3,6 +3,7 @@ Template.electionsList.helpers
     return Elections.find()
 
 Template.electionItem.rendered = () ->
+	renderRows()
 	theWindow = $(window)
 	sticky = $(".electiontitle")
 	test = $(".eachelection").first()
@@ -56,3 +57,14 @@ Template.electionsList.events
       if (err)
         Meteor.userError.throwError(err.reason)
       console.log resp)
+
+$(window).on("resize orientationchange", () ->
+	setTimeout(() ->
+		renderRows()
+	, 500)
+	)
+
+renderRows = () ->
+	for row in $(".row")
+		$(row).css({height: ""})
+		$(row).height($(row).height())

@@ -1,11 +1,18 @@
 <template name="electionsQuestions">
-		<div class="questionsbox">
-		 {{name}}<br/>
+	<div id="headerbanner">
+		<div  class="questiontitle">
+			<div class="questionsbox">
+		 		{{name}}<br/>
+		 	</div>
 		 </div>
-		 <div class="questiondescription">
-		 {{description}}<br/>
-		 </div>
-		<div class="choices row">
+		 	
+
+		<div class = "arrowdownblack"></div>
+	</div>
+	<div class="questiondescription text-muted"> 
+		{{description}}
+	</div>
+	<div class="choices row">
 		  {{#each choices}}
 
 		    {{>electionsChoice}}
@@ -13,3 +20,4 @@
 		  {{/each}}
 		</div>
 </template>
+

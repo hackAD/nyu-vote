@@ -4,12 +4,14 @@
 	</div>
 	<div class="choicename">
 	  Choice: {{name}}<br/>
-	 </div>
+	</div>
 	  {{#if imageExists}}
-	    <img class="profilepic" src="{{image}}" alt="{{name}}" /><br/>
+    <div class="profilepic">
+    		src="{{image}}" alt="{{name}}"
+    </div>
 	  {{/if}}
 	 <div class="description">
-	  Description: {{description}}<br/>
+	  Description: {{description}}
 	 </div>
 </div>
 </template>
