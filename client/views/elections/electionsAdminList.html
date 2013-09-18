@@ -1,17 +1,35 @@
 <template name="electionsAdminList">
   {{#each elections}}
     {{#if notModifying}}
-      Election:<br/>
-      Election Name: {{name}}<br/>
-      Questions: <br/>
+      <table border="1">
+      <tr>
+        <td><button class="openCloseElection" href="#">{{openCloseElection}} Election</button></td>
+        <td><button class="deleteElection" href="#">Delete Election</button></td>
+      </tr>
+      <tr><td>{{name}}</td></tr>
+      <tr><td>{{description}}</td></tr>
+      <tr><td>Creator: {{creator}}</td></tr>
+      <tr><td>Groups: </td></tr>
+      {{#each findGroups}}
+        <tr><td>{{name}}</td></tr>
+      {{/each}}
+      <tr><td>Questions: </td></tr>
       {{#each questions}}
-        Question Name: {{name}}<br/>
-        Choices: <br/>
+        <tr><td>{{name}}</td></tr>
+        <tr><td>{{description}}</td></tr>
+        <tr>
+          <td>{{allowAbstain}} Abstention</td>
+          <td>{{multi}} Choice</td>
+        </tr>
+        <tr><td>Choices: </td></tr>
         {{#each choices}}
-          {{name}}<br/>
+          <tr><td>{{name}}</td></tr>
+          <tr><td>{{description}}</td></tr>
+          <tr><td>Image URL: {{image}}</td></tr>
         {{/each}}
       {{/each}}
-      <a class="modifyElection" href="#" >Edit this Election</a><br/><br/>
+      </table>
+      <button class="modifyElection" href="#" >Edit this Election</button><br/><br/>
     {{else}}
       {{>electionsAdminModify}}
     {{/if}}
