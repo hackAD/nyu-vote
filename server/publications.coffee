@@ -7,8 +7,8 @@ Meteor.publish("adminElections", ()->
   groups = Groups.
     find({admins: if user?.profile?.netId? then user.profile.netId else ""}).fetch()
   return Elections.find(
-    groups:{$in: if groups.length > 0 then _.map(groups, (g) -> g._id) else []},
-    voters: {$ne: if user?.profile?.netId? then user.profile.netId else ""})
+    groups:{$in: if groups.length > 0 then _.map(groups, (g) -> g._id) else []}
+    )
 )
 Meteor.publish("Elections", () ->
   user = Meteor.users.findOne(this.userId)
