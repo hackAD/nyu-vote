@@ -24,3 +24,4 @@ Template.groupsModify.events
         admins: admins
         netIds: netIds
     )
+    Session.set("modifyingGroup", "0")

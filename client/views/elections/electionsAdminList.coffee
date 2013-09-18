@@ -16,3 +16,14 @@ Template.electionsAdminList.events
   "click .modifyElection": (e) ->
     e.preventDefault()
     Session.set("modifyingElection", this._id)
+  "click .openCloseElection": (e) ->
+    e.preventDefault()
+    if this.status == "open"
+      status = "closed"
+    else
+      status = "open"
+    Elections.update(
+      {_id:this._id}
+      $set:
+        status: status
+    )

@@ -13,3 +13,4 @@ Template.groupsCreate.events
         admins: admins
         netIds: netIds
     )
+    Session.set("creatingGroup", "0")
