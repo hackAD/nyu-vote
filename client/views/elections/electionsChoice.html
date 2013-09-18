@@ -1,15 +1,17 @@
 <template name="electionsChoice">
-<div class="choice profilebox col-xs-12 col-sm-6 col-md-4" data_id="{{_id}}">
+<div class="{{choiceClass}} profilebox col-xs-12 col-sm-6 col-md-4" data_id="{{_id}}">
 	<div class="profileblur">
 	</div>
 	<div class="choicename">
 	  Choice: {{name}}<br/>
-	 </div>
+	</div>
 	  {{#if imageExists}}
-	    <img class="profilepic" src="{{image}}" alt="{{name}}" /><br/>
+    <div class="profilepic">
+    		src="{{image}}" alt="{{name}}"
+    </div>
 	  {{/if}}
 	 <div class="description">
-	  Description: {{description}}<br/>
+	  Description: {{description}}
 	 </div>
 </div>
 </template>

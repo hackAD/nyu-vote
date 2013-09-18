@@ -1,11 +1,13 @@
 <template name="electionItem">
 
 <div class="eachelection">
-	<div id="headerbanner">
-		<div id="header-{{_id}}" class="electiontitle">Election Title:<br>{{name}}</div><br/>
-		<div class = "arrowdown"></div>
+		<div class="electiontitle">
+			{{name}}
+		</div>
+		<div class = "arrowdownpurple"></div>
+	<div class="electiondescription text-muted">
+			 {{description}}<br/>
 	</div>
-	<div class="electiondescription"><p>Election Description: {{description}}</p><br/></div>
 	<div class= "electionitem">
 		
 		{{#each questions}}
