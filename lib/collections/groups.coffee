@@ -18,7 +18,7 @@ root.Groups.deny(
 )
 
 Meteor.methods(
-  addGroup: (name, description, admins) ->
+  addGroup: (name, description, admins, netIds=[]) ->
     if Meteor.isServer and !Meteor.call("isAGroupAdmin")
       throw new Meteor.Error(500, "Error: You are not administrator of any group!")
     Groups.insert(
@@ -26,7 +26,7 @@ Meteor.methods(
       description: description
       creator: Meteor.user().profile.netId
       admins: admins
-      netIds: []
+      netIds: netIds
     )
     return Groups.findOne({name:name})._id
 )
