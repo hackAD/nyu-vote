@@ -32,8 +32,8 @@ Template.electionItem.rendered = () ->
 check = (topPositions, theWindow) ->
 	console.log theWindow.scrollTop()
 	for header in topPositions
-		if !header.sticky && theWindow.scrollTop() > header.top 
-			header.sticky = true
+		if !header.sticky && theWindow.scrollTop() > header.top
+		  header.sticky = true
 			$(".header-stick").removeClass("header-stick")
 			$(header.id).addClass("header-stick")
 			return
@@ -43,15 +43,23 @@ Template.electionsList.events
   "click .choice": (e) ->
     e.preventDefault()
     target = $(e.target)
-    if target.hasClass("choice")
-      target.toggleClass("chosen")
-    else
-      target.parent().toggleClass("chosen")
+    if !target.hasClass("choice")
+      target = target.parent()
+    target.toggleClass("chosen")
+    target.parent().children(".abstain").removeClass("chosen")
+  "click .abstain": (e) ->
+    e.preventDefault()
+    target = $(e.target)
+    if !target.hasClass("abstain")
+      target = target.parent()
+    target.parent().children(".choice").removeClass("chosen")
+    target.addClass("chosen")
+
   "click .vote": (e) ->
     e.preventDefault()
     election_id = this._id
     choices = $(e.target).parent()
-      .children(".chosen").map(() -> $(this).attr("data-id")).toArray()
+      .find(".chosen.choice").map(() -> $(this).attr("data-id")).toArray()
     Meteor.call("vote", election_id, choices, (err, resp) ->
       if (err)
         Meteor.userError.throwError(err.reason)
