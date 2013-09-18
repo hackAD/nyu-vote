@@ -1,8 +1,20 @@
 <template name="electionItem">
-Election Title: {{name}}<br/>
-Election Description: {{description}}<br/>
-Questions: <br/>
-{{#each questions}}
-  {{> electionsQuestions}}<br/>
-{{/each}}
+
+<div class="eachelection">
+	<div id="header-{{_id}}" class="electiontitle">Election Title:<br>{{name}}</div><br/>
+	<div class = "arrowdown"></div>
+	<div class="electiondescription"><p>Election Description: {{description}}</p><br/></div>
+	<div class= "electionitem">
+		
+		{{#each questions}}
+		  {{> electionsQuestions}}<br/>
+		{{/each}}
+		
+	</div>
+	<div class="buttons">
+		 	<button type ="button" class="submit"> Vote </button>
+	</div>
+	
+</div>
+
 </template>
