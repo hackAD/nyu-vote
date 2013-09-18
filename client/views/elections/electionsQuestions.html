@@ -11,6 +11,8 @@
 		    {{>electionsChoice}}
 
 		  {{/each}}
-      {{>electionsChoice abstain}}<br/>
+      {{#if options.allowAbstain}}
+        {{>electionsChoice abstain}}
+      {{/if}}
 		</div>
 </template>
