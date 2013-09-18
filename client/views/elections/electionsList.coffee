@@ -40,11 +40,6 @@ check = (topPositions, theWindow) ->
 
 
 Template.electionsList.events
-  "click #login": (e) ->
-    e.preventDefault()
-    Meteor.loginWithGoogleApps
-      requestPermissions: ["email"]
-      requestOfflineToken: true,
   "click .choice": (e) ->
     e.preventDefault()
     target = $(e.target)
