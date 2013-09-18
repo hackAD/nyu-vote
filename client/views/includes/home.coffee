@@ -18,6 +18,7 @@ Template.home.events
   "click #logout": (e) ->
     e.preventDefault()
     Meteor.logout()
+    window.location = "https://accounts.google.com/logout"
 
 Template.home.rendered = () ->
   $("#main").css({"min-height": $(window).height() - $("#header").height() - $("#footer").height() - 20 })

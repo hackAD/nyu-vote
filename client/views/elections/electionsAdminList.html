@@ -9,6 +9,7 @@
           </tr>
           <tr><td>{{name}}</td></tr>
           <tr><td>{{description}}</td></tr>
+          <tr><td>Total Votes: {{voteCountTotal}}</td></tr>
           <tr><td>Creator: {{creator}}</td></tr>
           <tr><td>Groups: </td></tr>
           <tr><td>
@@ -22,6 +23,7 @@
           {{#each questions}}
             <tr><td></td><td>{{name}}</td></tr>
             <tr><td></td><td>{{description}}</td></tr>
+            <tr><td></td><td>Question Votes: {{voteCountQuestion}}</td></tr>
             <tr>
               <td></td><td>{{allowAbstain}} Abstention</td>
               <td>{{multi}} Choice</td>
@@ -30,6 +32,7 @@
             {{#each choices}}
               <tr><td></td><td></td><td>{{name}}</td></tr>
               <tr><td></td><td></td><td>{{description}}</td></tr>
+              <tr><td></td><td></td><td>Choice Votes: {{voteCountChoice}}</td></tr>
               <tr><td></td><td></td><td>Image URL: {{image}}</td></tr>
             {{/each}}
           {{/each}}
