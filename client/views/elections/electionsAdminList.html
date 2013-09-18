@@ -2,41 +2,36 @@
   {{#each elections}}
     {{#if notModifying}}
       <table border="1" class="table table-striped table-bordered table-hover table-condensed">
-        <form>
+        <tr>
+          <td><button class="openCloseElection btn btn-primary" href="#">{{openCloseElection}} Election</button></td>
+          <td><button class="deleteElection btn btn-primary" href="#">Delete Election</button></td>
+        </tr>
+        <tr><td>{{name}}</td></tr>
+        <tr><td>{{description}}</td></tr>
+        <tr><td>Creator: {{creator}}</td></tr>
+        <tr><td>Groups: </td></tr>
+        <tr><td>
+        <select multiple="multiple">
+        {{#each groups}}
+          <option>{{name}}</option>
+        {{/each}}
+        </select>
+        </td></tr>
+        <tr><td>Questions: </td></tr>
+        {{#each questions}}
+          <tr><td></td><td>{{name}}</td></tr>
+          <tr><td></td><td>{{description}}</td></tr>
           <tr>
-            <td><button class="openCloseElection btn btn-primary" href="#">{{openCloseElection}} Election</button></td>
-            <td><button class="deleteElection btn btn-primary" href="#">Delete Election</button></td>
+            <td></td><td>{{allowAbstain}} Abstention</td>
+            <td>{{multi}} Choice</td>
           </tr>
-          <tr><td>{{name}}</td></tr>
-          <tr><td>{{description}}</td></tr>
-          <tr><td>Total Votes: {{voteCountTotal}}</td></tr>
-          <tr><td>Creator: {{creator}}</td></tr>
-          <tr><td>Groups: </td></tr>
-          <tr><td>
-          <select multiple="multiple">
-          {{#each groups}}
-            <option>{{name}}</option>
+          <tr><td></td><td>Choices: </td></tr>
+          {{#each choices}}
+            <tr><td></td><td></td><td>{{name}}</td></tr>
+            <tr><td></td><td></td><td>{{description}}</td></tr>
+            <tr><td></td><td></td><td>Image URL: {{image}}</td></tr>
           {{/each}}
-          </select>
-          </td></tr>
-          <tr><td>Questions: </td></tr>
-          {{#each questions}}
-            <tr><td></td><td>{{name}}</td></tr>
-            <tr><td></td><td>{{description}}</td></tr>
-            <tr><td></td><td>Question Votes: {{voteCountQuestion}}</td></tr>
-            <tr>
-              <td></td><td>{{allowAbstain}} Abstention</td>
-              <td>{{multi}} Choice</td>
-            </tr>
-            <tr><td></td><td>Choices: </td></tr>
-            {{#each choices}}
-              <tr><td></td><td></td><td>{{name}}</td></tr>
-              <tr><td></td><td></td><td>{{description}}</td></tr>
-              <tr><td></td><td></td><td>Choice Votes: {{voteCountChoice}}</td></tr>
-              <tr><td></td><td></td><td>Image URL: {{image}}</td></tr>
-            {{/each}}
-          {{/each}}
-        </form>
+        {{/each}}
       </table>
       <button class="modifyElection btn btn-primary" href="#" >Edit this Election</button><br/><br/>
     {{else}}
