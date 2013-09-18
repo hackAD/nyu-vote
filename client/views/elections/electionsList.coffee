@@ -47,6 +47,8 @@ Template.electionsList.events
       target = target.parent()
     target.toggleClass("chosen")
     target.parent().children(".abstain").removeClass("chosen")
+    if target.parent().find(".choice.chosen").length == 0
+      target.parent().find(".abstain").addClass("chosen")
   "click .abstain": (e) ->
     e.preventDefault()
     target = $(e.target)
