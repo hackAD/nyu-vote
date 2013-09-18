@@ -3,7 +3,7 @@ root.Elections = new Meteor.Collection("elections")
 
 root.electionRule = (userId, doc) ->
   if Meteor.isServer
-    return Meteor.call("isGroupAdminOf", _.map(Groups.find({_id: {$in: doc.groups }}).fetch(), (o) -> o._id))
+    return Meteor.call("isGroupAdminOf", _.map(Groups.find({_id: {$in: doc.groups }}).fetch(), (group) -> group._id))
   else
     return true
 
@@ -14,10 +14,10 @@ root.Elections.allow(
 
 root.Elections.deny(
   update: (userId, doc, fieldNames) ->
-    return 'choices.votes' in fieldNames or 'voters' in fieldNames or 'creator' in fieldNames
+    return 'questions.choices.votes' in fieldNames or 'voters' in fieldNames or 'creator' in fieldNames
 )
 
-root.createQuestion = (name, description, election_id) ->
+root.createQuestion = (name, description, election_id, {multi=true, required=false}) ->
   id = new Meteor.Collection.ObjectID()
   id = id.toHexString()
   Elections.update(
@@ -27,11 +27,14 @@ root.createQuestion = (name, description, election_id) ->
         _id: id
         name: name
         description: description
+        options:
+          multi: multi
+          required: required
         choices: []
   )
   return id
 
-root.createChoice = (name, description, question_id, image="") ->
+root.createChoice = (name, description="", question_id, image="") ->
   id = new Meteor.Collection.ObjectID()
   id = id.toHexString()
   Elections.update(
@@ -52,22 +55,28 @@ Meteor.methods(
       throw new Meteor.Error(500, "Error: Has already voted!")
     if typeof(choice_ids) == "string"
       choice_ids = [choice_ids]
-    questions = Elections.findOne(election_id).questions
-    for question in questions
-      for choice in question.choices when choice._id in choice_ids
-        choice.votes.push(Meteor.user().profile.netId)
+    election = Elections.findOne(election_id)
+    for question in elections.questions
+      matched_choices = (choice for choice in question.choices when choice._id in choice_ids)
+      if question.options.required
+        if question.options.multi && matched_choices.length == 0
+          throw new Meteor.Error(500, "Error: At least one choice must be voted on!")
+        if !question.options.multi && matched_choices.length != 1
+          throw new Meteor.Error(500, "Error: Exactly one choice must be voted on!")
+      else
+        if !question.options.multi && matched_choices.length > 1
+          throw new Meteor.Error(500, "Error: You cannot vote on more than one choice!")
+      votes.push(Meteor.user().profile.netId) for votes in matched_choices.votes
     Elections.update(
       {_id: election_id}
       $set:
         questions: questions
-      $addToSet:
+      $push:
         voters: Meteor.user().profile.netId
     )
     return true
 
-  createElection: (name, description, group_ids = [], voting_style) ->
-    if voting_style != "NYUAD" and voting_style != "NYU"
-      throw new Meteor.Error(500, "Error: Voting style not recognised!")
+  createElection: (name, description="", group_ids = []) ->
     if typeof(group_ids) == "string"
       group_ids = [group_ids]
     if Meteor.isServer and !Meteor.call("isGroupAdminOf", group_ids)
@@ -80,8 +89,6 @@ Meteor.methods(
       groups: group_ids
       voters: []
       questions: []
-      options:
-        voting_style: voting_style
       ,
       (err, resp) -> throw new Metor.Error(500, err.reason) if err?
     )

@@ -12,7 +12,6 @@ Meteor.publish("adminElections", ()->
 )
 Meteor.publish("Elections", () ->
   user = Meteor.users.findOne(this.userId)
-  console.log(user)
   groups = Groups.
     find({netIds: if user?.profile?.netId? then user.profile.netId else ""}).fetch()
   return Elections.find(
