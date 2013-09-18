@@ -1,9 +1,16 @@
 <template name="home">
   {{#if loggedIn}}
     {{> electionsList}}
-    <div class="ballots">
-      You have {{ballotCount}} open ballots.
-    </div>
+    {{#if noMoreVotes}}
+      <div class="ballots">
+        You have {{ballotCount}} open ballots.
+      </div>
+      <button id="logout" type="button" class="account" id="logout" href="#">Logout</button><br/>
+    {{else}}
+      <div class="ballots">
+        You have {{ballotCount}} open ballots.
+      </div>
+    {{/if}}
   {{else}}
     <div class="row">
       <div class="splash col-xs-8 col-xs-offset-2 col-sm-6 col-sm-offset-3">
@@ -19,7 +26,7 @@
         <p>
           Login to cast your votes!
         </p>
-        <button type="button" id="login" href="#">Login with NYU</button><br/>
+        <button type="button" class="account" id="login" href="#">Login with NYU</button><br/>
         <p class="text-muted">
           <small>
             If you would like to use NYU Vote for your program, just reach out
@@ -29,5 +36,6 @@
       </div>
     </div>
   {{/if}}
+  
 
 </template>

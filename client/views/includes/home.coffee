@@ -3,6 +3,8 @@ Template.home.helpers
     return Elections.find().count()
   loggedIn: () ->
     return Meteor.userId()
+  noMoreVotes: () ->
+    return Elections.find().count() == 0
 
 Template.home.events
   "click #login": (e) ->
@@ -10,3 +12,10 @@ Template.home.events
     Meteor.loginWithGoogleApps
       requestPermissions: ["email"]
       requestOfflineToken: true,
+  "click #logout": (e) ->
+    e.preventDefault()
+    Meteor.logout()
+
+Template.home.rendered = () ->
+  $("#main").css({"min-height": $(window).height() - $("#header").height() - $("#footer").height() - 20 })
+
