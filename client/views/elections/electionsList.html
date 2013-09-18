@@ -1,5 +1,7 @@
 <template name="electionsList">
-  <a id="login" href="#">Login with NYU</a><br/>
+	<div class="loginsection">
+  		<button type="button" id="login" href="#">Login with NYU</button><br/>
+	</div>
   {{#each electionItems}}
     {{> electionItem}}
   {{/each}}

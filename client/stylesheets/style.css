@@ -5,9 +5,6 @@ body{
 	font-family: 'Montserrat', sans-serif;
 }
 
-.container{
-
-}
 #header{
 	text-align: center;
 	padding-bottom: 10px;
@@ -15,12 +12,29 @@ body{
 	background: black;
 	color:white;
 	font-size:2em;
-
+	min-height: 100%;
 }
+
 .bold{
 	font-weight:700;
 }
+.loginsection{
+	text-align:center;
+	font-size: 1.5em;
+	margin-top: 10px;
 
+}
+#login{
+	height: 50px;
+	width: 200px;
+	height:50px;
+	color: white;
+	background: black;
+	border: none;
+	border-radius: 15px;
+	margin-bottom:10px;
+
+}
 #main{
 	position: relative;
 	color:black;
@@ -44,9 +58,8 @@ body{
 	filter: blur(2px);
 }
 
-.header-stick {
-	position: fixed;
-	top: 0;
+.choices{
+	color:white;
 }
 
 .eachelection{
@@ -90,12 +103,12 @@ body{
 }
 .questiondescription{
 	font-size:1.2em;
-	margin-bottom:20px;
 	text-align:center;
 }
 
 .choicename{
 	font-size: 1.6em;
+	margin-bottom:15px;
 }
 .profilepic{
 	width: 100%;
@@ -130,6 +143,7 @@ body{
 	font-size:1em;
 	width:100%;
 	text-align:left;
+	margin-top:15px;
 }
 
 .position{
@@ -162,5 +176,5 @@ h5{
 	width: 100%
 }
 .chosen {
-  background-color: red;
+  background-color: rgba(82,46,145,0.4);
 }
