@@ -11,13 +11,12 @@
 	<div class= "electionitem">
 		
 		{{#each questions}}
-		  {{> electionsQuestions}}<br/>
+		  {{> electionsQuestions}}
 		{{/each}}
 		
 	</div>
-	<div class="buttons">
-		 	<button type ="button" class="submit"> Vote </button>
-	</div>
+  <button type ="button" class="submit vote"> Vote </button>
+  <div class="vote-error text-danger"></div>
 	
 </div>
 

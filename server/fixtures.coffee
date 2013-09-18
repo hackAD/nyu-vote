@@ -39,12 +39,10 @@ Meteor.startup( () ->
       groups: [Groups.findOne({name:"nyuad_2016"})._id]
       voters: []
       questions: []
-      options:
-        voting_style: "NYUAD"
     )
     question = createQuestion("rep_question", "Class rep.", Elections.findOne({name:"nyuad_2016_rep_election"})._id)
-    createChoice("2016_rep_choice_1", "I am the best candidate because I am the first candidate. Logic.",question,"repPic.jpg")
-    createChoice("2016_rep_choice_2", "I am the best candidate because I don't rely on stupid numbering.",question,"repPic.jpg")
+    createChoice("2016_rep_choice_1", "I am the best candidate because I am the first candidate. Logic.",question,"http://reggiestake.files.wordpress.com/2012/06/darth-vader-3.jpeg")
+    createChoice("2016_rep_choice_2", "I am the best candidate because I don't rely on stupid numbering.",question)
 
     Elections.insert(
       name: "gnu_best_election"
@@ -54,12 +52,10 @@ Meteor.startup( () ->
       groups: [Groups.findOne({name:"nyu_2015"})._id]
       voters: []
       questions: []
-      options:
-        voting_style: "NYU"
     )
     question = createQuestion("gnu_best_coder_question", "Best coder", Elections.findOne({name:"gnu_best_election"})._id)
     createChoice("gnu_best_coder_choice_1", "1337",question)
-    createChoice("gnu_best_coder_choice_2", "I'm hardcore.",question, "haxorz.png")
+    createChoice("gnu_best_coder_choice_2", "I'm hardcore.",question, "http://benswann.com/wp-content/uploads/2013/08/Presbo.jpg")
     question = createQuestion("gnu_best_painter_question", "Best painter", Elections.findOne({name:"gnu_best_election"})._id)
     createChoice("gnu_best_painter_choice_1", "I'm lonely",question)
 
@@ -72,8 +68,6 @@ Meteor.startup( () ->
       voters: ["random_admin_1","random_admin_2","nyu_2015_student_3",
       "nyu_2015_student_1", "nyuad_2016_student_2"]
       questions: []
-      options:
-        voting_style: "NYUAD"
     )
     question = createQuestion("awesomest_question", "Awesomest!!!", Elections.findOne({name:"awesomest_election"})._id)
     createChoice("awesomest_choice_1", "Moiri Gamboni",question)

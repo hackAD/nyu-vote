@@ -10,15 +10,24 @@
 		<div class = "arrowdownblack"></div>
 	</div>
 	<div class="questiondescription text-muted"> 
-		{{description}}
+    {{#if required}}
+    <p>
+      This question is requied
+    </p>
+    {{/if}}
+    <p>
+      {{description}}
+    </p>
 	</div>
-	<div class="choices row">
+  <div class="choices row abstain-{{options.allowAbstain}}" data-multi="{{options.multi}}">
 		  {{#each choices}}
 
 		    {{>electionsChoice}}
 
 		  {{/each}}
-      {{>electionsChoice abstain}}<br/>
+      {{#if options.allowAbstain}}
+        {{>electionsChoice abstain}}
+      {{/if}}
 		</div>
 </template>
 
