@@ -66,12 +66,12 @@ Template.electionsList.events
     noAbstains =  $(e.target).parent().find(".abstain-false")
     if noAbstains.find(".choice.chosen").length != noAbstains.length
       $(e.target).parent().find(".vote-error").html("You did not answer all required questions")
-    #choices = $(e.target).parent()
-      #.find(".chosen.choice").map(() -> $(this).attr("data-id")).toArray()
-    #Meteor.call("vote", election_id, choices, (err, resp) ->
-      #if (err)
-        #Meteor.userError.throwError(err.reason)
-      #console.log resp)
+    choices = $(e.target).parent()
+      .find(".chosen.choice").map(() -> $(this).attr("data-id")).toArray()
+    Meteor.call("vote", election_id, choices, (err, resp) ->
+      if (err)
+        Meteor.userError.throwError(err.reason)
+      console.log resp)
 
 $(window).on("resize orientationchange", () ->
 	setTimeout(() ->
