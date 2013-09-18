@@ -1,0 +1,15 @@
+<template name="electionsAdminModify">
+  {{#if notModifying}}
+    balblablabl:<br/>
+    Election Name: {{name}}<br/>
+    Questions: <br/>
+    {{#each questions}}
+      Question Name: {{name}}<br/>
+      Choices: <br/>
+      {{#each choices}}
+        {{name}}<br/>
+      {{/each}}
+    {{/each}}
+    <a class="submitElection" href="#">Submit this Election</a><br/><br/>
+  {{/if}}
+</template>

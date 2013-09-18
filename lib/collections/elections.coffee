@@ -17,7 +17,9 @@ root.Elections.deny(
     return 'questions.choices.votes' in fieldNames or 'voters' in fieldNames or 'creator' in fieldNames
 )
 
-root.createQuestion = (name, description, election_id, {multi=true, required=false}) ->
+root.createQuestion = (name, description, election_id, {multi, allow_abstain}) ->
+  multi ?= true
+  allow_abstain ?= true
   id = new Meteor.Collection.ObjectID()
   id = id.toHexString()
   Elections.update(
@@ -29,7 +31,7 @@ root.createQuestion = (name, description, election_id, {multi=true, required=fal
         description: description
         options:
           multi: multi
-          required: required
+          allow_abstain: allow_abstain
         choices: []
   )
   return id
@@ -61,7 +63,7 @@ Meteor.methods(
     election = Elections.findOne(election_id)
     for question in elections.questions
       matched_choices = (choice for choice in question.choices when choice._id in choice_ids)
-      if question.options.required
+      if !question.options.allow_abstain
         if question.options.multi && matched_choices.length == 0
           throw new Meteor.Error(500, "Error: At least one choice must be voted on!")
         if !question.options.multi && matched_choices.length != 1
