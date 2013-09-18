@@ -1,9 +1,16 @@
 <template name="electionsQuestions">
-  Question: {{name}}<br/>
-  Question Description: {{description}}<br/>
-  Choices: <br/>
-  {{#each choices}}
-    {{>electionsChoice}}<br/>
-  {{/each}}
-  {{>electionsChoice abstain}}<br/>
+		<div class="questionsbox">
+		 {{name}}<br/>
+		 </div>
+		 <div class="questiondescription">
+		 {{description}}<br/>
+		 </div>
+		<div class="choices row">
+		  {{#each choices}}
+
+		    {{>electionsChoice}}
+
+		  {{/each}}
+      {{>electionsChoice abstain}}<br/>
+		</div>
 </template>
