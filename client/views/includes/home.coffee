@@ -11,15 +11,20 @@ Template.home.helpers
 
 Template.home.events
   "click #login": (e) ->
-    e.preventDefault()
     Meteor.loginWithGoogleApps
       requestPermissions: ["email"]
       requestOfflineToken: true,
   "click #logout": (e) ->
-    e.preventDefault()
     Meteor.logout()
     window.location = "https://accounts.google.com/logout"
 
-Template.home.rendered = () ->
-  $("#main").css({"min-height": $(window).height() - $("#header").height() - $("#footer").height() - 20 })
+fixHome = () ->
+  $("#main").css({"min-height": $(window).height() - $("#header").height() - $("#footer").height() - 30})
+
+Template.home.rendered = fixHome
+Template.about.rendered = fixHome
+Template.admin.rendered = fixHome
+
+
+  
 
