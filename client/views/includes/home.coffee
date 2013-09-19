@@ -19,7 +19,7 @@ Template.home.events
     window.location = "https://accounts.google.com/logout"
 
 fixHome = () ->
-  $("#main").css({"min-height": $(window).height() - $("#header").height() - $("#footer").height() - 30})
+  $("#main").css({"min-height": $(window).height() - $("#header").height() - $("#footer").height() - 15})
 
 Template.home.rendered = fixHome
 Template.about.rendered = fixHome
