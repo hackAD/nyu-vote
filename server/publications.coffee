@@ -7,7 +7,12 @@ Meteor.publish("adminElections", ()->
   groups = Groups.
     find({admins: if user?.profile?.netId? then user.profile.netId else ""}).fetch()
   return Elections.find(
-    groups:{$in: if groups.length > 0 then _.map(groups, (g) -> g._id) else []}
+      $or:
+        [
+          {groups: {$in: if groups.length > 0 then _.map(groups, (g) -> g._id) else []}}
+          ,
+          {creator: user?.profile?.netId}
+        ]
     )
 )
 Meteor.publish("Elections", () ->

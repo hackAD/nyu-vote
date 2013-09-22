@@ -16,14 +16,25 @@ root.electionRule2 = (userId, doc, fieldNames, modifier) ->
   else
     return true
 
+root.electionRule3 = (userId, doc, fieldNames, modifier) ->
+  if Meteor.isServer
+    return Meteor.call("isCreatorOf", doc.creator)
+  else
+    return true
+
 root.Elections.allow(
   update: root.electionRule2
   remove: root.electionRule2
+)
+root.Elections.allow(
+  update: root.electionRule3
+  remove: root.electionRule3
 )
 
 root.Elections.deny(
   update: (userId, doc, fieldNames, modifier) ->
     console.log(fieldNames, modifier)
+    console.log 'questions.choices.votes' in fieldNames or 'voters' in fieldNames or 'creator' in fieldNames
     return 'questions.choices.votes' in fieldNames or 'voters' in fieldNames or 'creator' in fieldNames
 )
 

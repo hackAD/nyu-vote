@@ -68,10 +68,7 @@ Template.electionsList.events
       $(e.target).parent().find(".vote-error").html("You did not answer all required questions")
     choices = $(e.target).parent()
       .find(".chosen.choice").map(() -> $(this).attr("data-id")).toArray()
-    Meteor.call("vote", election_id, choices, (err, resp) ->
-      if (err)
-        Meteor.userError.throwError(err.reason)
-      console.log resp)
+    Meteor.call("vote", election_id, choices)
 
 $(window).on("resize orientationchange", () ->
 	setTimeout(() ->

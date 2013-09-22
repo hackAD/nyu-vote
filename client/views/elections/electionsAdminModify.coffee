@@ -5,9 +5,14 @@ Template.electionsAdminModify.helpers
     return if this.options.multi == true then "checked" else ""
   groups: () ->
     return Groups.find()
+  hasGroup: (id, groups) ->
+    console.log "checking group"
+    console.log id
+    console.log groups
+    return if id in groups then "checked" else ""
 
 Template.electionsAdminModify.events
-  "click .submitElection": (e) ->
+  "click .submitElection, submit .election-form": (e) ->
     e.preventDefault()
     groups = $(".election.groups").val()
     #Elections.update({_id: this._id},$set:{name: name,description: description},$addToSet:{groups:$each:groups})
@@ -17,9 +22,11 @@ Template.electionsAdminModify.events
     Session.set("modifyingElection", "0")
     values = $('.election-form').serializeArray()
     allowAbstain = $('')
-    oldElection.groups = groups
+    newGroups = []
     for field in values
       switch field.name
+        when "group"
+          newGroups.push(field.value)
         when "name"
           oldElection.name = field.value 
         when "description"
@@ -49,7 +56,11 @@ Template.electionsAdminModify.events
         name: oldElection.name
         description: oldElection.description
         questions: oldElection.questions
+        groups: newGroups
     )
+  "click .cancelSubmitElection": (e) ->
+    e.preventDefault()
+    Session.set("modifyingElection", "0")
   "click .submitQuestion": (e) ->
     e.preventDefault()
     name = $(".new.question.name").val()
@@ -68,4 +79,6 @@ Template.electionsAdminModify.events
     name = $(".new.choice.name").val()
     description = $(".new.choice.description").val()
     image = $(".new.choice.image").val()
+    console.log "creating choice"
+    console.log name
     Meteor.call("createChoice", name, description, this._id, image)

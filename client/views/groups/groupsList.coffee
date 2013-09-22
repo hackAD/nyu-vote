@@ -9,21 +9,18 @@ Template.groupsList.helpers
 Template.groupsList.events
   "click .modifyGroup": (e) ->
     e.preventDefault()
-    setTimeout(() -> 
-      $(".modifyGroup").html("Cancel modification")
-      $(".modifyGroup").attr("class", "cancelModifyGroup btn btn-primary")
-    , 100)
     Session.set("modifyingGroup", this._id)
 
   "click .createGroup": (e) ->
     e.preventDefault()
     Session.set("creatingGroup", "1")
 
+  "click .deleteGroup": (e) ->
+    e.preventDefault()
+    if confirm("Are you sure you want to delete group '" + this.name + "'?")
+      Groups.remove({_id: this._id})
+
   "click .cancelModifyGroup": (e) ->
     console.log("cancel class")
     e.preventDefault()
-    setTimeout(() -> 
-      $(".cancelModifyGroup").html("Modify Group")
-      $(".cancelModifyGroup").attr("class", "modifyGroup btn btn-primary") 
-    , 100)
     Session.set("modifyingGroup", "0")

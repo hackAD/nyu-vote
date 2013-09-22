@@ -1,10 +1,25 @@
 <template name="admin">
-  Welcome to the admin panel. From here you can create, delete, and modify user groups and elections.<br/>
-  <br/>
-  Elections:<br/>
-  {{> electionsAdminList }}<br/>
-  <br/>
-  User Groups:<br/>
-  {{> groupsList }}<br/>
-  <br/>
+  {{#if electionsReady}}
+    {{#if isAdmin}}
+      <br/>
+      <h5>You have {{electionsCount}} elections:</h5>
+      {{> electionsAdminList }}<br/>
+      <br/>
+      <h5>You have {{groupsCount}} groups:</h5>
+      <br/>
+      {{> groupsList }}<br/>
+      <br/>
+    {{else}}
+      Sorry! You are not currently logged in as an admin
+      of NYUVote. Please contact lingliang.zhang (at) nyu.edu
+      if you want like to use NYUVote for your program.
+    {{/if}}
+  {{else}}
+    <div class="bigLoad">
+      <h1>
+        Loading...
+      </h1>
+      <img src="/loader.gif" alt="" />
+    </div>
+  {{/if}}
 </template>

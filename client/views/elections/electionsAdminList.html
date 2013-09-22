@@ -1,44 +1,56 @@
 <template name="electionsAdminList">
   {{#each elections}}
+    <br/>
+    <br/>
     {{#if notModifying}}
-      <table border="1" class="table table-striped table-bordered table-hover table-condensed">
-        <tr>
-          <td><button class="openCloseElection btn btn-primary" href="#">{{openCloseElection}} Election</button></td>
-          <td><button class="deleteElection btn btn-primary" href="#">Delete Election</button></td>
-        </tr>
-        <tr><td>{{name}}</td></tr>
-        <tr><td>{{description}}</td></tr>
-        <tr><td>Creator: {{creator}}</td></tr>
-        <tr><td>Total Votes: {{voteCountTotal}}</td></tr>
-        <tr><td>Groups: </td></tr>
-        <tr><td>
-        <select multiple="multiple">
-        {{#each groups}}
-          <option>{{name}}</option>
-        {{/each}}
-        </select>
-        </td></tr>
-        <tr><td>Questions: </td></tr>
-        {{#each questions}}
-          <tr><td></td><td>{{name}}</td></tr>
-          <tr><td></td><td>{{description}}</td></tr>
-          <tr><td></td><td>Question Votes: {{voteCountQuestion}}</td></tr>
+      <div class="table-responsive">
+        <table border="1" class="table table-striped table-bordered table-hover table-condensed table-responsive">
           <tr>
-            <td></td><td>{{allowAbstain}} Abstention</td>
-            <td>{{multi}} Choice</td>
+            <td><button class="openCloseElection btn btn-block {{openCloseClass}}" href="#">{{openCloseElection}} Election</button></td>
+            <td><button class="modifyElection btn btn-block btn-primary" href="#" >Edit this Election</button><br/><br/></td>
+            <td><button class="deleteElection btn btn-block btn-danger" href="#">Delete Election</button></td>
           </tr>
-          <tr><td></td><td>Choices: </td></tr>
-          {{#each choices}}
-            <tr><td></td><td></td><td>{{name}}</td></tr>
-            <tr><td></td><td></td><td>{{description}}</td></tr>
-            <tr><td></td><td></td><td>Image URL: {{image}}</td></tr>
-            <tr><td></td><td></td><td>Choice Votes: {{voteCountChoice}}</td></tr>
+          <tr><td><h5>{{name}}</h5></td></tr>
+          <tr><td><span class="text-muted">Description: </span>{{description}}</td></tr>
+          <tr><td><span class="text-muted">Creator: </span>{{creator}}</td></tr>
+          <tr><td><span class="text-muted">Total Votes: </span>{{voteCountTotal}}</td></tr>
+          <tr><td><span class="text-muted">Groups: </span></td></tr>
+          <tr><td>
+          {{#each groups}}
+            {{name}}<br/>
           {{/each}}
-        {{/each}}
-      </table>
-      <button class="modifyElection btn btn-primary" href="#" >Edit this Election</button><br/><br/>
+          </td></tr>
+        <tr><td><h5 class="text-muted">Questions: </h5></td></tr>
+          {{#each questions}}
+            <tr class="success"><td></td><td>{{name}}</td></tr>
+            <tr><td></td><td><span class="text-muted">Description: </span>{{description}}</td></tr>
+            <tr><td></td><td><span class="text-muted">Question Votes: </span>{{voteCountQuestion}}</td></tr>
+            <tr>
+              <td></td><td class="{{abstainTextClass}}">{{allowAbstain}} Abstention</td>
+            </tr>
+            <tr>
+              <td></td><td class="{{multiTextClass}}">{{multi}} Choice</td>
+            </tr>
+            <tr><td></td><td>Choices: </td></tr>
+            {{#each choices}}
+              <tr class="warning"><td></td><td></td><td>{{name}}</td></tr>
+              <tr><td></td><td></td><td><span class="text-muted">Description: </span>{{description}}</td></tr>
+              <tr><td></td><td></td><td><span class="text-muted">Image URL: </span>{{image}}</td></tr>
+              <tr><td></td><td></td><td><span class="text-muted">Choice Votes: </span>{{voteCountChoice}}</td></tr>
+            {{/each}}
+          {{/each}}
+        </table>
+      </div>
     {{else}}
       {{>electionsAdminModify}}
     {{/if}}
   {{/each}}
+  <h5> Create New Election </h5>
+  <form id="newElection">
+    <label for="electionName" class="text-muted">Election Name: </label>
+    <input id="electionName" name="electionName" type="text" /><br/>
+    <label for="electionDescription" class="text-muted">Election Description: </label>
+    <input id="electionDescription" name="electionDescription" type="text" /><br/>
+    <input type="submit" value="Create New Election" class="btn btn-success" />
+  </form>
 </template>
