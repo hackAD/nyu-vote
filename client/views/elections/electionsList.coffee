@@ -1,9 +1,16 @@
 Template.electionsList.helpers
-  electionItems: () ->
-    return Elections.find()
+	electionItems: () ->
+		return Elections.find()
 
-Template.electionItem.rendered = () ->
-	renderRows()
+Template.electionItem.created = () ->
+	setTimeout(() ->
+			renderRows()
+		, 100)
+	$(window).on("orientationchange", () ->
+		setTimeout(() ->
+			renderRows()
+		, 500)
+	)
 	#theWindow = $(window)
 	#sticky = $(".electiontitle")
 	#test = $(".eachelection").first()
@@ -34,48 +41,48 @@ check = (topPositions, theWindow) ->
 	console.log theWindow.scrollTop()
 	for header in topPositions
 		if !header.sticky && theWindow.scrollTop() > header.top
-		  header.sticky = true
+			header.sticky = true
 			$(".header-stick").removeClass("header-stick")
 			$(header.id).addClass("header-stick")
 			return
 
-
 Template.electionsList.events
-  "click .choice": (e) ->
-    e.preventDefault()
-    target = $(e.target)
-    if !target.hasClass("choice")
-      target = target.parent()
-    if target.parent().attr("data-multi") != "true"
-      target.parent().find(".choice").removeClass("chosen")
-    target.toggleClass("chosen")
-    target.parent().children(".abstain").removeClass("chosen")
-    if target.parent().find(".choice.chosen").length == 0
-      target.parent().find(".abstain").addClass("chosen")
-  "click .abstain": (e) ->
-    e.preventDefault()
-    target = $(e.target)
-    if !target.hasClass("abstain")
-      target = target.parent()
-    target.parent().children(".choice").removeClass("chosen")
-    target.addClass("chosen")
+	"click .choice": (e) ->
+		e.preventDefault()
+		target = $(e.target)
+		if !target.hasClass("choice")
+			target = target.parent()
+		counter = target.parent().attr("chosen-number")
+		if target.parent().attr("data-multi") != "true" || (target.parent().find(".chosen").length==3 &&!target.hasClass("chosen"))
+			target.parent().find(".choice").removeClass("chosen")
+		target.toggleClass("chosen")
+		target.parent().children(".abstain").removeClass("chosen")
+		if target.parent().find(".choice.chosen").length == 0
+			target.parent().find(".abstain").addClass("chosen")
+	"click .abstain": (e) ->
+		e.preventDefault()
+		target = $(e.target)
+		if !target.hasClass("abstain")
+			target = target.parent()
+		target.parent().children(".choice").removeClass("chosen")
+		target.addClass("chosen")
 
-  "click .vote": (e) ->
-    e.preventDefault()
-    election_id = this._id
-    noAbstains =  $(e.target).parent().find(".abstain-false")
-    if noAbstains.find(".choice.chosen").length != noAbstains.length
-      $(e.target).parent().find(".vote-error").html("You did not answer all required questions")
-    choices = $(e.target).parent()
-      .find(".chosen.choice").map(() -> $(this).attr("data-id")).toArray()
-    Meteor.call("vote", election_id, choices)
+	"click .vote": (e) ->
+		e.preventDefault()
+		election_id = this._id
+		noAbstains =  $(e.target).parent().find(".abstain-false")
+		if noAbstains.find(".choice.chosen").length != noAbstains.length
+			$(e.target).parent().find(".vote-error").html("You did not answer all required questions")
+		for question in $(e.target).parent().find(".choices")
+			if $(question).find(".chosen").length != 3
+				$(e.target).parent().find(".vote-error").html("You did not pick 3 answers for each question")
+				break
+		choices = $(e.target).parent()
+			.find(".chosen.choice").map(() -> $(this).attr("data-id")).toArray()
+		Meteor.call("vote", election_id, choices)
 
-$(window).on("resize orientationchange", () ->
-	setTimeout(() ->
-		renderRows()
-	, 500)
-	)
+
 
 renderRows = () ->
-  max = Math.max.apply(null, $(".profilebox").map( () -> $(this).height()).toArray())
-  $(".profilebox").height(max)
+	max = Math.max.apply(null, $(".profilebox").map( () -> $(this).height()).toArray())
+	$(".profilebox").height(max)
