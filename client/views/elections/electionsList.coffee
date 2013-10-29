@@ -53,7 +53,7 @@ Template.electionsList.events
 		if !target.hasClass("choice")
 			target = target.parent()
 		counter = target.parent().attr("chosen-number")
-		if target.parent().attr("data-multi") != "true" || (target.parent().find(".chosen").length==3 &&!target.hasClass("chosen"))
+		if target.parent().attr("data-multi") != "true"  && !target.hasClass("chosen")
 			target.parent().find(".choice").removeClass("chosen")
 		target.toggleClass("chosen")
 		target.parent().children(".abstain").removeClass("chosen")
@@ -73,10 +73,6 @@ Template.electionsList.events
 		noAbstains =  $(e.target).parent().find(".abstain-false")
 		if noAbstains.find(".choice.chosen").length != noAbstains.length
 			$(e.target).parent().find(".vote-error").html("You did not answer all required questions")
-		for question in $(e.target).parent().find(".choices")
-			if $(question).find(".chosen").length != 3
-				$(e.target).parent().find(".vote-error").html("You did not pick 3 answers for each question")
-				break
 		choices = $(e.target).parent()
 			.find(".chosen.choice").map(() -> $(this).attr("data-id")).toArray()
 		Meteor.call("vote", election_id, choices)
