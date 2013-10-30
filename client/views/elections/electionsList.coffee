@@ -1,6 +1,6 @@
 Template.electionsList.helpers
 	electionItems: () ->
-		return Elections.find()
+		return Elections.find({}, {reactive: false})
 
 Template.electionItem.created = () ->
 	setTimeout(() ->

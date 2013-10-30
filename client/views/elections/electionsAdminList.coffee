@@ -10,13 +10,13 @@ Template.electionsAdminList.helpers
   openCloseClass: () ->
     if this.status == "open" then return "btn-warning" else return "btn-success"
   allowAbstain: () ->
-    if this.options.allowAbstain then return "Allows" else return "Forbids"
+    if this.options?.allowAbstain then return "Allows" else return "Forbids"
   abstainTextClass: () ->
-    if this.options.allowAbstain then return "text-success" else return "text-warning"
+    if this.options?.allowAbstain then return "text-success" else return "text-warning"
   multi: () ->
-    if this.options.multi then return "Multiple" else return "Single"
+    if this.options?.multi then return "Multiple" else return "Single"
   multiTextClass: () ->
-    if this.options.multi then return "text-success" else return "text-warning"
+    if this.options?.multi then return "text-success" else return "text-warning"
   voteCountTotal: () ->
     return this?.voters?.length
   voteCountQuestion: () ->
