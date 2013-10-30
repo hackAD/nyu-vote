@@ -97,8 +97,6 @@ Meteor.methods(
       else
         if !question.options.multi && matched_choices.length > 1
           throw new Meteor.Error(500, "Error: You cannot vote on more than one choice!")
-      if matched_choices.length != 3
-        throw new Meteor.Error(500, "Error: You need to vote on three choices for each question!")
       choice.votes.push(Meteor.user().profile.netId) for choice in matched_choices
     Elections.update(
       {_id: election_id}
