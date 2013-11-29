@@ -1,6 +1,13 @@
 Meteor.publish("adminGroups", ()->
   user = Meteor.users.findOne(this.userId)
-  return Groups.find({admins: if user?.profile?.netId? then user.profile.netId else "" })
+  return Groups.find(
+    $or:
+      [
+        {admins: if user?.profile?.netId? then user.profile.netId else "" }
+        ,
+        {creator: user?.profile?.netId}
+      ]
+    )
 )
 Meteor.publish("adminElections", ()->
   user = Meteor.users.findOne(this.userId)
