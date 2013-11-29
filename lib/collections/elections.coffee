@@ -89,13 +89,13 @@ Meteor.methods(
     election = Elections.findOne(election_id)
     for question in election.questions
       matched_choices = (choice for choice in question.choices when choice._id in choice_ids)
-      if !question.options.allowAbstain
-        if question.options.multi && matched_choices.length == 0
+      if !question.options?.allowAbstain
+        if question.options?.multi && matched_choices.length == 0
           throw new Meteor.Error(500, "Error: At least one choice must be voted on!")
-        if !question.options.multi && matched_choices.length != 1
+        if !question.options?.multi && matched_choices.length != 1
           throw new Meteor.Error(500, "Error: Exactly one choice must be voted on!")
       else
-        if !question.options.multi && matched_choices.length > 1
+        if !question.options?.multi && matched_choices.length > 1
           throw new Meteor.Error(500, "Error: You cannot vote on more than one choice!")
       choice.votes.push(Meteor.user().profile.netId) for choice in matched_choices
     Elections.update(

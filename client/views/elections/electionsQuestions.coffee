@@ -7,4 +7,4 @@ Template.electionsQuestions.helpers
       abstain: true
     }
   "required": () ->
-    return !this.options.allowAbstain
+    return !this?.options?.allowAbstain
