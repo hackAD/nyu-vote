@@ -1,6 +1,6 @@
 Template.footer.helpers
   "loggedIn": () ->
-    return Meteor.userId
+    return Meteor.userId()
 
 Template.footer.events
   "click #logoutFoot": (e) ->

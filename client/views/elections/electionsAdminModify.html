@@ -14,7 +14,8 @@
         <tr><td>Groups: </td></tr>
         <tr><td>
         {{#each groups}}
-        <input name="group" class="election group" type="checkbox" value="{{_id}}"{{hasGroup _id ../groups }}>{{name}}</br>
+        <input name="group" class="election group" type="checkbox"
+        value="{{_id}}" checked="{{hasGroup _id ../groups }}">{{name}}<br />
         {{/each}}
         </td></tr>
         <tr><td>Questions: </td></tr>
@@ -22,10 +23,13 @@
         <tr class="success"><td></td><td><label class="text-muted" for="question-{{_id}}-name">Name:</label><input id="question-{{_id}}-name" name="questionName" class="form-control question name" type="text" placeholder="{{name}}" value="{{name}}"></td></tr>
         <tr><td></td><td><label class="text-muted" for="question-{{_id}}-description">Description:</label><input id="question-{{_id}}-description" name="questionDescription" class="form-control question description" type="text" placeholder="{{description}}" value="{{description}}"></td></tr>
           <tr>
-            <td></td><td><input id="allow-abstain" name="questionAllowAbstain" class="question allowAbstain" type="checkbox" {{allowAbstain}}><label for="allow-abstain">Allow Abstention</label></td>
+            <td></td><td><input id="allow-abstain" name="questionAllowAbstain"
+              class="question allowAbstain" type="checkbox"
+              checked="{{allowAbstain}}"><label for="allow-abstain">Allow Abstention</label></td>
           </tr>
           <tr>
-            <td></td><td><input id="multi" name="questionMulti" class="question multi" type="checkbox" {{multi}}><label for="multi">Multiple Choice</label></td>
+            <td></td><td><input id="multi" name="questionMulti"
+              class="question multi" type="checkbox" checked="{{multi}}"><label for="multi">Multiple Choice</label></td>
           </tr>
           <tr><td></td><td>Choices: </td></tr>
           {{#each choices}}

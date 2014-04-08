@@ -4,12 +4,12 @@
 # but you can also edit it by hand.
 
 standard-app-packages
-preserve-inputs
-router
 userErrors
 coffeescript
 accounts-base
 accounts-password
 stylus
-accounts-googleapps
-googleapps
+service-configuration
+iron-router
+accounts-google
+google

@@ -7,8 +7,7 @@ Template.admin.helpers
     return Groups.find().count() > 0
   "electionsReady": () ->
     Session.get("adminReady")
-    if Meteor.Router.page() == "admin"
-      return adminElectionsHandle?.ready()
+    return adminElectionsHandle?.ready()
 
 Template.admin.created = () ->
   setTimeout(() ->

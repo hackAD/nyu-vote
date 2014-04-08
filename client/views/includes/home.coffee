@@ -11,7 +11,8 @@ Template.home.helpers
 
 Template.home.events
   "click #login": (e) ->
-    Meteor.loginWithGoogleApps
+    console.log "HELLO"
+    Meteor.loginWithGoogle
       requestPermissions: ["email"],
       requestOfflineToken: true
   "click #logout": (e) ->

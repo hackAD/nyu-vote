@@ -6,16 +6,19 @@
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
 </head>
 <body>
+
+</body>
+
+<template name="oldMaster">
 	<div id = "header">
     <a href="/"><div id="nyuvote">NYUVote</div></a>
 	</div>
-    {{> userErrors}}
-    <div id="main">
-	    <div class="backgroundimg">
-		</div>
-      {{renderPage}}
-	     
-    </div>
-    {{> footer}}
-
-</body>
+  {{> userErrors}}
+  <div id="main">
+    <div class="backgroundimg">
+  </div>
+    {{> yield}}
+     
+  </div>
+  {{> footer}}
+</template>

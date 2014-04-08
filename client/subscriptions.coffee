@@ -1,6 +1,6 @@
 root = global ? window
 Deps.autorun(() ->
-  if Meteor.Router.page() == "admin"
+  if Router.current()?.route.name == "admin"
     root.adminElectionsHandle = Meteor.subscribe("adminElections")
     Meteor.subscribe("adminGroups")
   else
