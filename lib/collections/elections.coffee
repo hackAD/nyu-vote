@@ -1,4 +1,6 @@
 root = global ? window
+
+# Reactive Election Class
 class Election
   self = @
 
@@ -29,7 +31,7 @@ root.Elections = new Meteor.Collection("elections",
     return new Election(doc)
 )
 
-root.electionRule = (userId, doc, fieldNames, modifier) ->
+electionRule = (userId, doc, fieldNames, modifier) ->
   if Meteor.isServer
     groupModifier = ([operation,operand.groups["$each"]] for operation, operand of modifier when "groups" of operand) 
     groupModifier = groupModifier[0]
@@ -38,26 +40,26 @@ root.electionRule = (userId, doc, fieldNames, modifier) ->
   else
     return true
 
-root.electionRule2 = (userId, doc, fieldNames, modifier) ->
+electionRule2 = (userId, doc, fieldNames, modifier) ->
   if Meteor.isServer
     return Meteor.call("isInGroupAdminsOf", doc.groups)
   else
     return true
 
-root.electionRule3 = (userId, doc, fieldNames, modifier) ->
+electionRule3 = (userId, doc, fieldNames, modifier) ->
   if Meteor.isServer
     return Meteor.call("isCreatorOf", doc.creator)
   else
     return true
 
 root.Elections.allow(
-  update: root.electionRule2
-  remove: root.electionRule2
+  update: electionRule2
+  remove: electionRule2
 )
 
 root.Elections.allow(
-  update: root.electionRule3
-  remove: root.electionRule3
+  update: electionRule3
+  remove: electionRule3
 )
 
 root.Elections.deny(
