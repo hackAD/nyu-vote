@@ -7,7 +7,8 @@
   "dependencies": {
     "basePackages": {
       "router": {},
-      "iron-router": {}
+      "iron-router": {},
+      "collection-hooks": {}
     },
     "packages": {
       "router": {
@@ -19,6 +20,11 @@
         "git": "https://github.com/EventedMind/iron-router.git",
         "tag": "v0.7.0",
         "commit": "05f34bc48c4cad9fdaa366c1ddcabe6980232ece"
+      },
+      "collection-hooks": {
+        "git": "https://github.com/matb33/meteor-collection-hooks.git",
+        "tag": "v0.6.3",
+        "commit": "70f2598bf991cb36effd72aea2555cba96f88355"
       },
       "page-js-ie-support": {
         "git": "https://github.com/tmeasday/meteor-page-js-ie-support.git",

@@ -4,5 +4,6 @@ Deps.autorun(() ->
     root.adminElectionsHandle = Meteor.subscribe("adminElections")
     Meteor.subscribe("adminGroups")
   else
-    root.electionHandle = Meteor.subscribe("Elections")
+    root.electionsHandle = Meteor.subscribe("elections")
+    root.votedElections = Meteor.subscribe("votedElections")
 )

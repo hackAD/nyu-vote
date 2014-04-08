@@ -1,5 +1,33 @@
 root = global ? window
-root.Elections = new Meteor.Collection("elections")
+class Election
+  self = @
+
+  constructor: (params) ->
+    _.extend(@, params)
+
+  # static methods
+
+  @create: (params) ->
+    id = Elections.insert(params)
+    return self.findOne(id)
+
+  @findOne: (id) ->
+    election = Object.create(Election)
+    Deps.autorun () ->
+      _.extend(election, Elections.findOne(id))
+    if _.isEmpty(election)
+      throw new Meteor.Error(404, "Election with _id #{id} not found")
+    return election
+
+  hasVoted: () ->
+    return !@.questions?
+
+root.Election = Election
+
+root.Elections = new Meteor.Collection("elections",
+  transform: (doc) ->
+    return new Election(doc)
+)
 
 root.electionRule = (userId, doc, fieldNames, modifier) ->
   if Meteor.isServer
@@ -26,6 +54,7 @@ root.Elections.allow(
   update: root.electionRule2
   remove: root.electionRule2
 )
+
 root.Elections.allow(
   update: root.electionRule3
   remove: root.electionRule3

@@ -5,6 +5,7 @@
   },
   "packages": {
     "router": {},
-    "iron-router": {}
+    "iron-router": {},
+    "collection-hooks": {}
   }
 }

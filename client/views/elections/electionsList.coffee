@@ -1,6 +1,6 @@
 Template.electionsList.helpers
 	electionItems: () ->
-		return Elections.find({}, {reactive: false})
+		return Elections.find({})
 
 Template.electionItem.created = () ->
 	setTimeout(() ->
@@ -11,31 +11,6 @@ Template.electionItem.created = () ->
 			renderRows()
 		, 500)
 	)
-	#theWindow = $(window)
-	#sticky = $(".electiontitle")
-	#test = $(".eachelection").first()
-	#test.scrollspy(
-		#onEnter: (element, position) ->
-			#console.log("You entered!")
-			#console.log element
-			#console.log position
-		#onLeave: (element, position) ->
-			#console.log "you left!"
-			#console.log element
-			#console.log position
-			#)
-	#topPositions = []
-	#for stick in sticky
-		#stick = $(stick)
-		#topPositions.push
-			#id: "#" + stick.attr("id")
-			#top: stick.offset().top
-			#sticky: false
-	#console.log topPositions
-	#top = sticky.offset().top
-	#theWindow.scroll( () ->
-			#check(topPositions, theWindow)
-		#)
 
 check = (topPositions, theWindow) ->
 	console.log theWindow.scrollTop()
@@ -76,8 +51,6 @@ Template.electionsList.events
 		choices = $(e.target).parent()
 			.find(".chosen.choice").map(() -> $(this).attr("data-id")).toArray()
 		Meteor.call("vote", election_id, choices)
-
-
 
 renderRows = () ->
 	max = Math.max.apply(null, $(".profilebox").map( () -> $(this).height()).toArray())

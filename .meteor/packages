@@ -13,3 +13,4 @@ service-configuration
 iron-router
 accounts-google
 google
+collection-hooks

@@ -6,8 +6,7 @@ Template.home.helpers
   noMoreVotes: () ->
     return Elections.find().count() == 0
   electionsReady: () ->
-    return electionHandle.ready()
-
+    return electionsHandle.ready()
 
 Template.home.events
   "click #login": (e) ->

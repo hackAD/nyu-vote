@@ -22,26 +22,49 @@ Meteor.publish("adminElections", ()->
         ]
     )
 )
-Meteor.publish("Elections", () ->
+Meteor.publish("elections", () ->
   user = Meteor.users.findOne(this.userId)
+  if not user
+    this.ready()
+    return
   groups = Groups.
-    find({netIds: if user?.profile?.netId? then user.profile.netId else ""}).fetch()
-  return Elections.find(
+    find({netIds: user.profile.netId}).fetch()
+  if groups.length == 0
+    this.ready()
+    return
+  handle = Elections.find(
     groups:
-      {$in: if groups.length > 0 then _.map(groups, (g) -> g._id) else []}
+      $in: _.map(groups, (g) -> g._id)
     status:"open",
-    voters: {$ne: if user?.profile?.netId? then user.profile.netId else ""},
-    {fields: {voters: 0}})
+    voters: {$ne: user.profile.netId}
+    ,
+    {fields:
+      name: 1,
+      description: 1,
+      questions: 1
+    }
+  )
+  return handle
 )
 
-Meteor.publish("VotedElections", () ->
+Meteor.publish("votedElections", () ->
   user = Meteor.users.findOne(this.userId)
+  if not user
+    this.ready()
+    return
   groups = Groups.
-    find({netIds: if user?.profile?.netId? then user.profile.netId else ""}).fetch()
+    find({netIds: user.profile.netId}).fetch()
+  if groups.length == 0
+    this.ready()
+    return
   return Elections.find(
     groups:
-      {$in: if groups.length > 0 then _.map(groups, (g) -> g._id) else []}
-    status:"open",
-    voters: {$ne: if user?.profile?.netId? then user.profile.netId else ""},
-    {fields: {voters: 0}})
+      $in: _.map(groups, (g) -> g._id)
+    status:"open"
+    ,
+    {fields:
+      name: 1
+      description: 1
+    }
+  )
 )
