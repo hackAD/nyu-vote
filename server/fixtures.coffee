@@ -29,7 +29,7 @@ Meteor.startup( () ->
       description: "NYUAD Class of 2016."
       creator: "devAdmin"
       admins: ["devAdmin", "random_admin_1", "random_admin_2"]
-      netIds: ["devAdmin", "random_admin_1", "2016_rep_candidate_1", 
+      netIds: ["devAdmin", "random_admin_1", "2016_rep_candidate_1",
       "2016_rep_candidate_2", "nyuad_2016_student_1", "nyuad_2016_student_2"]
     )
     Groups.insert(
