@@ -1,0 +1,55 @@
+minimum = 320px
+mobile = 480px
+tablet = 768px
+laptop = 940px
+desktop = 1210px
+
+purple = #7B57A1
+light-green = #9ECE8D
+green = #5EB955
+blue = #0CACA9
+light-blue = #55B7B6
+darkest-blue = #549090
+
+text-black = #4F4F4F
+
+thick = 700
+thin = 400
+
+body
+	color: white
+	text-align: center
+
+.purple-bg
+	background-color: purple
+
+#container
+	position: absolute
+	min-width: 320px
+	width: 100%
+	height: 100%
+	a
+		color: white
+		text-decoration: none
+		&:hover
+			background-color: rgba(255,255,255,0.4)
+		
+.content-wrapper
+	height: 100%
+
+h1
+	font-size: 4em
+	position: absolute
+	top: 40%
+	width: 100%
+
+#login-button
+	position: relative
+	top: 60%
+	margin: 0 auto
+	border: 2px solid
+	padding 5px 100px
+
+@media screen and (max-width: 480px)
+	h1
+		font-size: 3.5em

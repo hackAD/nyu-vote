@@ -1,3 +1,11 @@
 router
 page-js-ie-support
 HTML5-History-API
+/router
+/iron-router
+/collection-hooks
+/reactive-class
+/react-meteor
+/page-js-ie-support
+/HTML5-History-API
+/blaze-layout
