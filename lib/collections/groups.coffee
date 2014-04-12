@@ -1,30 +1,63 @@
 root = global ? window
 root.Groups = new Meteor.Collection("groups")
 
-root.groupRule = (userId, doc) ->
-  if Meteor.isServer
-    return Meteor.call("isGroupAdminOf", doc._id)
-  else
-    return true
+class Group extends ReactiveClass(Groups)
+  constructor: (fields) ->
+    _.extend(@, fields)
+    Groups.initialize.call(@)
+  
+  hasAdmin: (user) ->
+    if user.isGlobalAdmin()
+      return true
+    return _.contains(@admins, user.getNetId())
 
-root.Groups.allow(
-  update: root.groupRule
-  remove: root.groupRule
+  # Whether a user is present in a group as a voter
+  containsUser: (user) ->
+    return _.contains(@netIds, user.getNetId())
+
+  # Finds which groups have a specific user as an admin
+  @findWithAdmin = (user) ->
+    return @collection.find({admins: user._id})
+
+# Registering offline fields
+Group.addOfflineFields(["creator"])
+
+# Registering Hooks
+Groups.before.insert((userId, doc) ->
+  doc.slug = Utilities.generateSlug(doc.name, Groups)
+)
+Groups.after.update((userId, doc, fieldNames, modifier, options) ->
+  if doc.name != @previous.name
+    newSlug = Utilities.generateSlug(doc.name, Groups)
+  Groups.update(doc._id, {
+    $set: {slug: newSlug}
+  })
 )
 
-root.Groups.deny(
+# They must be on the whitelist to create groups but they can edit groups that
+# they are the admin of
+Groups.allow(
+  insert: (userId, doc) ->
+    user = User.fetchOne(userId)
+    return user.isWhitelisted()
+  update: (userId, doc) ->
+    doc.hasAdmin(User.fetchOne(userId))
+  remove: (userId, doc) ->
+    doc.hasAdmin(User.fetchOne(userId))
+)
+
+# The creator of a group is immutable
+Groups.deny(
   update: (userId, doc, fieldNames) ->
-    return 'creator' in fieldNames
+    return "creator" in fieldNames
 )
 
 Meteor.methods(
   addGroup: (name, description, admins, netIds=[]) ->
     if Meteor.isServer and !Meteor.call("isAGroupAdmin")
-      throw new Meteor.Error(500, "Error: You are not administrator of any group!")
-    id = new Meteor.Collection.ObjectID()
-    id = id.toHexString()
+      throw new Meteor.Error(500,
+      "Error: You are not administrator of any group!")
     Groups.insert(
-      _id: id
       name: name
       description: description
       creator: Meteor.user().profile.netId

@@ -2,42 +2,66 @@ root = global ? window
 
 root.Elections = new Meteor.Collection("elections")
 
-electionRule = (userId, doc, fieldNames, modifier) ->
-  if Meteor.isServer
-    groupModifier = ([operation,operand.groups["$each"]] for operation, operand of modifier when "groups" of operand) 
-    groupModifier = groupModifier[0]
-    if groupModifier == [] then groupModifier = ["",[]]
-    return Meteor.call("isGroupAdminOf", groupModifier[1]) and (groupModifier[0]=="$addToSet" or "groups" not in fieldNames)
-  else
-    return true
+class Election extends ReactiveClass(Elections)
+  constructor: (fields) ->
+    _.extends(@, fields)
+    Election.initialize.call(@)
 
-electionRule2 = (userId, doc, fieldNames, modifier) ->
-  if Meteor.isServer
-    return Meteor.call("isInGroupAdminsOf", doc.groups)
-  else
-    return true
+  hasAdmin: (user) ->
+    # They could be a global admin
+    if user.isGlobalAdmin()
+      return true
+    # They could be the creator
+    if user.getNetId() == @creator
+      return true
+    # They can be the admin of any of the groups
+    for group in @groups
+      if group.hasAdmin(user)
+        return true
+    return false
 
-electionRule3 = (userId, doc, fieldNames, modifier) ->
-  if Meteor.isServer
-    return Meteor.call("isCreatorOf", doc.creator)
-  else
-    return true
+# Promote it to the global scope
+root.Election = Election
 
-root.Elections.allow(
-  update: electionRule2
-  remove: electionRule2
+# We need to enforce slugs
+Elections.before.insert((userId, doc) ->
+  doc.slug = Utilities.generateSlug(doc.name, Elections)
+  doc.status = "unopened"
 )
 
-root.Elections.allow(
-  update: electionRule3
-  remove: electionRule3
+Elections.after.update((userId, doc, fieldNames, modifier, options) ->
+  if doc.name != @previous.name
+    newSlug = Utilities.generateSlug(doc.name, Elections)
+  Elections.update(doc._id, {
+    $set: {slug: newSlug}
+  })
 )
 
-root.Elections.deny(
+# One can only create elections if they are on the whitelist. They are able to
+# update and remove them however, if they are admins of the election
+Elections.allow(
+  insert: (userId, doc) ->
+    user = User.fetchOne(userId)
+    return user.isWhitelisted()
   update: (userId, doc, fieldNames, modifier) ->
-    console.log(fieldNames, modifier)
-    console.log 'questions.choices.votes' in fieldNames or 'voters' in fieldNames or 'creator' in fieldNames
-    return 'questions.choices.votes' in fieldNames or 'voters' in fieldNames or 'creator' in fieldNames
+    user = User.fetchOne(userId)
+    return doc.hasAdmin(user)
+
+  remove: (userId, doc) ->
+    user = User.fetchOne(userId)
+    return doc.hasAdmin(user)
+)
+
+# Elections are only mutable before an election. Also, no user can change the
+# status, it must be done by the server
+Elections.deny(
+  update: (userId, doc, fieldNames) ->
+    return (doc.status != "unopened" || "status" in fieldNames)
+)
+
+Elections.deny(
+  update: (userId, doc, fieldNames, modifier) ->
+    return 'creator' in fieldNames
 )
 
 root.createQuestion = (name, description, election_id, options = {}) ->

@@ -10,8 +10,16 @@ Meteor.startup( () ->
     )
   if isDevEnv() and Groups.find({"name": "global"}).count() == 0
     Groups.insert(
-      name: "global"
+      name: "Global Admins"
       description: "This is the initial group."
+      creator: "devAdmin"
+      admins: ["devAdmin"]
+      netIds: ["devAdmin"]
+    )
+    # The group that gives people the power to create groups & elections
+    Groups.insert(
+      name: "Global Whitelist"
+      description: "This is the list that designates who has admin access"
       creator: "devAdmin"
       admins: ["devAdmin"]
       netIds: ["devAdmin"]
