@@ -69,6 +69,24 @@ class Election extends ReactiveClass(Elections)
     )
     return id
 
+  # Stateful tracking of the active election
+  activeElectionDep = new Deps.Dependency
+  activeElection = undefined
+  @setActive = (newElectionSlug, adminMode) ->
+    if activeElection.slug == newElectionSlug
+      return @
+    activeElectionDep.changed()
+    activeElection = @fetchOne({slug: newElectionSlug})
+    # if we are an admin, we don't want the ballot
+    if not adminMode
+      Ballot.setActiveBallot(activeElection)
+    return @
+
+  @getActive = () ->
+    activeElectionDep.depend()
+    return activeElection
+
+
 Election.setupTransform()
 # Promote it to the global scope
 root.Election = Election

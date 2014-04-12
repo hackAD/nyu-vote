@@ -1,6 +1,9 @@
 /** @jsx React.DOM */
 
 ElectionsItem = React.createClass({
+  goToElection: function() {
+    Router.go("electionsShow", {slug: this.props.election.slug});
+  },
   render: function() {
     return(
       <div>

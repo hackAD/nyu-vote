@@ -23,7 +23,6 @@ Meteor.publish("adminElections", ()->
     )
 )
 Meteor.publish("elections", () ->
-  console.log ("This is running again!")
   user = Meteor.users.findOne(this.userId)
   if not user
     this.ready()
