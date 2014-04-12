@@ -15,5 +15,6 @@ Accounts.onCreateUser( (options, user) ->
     throw new Meteor.Error("Error: Account does not have valid netId!")
   user.profile =
     netId: netId[1]
+    name: user.services.google.name
   return user
   )
