@@ -2,10 +2,12 @@
 
 ElectionsList = ReactMeteor.createClass({
   getMeteorState: function() {
-    console.log("computation rerun");
     return {
-      electionNodes: Elections.find().map(function(election) {
-        return <ElectionsItem election={election} />;
+      openElectionNodes: Elections.find().map(function(election) {
+        return <ElectionsItem election={election} open={true} />;
+      }),
+      closedElectionNodes: Elections.find().map(function(election) {
+        return <ElectionsItem election={election} open={false} />;
       })
     };
   },
@@ -13,7 +15,12 @@ ElectionsList = ReactMeteor.createClass({
     return(
       <div>
         <h1>This is the Elections List</h1>
-        {this.state.electionNodes}
+        <div>
+          {this.state.openElectionNodes}
+        </div>
+        <div>
+          {this.state.closedElectionNodes}
+        </div>
       </div>
     );
   }
