@@ -4,7 +4,7 @@ root.Groups = new Meteor.Collection("groups")
 class Group extends ReactiveClass(Groups)
   constructor: (fields) ->
     _.extend(@, fields)
-    Groups.initialize.call(@)
+    Group.initialize.call(@)
   
   hasAdmin: (user) ->
     if user.isGlobalAdmin()
@@ -19,8 +19,11 @@ class Group extends ReactiveClass(Groups)
   @findWithAdmin = (user) ->
     return @collection.find({admins: user._id})
 
+Group.setupTransform()
 # Registering offline fields
 Group.addOfflineFields(["creator"])
+# Promote it to the global scope
+root.Group = Group
 
 # Registering Hooks
 Groups.before.insert((userId, doc) ->

@@ -4,7 +4,7 @@ root.Elections = new Meteor.Collection("elections")
 
 class Election extends ReactiveClass(Elections)
   constructor: (fields) ->
-    _.extends(@, fields)
+    _.extend(@, fields)
     Election.initialize.call(@)
 
   hasAdmin: (user) ->
@@ -29,15 +29,16 @@ class Election extends ReactiveClass(Elections)
   hasVoted: (user) ->
     return Ballots.find({netId: user.getNetId(), electionId: @_id}).count() > 0
 
-  addQuestion: (name, description, options) ->
+  addQuestion: ({name, description, options}) ->
+    if (!name || name.length < 1)
+      throw new Meteor.Error(500, "Questions must have a name")
+    id = new Meteor.Collection.ObjectID().toHexString()
+    description ?= ""
     options ?= {}
     options.type ?= "pick"
     if (options.type == "pick")
       options.multi ?= false
     options.allowAbstain ?= false
-    id = new Meteor.Collection.ObjectID().toHexString()
-    if (name.length < 1)
-      throw new Meteor.Error(500, "Questions must have a name")
     @questions.push(
       _id: id
       name: name
@@ -47,14 +48,19 @@ class Election extends ReactiveClass(Elections)
     )
     return id
   
-  addChoice: (questionId, name, description="", image="") ->
+  addChoice: (questionId, {name, description, image}) ->
+    if not questionId
+      throw new Meteor.Error(500, "You must specify a question to add this choice to")
+    if (!name || name.length < 1)
+      throw new Meteor.Error(500, "Choices must have a name")
+
     id = new Meteor.Collection.ObjectID().toHexString()
+    description ?= ""
+    image ?= ""
     question = _.find(@questions, (question) ->
       return question._id == questionId
     )
-    if (name.length < 1)
-      throw new Meteor.Error(500, "Choices must have a name")
-    question.push(
+    question.choices.push(
       _id: id
       name: name
       description: description
@@ -63,7 +69,7 @@ class Election extends ReactiveClass(Elections)
     )
     return id
 
-
+Election.setupTransform()
 # Promote it to the global scope
 root.Election = Election
 
@@ -108,29 +114,23 @@ Elections.deny(
     return 'creator' in fieldNames
 )
 
-root.createChoice = (name, description="", question_id, image="") ->
-  id = new Meteor.Collection.ObjectID()
-  id = id.toHexString()
-  Elections.update(
-    {"questions._id": question_id},
-    $push:
-      "questions.$.choices":
-        _id: id
-        name: name
-        description: description
-        image: image
-        votes: []
-      )
-  return id
-
 Meteor.methods(
   createQuestion: (electionId, name, description, options = {}) ->
     election = Election.fetchOne(electionId)
-    election.addQuestion(name, description, options)
+    election.addQuestion(
+      name: name
+      description: description
+      options: options
+    )
     election.update()
   createChoice: (electionId, questionId, name, description="", image="") ->
     election = Election.fetchOne(electionId)
-    election.addChoice(questionId, name, description, image)
+    election.addChoice(
+      questionId: questionId
+      name: name
+      description: description
+      image: image
+    )
     election.update()
   vote: (election_id, choice_ids=[]) ->
     if Meteor.isServer and !Meteor.call("hasNotVoted", election_id)

@@ -41,3 +41,6 @@ class Ballot extends ReactiveClass(Ballots)
     )
     return ballot
 
+Ballot.setupTransform()
+
+root.Ballot = Ballot

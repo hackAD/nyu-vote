@@ -36,8 +36,6 @@ Meteor.publish("elections", () ->
   handle = Elections.find(
     groups:
       $in: _.map(groups, (g) -> g._id)
-    status:"open",
-    voters: {$ne: user.profile.netId}
     ,
     {fields:
       name: 1,

@@ -73,12 +73,13 @@ Template.electionsAdminModify.events
       multi = true 
     else 
       multi = false
-    Meteor.call("createQuestion", name, description, this._id, {allowAbstain: allowAbstain, multi: multi})
-  "click .submitChoice": (e) ->
+    Meteor.call("createQuestion", this._id, name, description, {allowAbstain: allowAbstain, multi: multi})
+  "click .submitChoice": (e, template) ->
     e.preventDefault()
+    electionId = template.data._id
     name = $(".new.choice.name").val()
     description = $(".new.choice.description").val()
     image = $(".new.choice.image").val()
     console.log "creating choice"
     console.log name
-    Meteor.call("createChoice", name, description, this._id, image)
+    Meteor.call("createChoice", electionId, this._id, name, description, image)
