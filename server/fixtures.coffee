@@ -3,6 +3,7 @@ Meteor.startup( () ->
     Accounts.createUser(
       username:"devAdmin"
       password:"password"
+      email: "admin@nyu.edu"
       profile:
         name: "devAdmin"
         netId: "devAdmin"
