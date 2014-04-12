@@ -13,7 +13,7 @@ Template.userError.rendered = function() {
 Template.userError.events = ({
   "click .close": function(e) {
     e.preventDefault();
-    $(e.target).parent().css({"display": "none"});
+    $(e.target).parent().css({ "display": "none"});
   }
 });
 

@@ -7,8 +7,9 @@
 </template>
 
 <template name="userError">
+<a class="close" type="button" data-dismiss = "alert">
   <div class="alert alert-error">
-    <button class="close" type="button" data-dismiss="alert">&times;</button>
-    {{message}}
+  	<p id="error-message">{{message}}</p>
   </div>
+</a>
 </template>

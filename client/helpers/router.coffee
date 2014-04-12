@@ -1,7 +1,10 @@
+Router.configure
+  template: "voterView"
+
 Router.map ->
   @route "home",
     path: "/"
-    template: "home"
+  @route "electionList"
   @route "admin",
     path: "/admin"
     layoutTemplate: "adminMaster"

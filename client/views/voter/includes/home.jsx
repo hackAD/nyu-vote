@@ -1,7 +1,6 @@
 /** @jsx React.DOM */
 
-
-var ElectionList = React.createClass({
+Home = React.createClass({
   login: function() {
     Meteor.loginWithGoogle({
       requestPermissions: ["email"],
@@ -10,7 +9,9 @@ var ElectionList = React.createClass({
     return false;
   },
   loginWithDummy: function() {
-    Meteor.loginWithPassword("devAdmin", "password");
+    Meteor.loginWithPassword("devAdmin", "password", function(err) {
+
+    });
   },
   render: function() {
     return (
@@ -29,9 +30,3 @@ var ElectionList = React.createClass({
   }
 });
 
-Template.home.rendered = function() {
-  React.renderComponent(
-    <ElectionList />,
-    this.find("#container")
-  );
-};
