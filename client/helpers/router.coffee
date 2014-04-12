@@ -4,7 +4,8 @@ Router.configure
 Router.map ->
   @route "home",
     path: "/"
-  @route "electionList"
+  @route "electionList",
+    path: "/vote"
   @route "admin",
     path: "/admin"
     layoutTemplate: "adminMaster"

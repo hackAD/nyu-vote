@@ -8,5 +8,11 @@ Template.voterView.rendered = function() {
         this.find("#container")
       );
       break;
+    case "electionList":
+      React.renderComponent(
+        <ElectionsList />,
+        this.find("#container")
+      );
+      break;
   }
 };
