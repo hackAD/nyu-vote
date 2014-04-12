@@ -13,7 +13,7 @@ ElectionsItem = React.createClass({
         <div>
           {this.props.election.description}
         </div>
-        <button>Vote</button>
+        <button onClick={this.goToElection}>Show</button>
       </div>
     );
   }

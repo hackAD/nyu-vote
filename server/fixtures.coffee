@@ -63,8 +63,8 @@ seed = () ->
       name: "2016_rep_choice_2"
       description: "I am the best candidate because I don't rely on numbering."
     )
-
     election.put()
+
     election = new Election(
       name: "gnu_best_election"
       description: "Election for the best in everything."
@@ -94,8 +94,8 @@ seed = () ->
       name: "gnu_best_painter_choice_1"
       description: "I'm lonely"
     )
-
     election.put()
+
     election = new Election(
       name: "awesomest_election"
       description: "Who is the awesomest?"

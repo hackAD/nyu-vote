@@ -1,16 +1,25 @@
 /** @jsx React.DOM */
 
 Template.voterView.rendered = function() {
+  var self = this;
   switch(Router.current().route.name) {
     case "home":
-      React.renderComponent(
-        <Home />,
-        this.find("#container")
-      );
+      Deps.autorun(function() {
+        if (Meteor.user())
+          React.renderComponent(
+            <ElectionsList />,
+            self.find("#container")
+          );
+        else
+          React.renderComponent(
+            <Home />,
+            self.find("#container")
+          );
+      });
       break;
-    case "electionList":
+    case "electionsShow":
       React.renderComponent(
-        <ElectionsList />,
+        <ElectionsShow />,
         this.find("#container")
       );
       break;

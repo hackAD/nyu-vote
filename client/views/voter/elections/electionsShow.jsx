@@ -2,14 +2,21 @@
 
 ElectionsShow = ReactMeteor.createClass({
   getMeteorState: function() {
-    election: Election.fetchOne(Session.get(""))
+    return {
+      election: Election.getActive()
+    };
+  },
+  beginVote: function() {
+    Router.go("electionsVote", {slug: this.state.election.slug, page: 0});
   },
   render: function() {
     return(
       <div>
-        <h1>{this.state.election}</h1>
+        <h1>{this.state.election.name}</h1>
+        <p>{this.state.election.description}</p>
+        <button onClick={beginVote}>Cast Your Ballot</button>
       </div>
-    )
+    );
   }
 
 });

@@ -4,12 +4,13 @@ Router.configure
 Router.map ->
   @route "home",
     path: "/"
-  @route "electionList",
-    path: "/vote"
-  @route "electionShow",
+  @route "electionsShow",
     path: "/vote/:slug/"
     onBeforeAction: () ->
       Election.setActive(this.params.slug)
+  @route "electionsVote",
+    path: "/:slug"
+
   @route "admin",
     path: "/admin"
     layoutTemplate: "adminMaster"

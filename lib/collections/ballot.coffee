@@ -78,6 +78,13 @@ class Ballot extends ReactiveClass(Ballots)
     activeBallotDep.depend()
     return activeBallot
 
+  random_map = {}
+
+
+
+
 Ballot.setupTransform()
+
+Ballot.addOfflineFields(["random_map"])
 
 root.Ballot = Ballot
