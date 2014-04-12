@@ -1,5 +1,11 @@
 /** @jsx React.DOM */
 
+
+        // <a href="#" onClick={this.loginWithDummy}>
+        //   Login With Dummy
+        // </a>
+
+
 Home = React.createClass({
   login: function() {
     Meteor.loginWithGoogle({
@@ -15,15 +21,12 @@ Home = React.createClass({
   },
   render: function() {
     return (
-      <div>
+      <div className="content-wrapper purple-bg">
         <h1>
-          This is the page where The election data is shown
+          NYU Vote
         </h1>
-        <a href="#" onClick={this.login}>
-          Login With Google
-        </a>
-        <a href="#" onClick={this.loginWithDummy}>
-          Login With Dummy
+        <a id="login-button" href="#" onClick={this.login}>
+          Sign in
         </a>
       </div>
     );
