@@ -6,6 +6,10 @@
   "packages": {
     "router": {},
     "iron-router": {},
-    "collection-hooks": {}
+    "collection-hooks": {},
+    "reactive-class": {},
+    "react-meteor": {
+      "git": "https://github.com/benjamn/react-meteor.git"
+    }
   }
 }

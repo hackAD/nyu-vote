@@ -1,13 +1,12 @@
-Router.configure
-  layoutTemplate: "oldMaster"
-
 Router.map ->
   @route "home",
     path: "/"
     template: "home"
   @route "admin",
     path: "/admin"
+    layoutTemplate: "adminMaster"
     template: "admin"
   @route "about",
     path: "/about"
+    layoutTemplate: "adminMaster"
     template: "about"

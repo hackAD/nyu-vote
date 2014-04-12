@@ -8,7 +8,12 @@
     "basePackages": {
       "router": {},
       "iron-router": {},
-      "collection-hooks": {}
+      "collection-hooks": {},
+      "reactive-class": {},
+      "react-meteor": {
+        "git": "https://github.com/benjamn/react-meteor.git",
+        "branch": "master"
+      }
     },
     "packages": {
       "router": {
@@ -25,6 +30,16 @@
         "git": "https://github.com/matb33/meteor-collection-hooks.git",
         "tag": "v0.6.3",
         "commit": "70f2598bf991cb36effd72aea2555cba96f88355"
+      },
+      "reactive-class": {
+        "git": "https://github.com/lingz/meteor-reactive-class.git",
+        "tag": "v1.0.0",
+        "commit": "5751af33c6e26d91ba8c58a2f4c0a781ce8a7f63"
+      },
+      "react-meteor": {
+        "git": "https://github.com/benjamn/react-meteor.git",
+        "branch": "master",
+        "commit": "060f18505186ca34345582c287730b3e4db03482"
       },
       "page-js-ie-support": {
         "git": "https://github.com/tmeasday/meteor-page-js-ie-support.git",
