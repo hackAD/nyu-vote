@@ -8,7 +8,7 @@ Router.configure
 Router.onBeforeAction("loading")
 
 voterHandle = () ->
-  return [electionsHandle, ballotsHandle]
+  return [electionsHandle, ballotsHandle, usersHandle]
 
 setActiveElection = (newElectionSlug) ->
   Deps.nonreactive(() ->
@@ -22,6 +22,15 @@ setActiveElection = (newElectionSlug) ->
 Router.map ->
   @route "home",
     path: "/"
+    waitOn: voterHandle
+  @route "admin",
+    path: "/admin"
+    layoutTemplate: "adminMaster"
+    template: "admin"
+  @route "about",
+    path: "/about"
+    layoutTemplate: "adminMaster"
+    template: "about"
   @route "electionsReview",
     path: "/:slug/review"
     waitOn: voterHandle
@@ -44,11 +53,3 @@ Router.map ->
     waitOn: voterHandle
     onAfterAction: () ->
       setActiveElection(@params.slug)
-  @route "admin",
-    path: "/admin"
-    layoutTemplate: "adminMaster"
-    template: "admin"
-  @route "about",
-    path: "/about"
-    layoutTemplate: "adminMaster"
-    template: "about"

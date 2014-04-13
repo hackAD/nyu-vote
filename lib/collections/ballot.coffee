@@ -34,6 +34,8 @@ class Ballot extends ReactiveClass(Ballots)
 
   selectedChoices: (questionIndex, returnBallots) ->
     election = @getElection()
+    if questionIndex > @questions.length - 1
+      throw new Meteor.Error(500, questionIndex + " is out of bounds")
     array = if returnBallots then @questions[questionIndex].choices else
       election.questions[questionIndex].choices
     selected = _.filter(array, (choice, index) =>
@@ -169,4 +171,57 @@ Ballot.setupTransform()
 
 Ballot.addOfflineFields(["random_map"])
 
+# Ballots must match the user that is submitting them, and have the right
+# fields
+Ballots.allow(
+  insert: (userId, ballot) ->
+    if not ballot.netId || not ballot.electionId || not ballot.questions
+      return false
+    if not userId
+      return false
+    user = User.fetchOne(userId)
+    if not user.profile.netId
+      return false
+    if not ballot.netId == user.profile.netId
+      return false
+    return ballot.isValid()
+)
+
+# Ballots can be denied for not being unique or for the election not being
+# open. They alsso cannot be updated or removed
+Ballots.deny(
+  insert: (userId, ballot) ->
+    election = Election.fetchOne(ballot.electionId)
+    if election.status != "open"
+      return true
+    if Ballots.find({
+      netId: ballot.netId,
+      election: ballot.electionId
+    }).count > 0
+      return true
+  update: () ->
+    return true
+  remove: () ->
+    return true
+)
+
+# After a ballot is inserted, we need to incremenet all the voted regions of
+# the ballot
+Ballots.after.insert((userId, ballot) ->
+  if (Meteor.isClient)
+    return
+  toIncrement = {}
+  for i in [0...ballot.questions.length]
+    question = ballot.questions[i]
+    choices = ballot.selectedChoices(i)
+    _.each(choices, (choice) ->
+      toIncrement["questions." + question._id + "." + ballot._id] = 1
+    )
+  Elections.update(ballot.electionId, {
+    "$inc": toIncrement
+  })
+)
+
+
+# After it is inserted
 root.Ballot = Ballot

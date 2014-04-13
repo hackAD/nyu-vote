@@ -3,9 +3,8 @@ root = global ? window
 root.Utilities = {}
 
 RESERVED_SLUGS = [
-  "vote",
-  "groups",
-  "elections"
+  "admin",
+  "about"
 ]
 
 Utilities.generateSlug = (title, collection)->
