@@ -48,17 +48,23 @@ seed = () ->
       groups: [Groups.findOne({name:"nyuad_2016"})._id]
     )
     questionId = election.addQuestion(
-      name: "rep_question"
-      description: "Class rep."
+      name: "Who is the coolest person to be around?"
+      description: "The coolest person is someone who you think is most worthy of ruling the world."
     )
     election.addChoice(questionId,
-      name: "2016_rep_choice_1"
-      description: "I am the best candidate because I am the first candidate"
-      image: "http://reggiestake.files.wordpress.com/2012/06/darth-vader-3.jpeg"
+      name: "Brett Bolton"
+      description: "My name is Brett and I love to play chess.  I also love to skype my parents.  One of my hobbies is to bring freshman to the cheese bread store near our dorms.  I like cheese bread because it reminds me of home.  Did I ever tell you that my mom makes the best cheese bread in the world?   She said that she will make every student in the university Cheese bread if I get elected."
+      image: "https://fbcdn-sphotos-e-a.akamaihd.net/hphotos-ak-ash3/t1.0-9/p417x417/1662407_10151929878661903_963907986_n.jpg"
     )
     election.addChoice(questionId,
-      name: "2016_rep_choice_2"
-      description: "I am the best candidate because I don't rely on numbering."
+      name: "Koh Terai"
+      description: "You should vote for me because I am nice.  I think about others and I think about myself.  I think, I am a thinker. a philosopher."
+      image: "https://fbcdn-sphotos-a-a.akamaihd.net/hphotos-ak-prn2/t31.0-8/1421249_10153579206155001_25743345_o.jpg"
+    )
+    election.addChoice(questionId,
+      name: "Linglang Zhang"
+      description: "Coding is an art form.  If you cannot master it, you will not master anything.  Mastery of code is mastery of life.  From the beginning of time, mankind has always been programming even before the invention of computers.  Programming does not always need to be on the computer.  There is programming of the human mind, programming of theatrecal pieces, just programming of everything."
+      image: "https://fbcdn-sphotos-f-a.akamaihd.net/hphotos-ak-ash4/t1.0-9/p417x417/1455102_567896989965010_819788213_n.jpg"
     )
     election.put()
 
