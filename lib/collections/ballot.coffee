@@ -36,7 +36,7 @@ class Ballot extends ReactiveClass(Ballots)
     election = @getElection()
     array = if returnBallots then @questions[questionIndex].choices else
       election.questions[questionIndex].choices
-    selected = _.filter(array, (choice, index) ->
+    selected = _.filter(array, (choice, index) =>
       ballotChoice = @questions[questionIndex].choices[index]
       return ballotChoice.value == true
     )

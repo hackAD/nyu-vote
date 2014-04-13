@@ -11,7 +11,7 @@
       "collection-hooks": {},
       "reactive-class": {},
       "react-meteor": {
-        "git": "https://github.com/benjamn/react-meteor.git",
+        "git": "https://github.com/lingz/react-meteor.git",
         "branch": "master"
       }
     },
@@ -37,9 +37,9 @@
         "commit": "c2f0a34a867e90d07531754f0fbfdbcdefd62912"
       },
       "react-meteor": {
-        "git": "https://github.com/benjamn/react-meteor.git",
+        "git": "https://github.com/lingz/react-meteor.git",
         "branch": "master",
-        "commit": "060f18505186ca34345582c287730b3e4db03482"
+        "commit": "d631bae3ffe33a101950666467bfcd96ab96606e"
       },
       "page-js-ie-support": {
         "git": "https://github.com/tmeasday/meteor-page-js-ie-support.git",

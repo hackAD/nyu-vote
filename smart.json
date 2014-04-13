@@ -9,7 +9,7 @@
     "collection-hooks": {},
     "reactive-class": {},
     "react-meteor": {
-      "git": "https://github.com/benjamn/react-meteor.git"
+      "git": "https://github.com/lingz/react-meteor.git"
     }
   }
 }

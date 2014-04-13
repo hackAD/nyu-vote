@@ -1,6 +1,10 @@
 Router.configure
   template: "voterView"
   loadingTemplate: "loading"
+  onBeforeAction: () ->
+    $('html,body').animate({scrollTop:0}, 300)
+
+
 Router.onBeforeAction("loading")
 
 voterHandle = () ->
