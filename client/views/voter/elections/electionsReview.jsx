@@ -6,19 +6,12 @@ ElectionsVote = ReactMeteor.createClass({
     var activeBallot = Ballot.getActive();
     return {
       election: activeElection,
-      question: activeElection.getActiveQuestion(),
       ballot: activeBallot,
-      questionIndex: activeElection.getActiveQuestionIndex()
     };
-  },
-  beginVote: function() {
-    Router.go("electionsVote", {slug: this.state.election.slug, questionIndex: 0});
   },
   render: function() {
     var election = this.state.election;
-    var questionIndex = this.state.questionIndex;
     var ballot = this.state.ballot;
-    var question = this.state.question;
 
     var choices = [];
     var randomMap = election.getRandomQuestionMap(questionIndex);
@@ -46,7 +39,7 @@ ElectionsVote = ReactMeteor.createClass({
         <div>
           {choices}
         </div>
-        <ElectionsFooter ballot={ballot} election={election} questionIndex={questionIndex} />
+        <ElectionsFooter ballot={ballot} election={election} questionIndex={-1} />
       </div>
     );
   }

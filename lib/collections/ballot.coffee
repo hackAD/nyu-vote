@@ -11,10 +11,6 @@ class Ballot extends ReactiveClass(Ballots)
   # For pick mode
   isPicked: (questionIndex, choiceIndex) ->
     @depend()
-    console.log("HERE")
-    console.log(questionIndex)
-    console.log(choiceIndex)
-    console.log(@)
     choice = @questions[questionIndex].choices[choiceIndex]
     return choice.value == true
 

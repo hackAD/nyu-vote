@@ -2,16 +2,17 @@
 
 ElectionsFooter = React.createClass({
   getButton: function() {
-    var questionIndex = this.props.questionIndex;
+    var questionIndex = parseInt(this.props.questionIndex);
     var ballot = this.props.ballot;
+    var election = this.props.election;
     var question = ballot.questions[questionIndex];
     var button;
     if (questionIndex === -1) {
       button = <a href="#" onClick={this.vote}>Cast Vote</a>;
-    } else if (questionIndex == question.choices.length -1)
-      button = <a href="#" onClick={this.vote}>Review Ballot</a>;
+    } else if (questionIndex == election.questions.length - 1)
+      button = <a href={Router.path("electionsReview", {slug: election.slug})}>Review Ballot</a>;
     else
-      button = <a href="#" onClick={this.vote}>Next</a>;
+      button = <a href={Router.path("electionsVote", {slug: election.slug, questionIndex: questionIndex + 1})}>Next</a>;
     return button;
   },
   render: function() {

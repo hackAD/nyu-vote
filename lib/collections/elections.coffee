@@ -93,8 +93,9 @@ class Election extends ReactiveClass(Elections)
     Election.setActive(@)
 
   setActiveQuestion: (questionIndex) ->
-    console.log("setting question index")
+    console.log("Resetting active question")
     console.log(questionIndex)
+    console.log(@)
     @set("_activeQuestionIndex", questionIndex)
     return @
 
