@@ -10,9 +10,7 @@ Home = React.createClass({
     return false;
   },
   loginWithDummy: function() {
-    Meteor.loginWithPassword("devAdmin", "password", function(err) {
-      Router.go("electionList");
-    });
+    Meteor.loginWithPassword("devAdmin", "password");
   },
   render: function() {
     return (

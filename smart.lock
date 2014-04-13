@@ -33,8 +33,8 @@
       },
       "reactive-class": {
         "git": "https://github.com/lingz/meteor-reactive-class.git",
-        "tag": "v1.0.0",
-        "commit": "5751af33c6e26d91ba8c58a2f4c0a781ce8a7f63"
+        "tag": "v1.1.0",
+        "commit": "28fad6c8fe1ac5410bc61efbe4ace3fe14b97c34"
       },
       "react-meteor": {
         "git": "https://github.com/benjamn/react-meteor.git",

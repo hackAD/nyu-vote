@@ -4,7 +4,8 @@ root.Elections = new Meteor.Collection("elections")
 
 class Election extends ReactiveClass(Elections)
   constructor: (fields) ->
-    _.extends(@, fields)
+    _.extend(@, fields)
+    this._activeQuestionIndex = 0
     Election.initialize.call(@)
 
   hasAdmin: (user) ->
@@ -29,15 +30,16 @@ class Election extends ReactiveClass(Elections)
   hasVoted: (user) ->
     return Ballots.find({netId: user.getNetId(), electionId: @_id}).count() > 0
 
-  addQuestion: (name, description, options) ->
+  addQuestion: ({name, description, options}) ->
+    if (!name || name.length < 1)
+      throw new Meteor.Error(500, "Questions must have a name")
+    id = new Meteor.Collection.ObjectID().toHexString()
+    description ?= ""
     options ?= {}
     options.type ?= "pick"
     if (options.type == "pick")
       options.multi ?= false
     options.allowAbstain ?= false
-    id = new Meteor.Collection.ObjectID().toHexString()
-    if (name.length < 1)
-      throw new Meteor.Error(500, "Questions must have a name")
     @questions.push(
       _id: id
       name: name
@@ -47,14 +49,19 @@ class Election extends ReactiveClass(Elections)
     )
     return id
   
-  addChoice: (questionId, name, description="", image="") ->
+  addChoice: (questionId, {name, description, image}) ->
+    if not questionId
+      throw new Meteor.Error(500, "You must specify a question to add this choice to")
+    if (!name || name.length < 1)
+      throw new Meteor.Error(500, "Choices must have a name")
+
     id = new Meteor.Collection.ObjectID().toHexString()
+    description ?= ""
+    image ?= ""
     question = _.find(@questions, (question) ->
       return question._id == questionId
     )
-    if (name.length < 1)
-      throw new Meteor.Error(500, "Choices must have a name")
-    question.push(
+    question.choices.push(
       _id: id
       name: name
       description: description
@@ -63,14 +70,104 @@ class Election extends ReactiveClass(Elections)
     )
     return id
 
+  # Stateful tracking of the active election
+  activeElectionDep = new Deps.Dependency
+  activeElection = undefined
+  @setActive = (election, adminMode) ->
+    if activeElection?.slug == election.slug
+      return @
+    activeElectionDep.changed()
+    activeElection = election
+    # if we are an admin, we don't want the ballot
+    if not adminMode
+      Ballot.setActive(election)
+    return @
 
+  @getActive = () ->
+    activeElectionDep.depend()
+    if activeElection
+      activeElection.depend()
+    return activeElection
+
+  makeActive: (adminMode) ->
+    Election.setActive(@)
+
+  setActiveQuestion: (questionIndex) ->
+    console.log("setting question index")
+    console.log(questionIndex)
+    @set("_activeQuestionIndex", questionIndex)
+    return @
+
+  getActiveQuestionIndex: () ->
+    return @get("_activeQuestionIndex")
+
+  getActiveQuestion: () ->
+    return @questions[@getActiveQuestionIndex()]
+
+  # how we deterministically shuffle the candidates based on the user's netId
+  random_map = {}
+
+  # returns a numerical SHA1 hash of a string as an integer
+  stringHash = (string) ->
+    sha1 = CryptoJS.SHA1(string).toString()
+    hash = parseInt(sha1, 16)
+    return hash
+
+  root.stringHash = stringHash
+
+  getRandomElectionMap = (election, user) ->
+    if !random_map[election._id]
+      user ?= Meteor.user()
+      random_map[election._id] = _.map(election.questions, (question) ->
+        # Keep a record of which hashes correspond to which indexes
+        choiceIndexes = {}
+        # Hash every choice with a combination of the choiceId, and the
+        # netId of the user
+        choiceHashes = _.map(question.choices, (choice, index) ->
+          seed = choice._id
+          if user
+            seed += user.profile.netId
+          hash = stringHash(seed)
+          choiceIndexes[hash] = index
+          return hash
+        )
+        # Sort the hashes
+        choiceHashes.sort()
+        # Return the shuffled list of indexes
+        return _.map(choiceHashes, (choiceHash) ->
+          return choiceIndexes[choiceHash]
+        )
+      )
+    return random_map[election._id]
+
+  # fetches the map of the random choices for a specific question
+  getRandomQuestionMap: (questionIndex) ->
+    return getRandomElectionMap(@)[questionIndex]
+
+  # returns the random choice for a specific question and choice index
+  getRandomChoice: (questionIndex, choiceIndex) ->
+    trueChoiceIndex = getRandomElectionMap(@)[questionIndex][choiceIndex]
+    return @get("questions")[questionIndex].choices[trueChoiceIndex]
+
+
+
+
+
+Election.addOfflineFields(["activeQuestionIndex"]);
+
+Election.setupTransform()
 # Promote it to the global scope
 root.Election = Election
+
 
 # We need to enforce slugs
 Elections.before.insert((userId, doc) ->
   doc.slug = Utilities.generateSlug(doc.name, Elections)
   doc.status = "unopened"
+  doc.questions ?= []
+  if userId
+    user = User.fetchOne(userId)
+    doc.creator = user.getNetId()
 )
 
 Elections.after.update((userId, doc, fieldNames, modifier, options) ->
@@ -108,29 +205,23 @@ Elections.deny(
     return 'creator' in fieldNames
 )
 
-root.createChoice = (name, description="", question_id, image="") ->
-  id = new Meteor.Collection.ObjectID()
-  id = id.toHexString()
-  Elections.update(
-    {"questions._id": question_id},
-    $push:
-      "questions.$.choices":
-        _id: id
-        name: name
-        description: description
-        image: image
-        votes: []
-      )
-  return id
-
 Meteor.methods(
   createQuestion: (electionId, name, description, options = {}) ->
     election = Election.fetchOne(electionId)
-    election.addQuestion(name, description, options)
+    election.addQuestion(
+      name: name
+      description: description
+      options: options
+    )
     election.update()
   createChoice: (electionId, questionId, name, description="", image="") ->
     election = Election.fetchOne(electionId)
-    election.addChoice(questionId, name, description, image)
+    election.addChoice(
+      questionId: questionId
+      name: name
+      description: description
+      image: image
+    )
     election.update()
   vote: (election_id, choice_ids=[]) ->
     if Meteor.isServer and !Meteor.call("hasNotVoted", election_id)

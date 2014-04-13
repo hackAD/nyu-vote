@@ -1,16 +1,19 @@
 Accounts.config
   restrictCreationByEmailDomain: "nyu.edu"
 
+root = global ? window
 
 class User extends ReactiveClass(Meteor.users)
   constructor: (fields) ->
-    _.extends(@, fields)
+    _.extend(@, fields)
     User.initialize.call(@)
 
   isGlobalAdmin: ->
     globalAdminGroup = Group.fetchOne({slug: "global-admins"})
+    console.log(globalAdminGroup)
     if globalAdminGroup
       return _.contains(globalAdminGroup.admins, @getNetId())
+    return false
 
   getNetId: ->
     return @profile.netId
@@ -22,5 +25,8 @@ class User extends ReactiveClass(Meteor.users)
     whitelist = Group.fetchOne({slug: "Global Whitelist"})
     return whitelist.contains(user)
 
+User.setupTransform()
 
+
+root.User = User
   
