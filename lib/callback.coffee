@@ -1,7 +1,6 @@
 (global ? window).createCallback = (run, callback = null) ->
   return (err, resp) ->
     if err? 
-      console.log(1)
       Meteor.userError.throwError(err.reason)
     else 
       if run?

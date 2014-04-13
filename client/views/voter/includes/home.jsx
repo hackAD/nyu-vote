@@ -1,6 +1,5 @@
 /** @jsx React.DOM */
 
-
 Home = React.createClass({
   login: function() {
     Meteor.loginWithGoogle({
