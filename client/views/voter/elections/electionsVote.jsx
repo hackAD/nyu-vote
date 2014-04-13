@@ -35,13 +35,15 @@ ElectionsVote = ReactMeteor.createClass({
       );
     return(
       <div>
-        <div>
-          <a href={Router.path("home")}>Exit</a>
-          <h1>{election.name}</h1>
+        <div className="header white-bg">
+          <a href={Router.path("home")}>{"<  "}Exit</a>
+          {election.name}
         </div>
-        <div>
-          <h2>{question.name}</h2>
-          <p>{question.description}</p>
+        <div className="deep-blue-bg">
+          <div className="centered-container">
+            <h2>{question.name}</h2>
+            <p>{question.description}</p>
+          </div>
         </div>
         <div>
           {choices}
