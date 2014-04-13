@@ -3,11 +3,21 @@
     <a href="/"><div id="nyuvote">NYUVote</div></a>
 	</div>
   {{> userErrors}}
-  <div id="main">
-    <div class="backgroundimg">
-  </div>
-    {{> yield}}
-     
-  </div>
+  {{#if loggedIn}}
+    {{#if canAccess}}
+      {{> yield}}
+    {{else}}
+      <p>
+        Sorry! You are not currently logged in as an admin
+        of NYUVote. Please contact lingliang.zhang (at) nyu.edu
+        if you want like to use NYUVote for your program.
+      </p>
+    {{/if}}
+  {{else}}
+    <h1>
+      You are not Logged In
+    </h1>
+    <button class="login">Login</button>
+  {{/if}}
   {{> footer}}
 </template>

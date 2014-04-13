@@ -1,4 +1,7 @@
 Meteor.publish("adminGroups", ()->
+  if not @userId
+    @ready()
+    return
   user = Meteor.users.findOne(@userId)
   return Groups.find(
     $or:
@@ -10,9 +13,10 @@ Meteor.publish("adminGroups", ()->
     )
 )
 Meteor.publish("adminElections", ()->
-  user = Meteor.users.findOne(@userId)
-  groups = Groups.
-    find({admins: if user?.profile?.netId? then user.profile.netId else ""}).fetch()
+  groups = findUserGroups(@)
+  if not groups
+    @ready()
+    return
   return Elections.find(
       $or:
         [
@@ -22,6 +26,15 @@ Meteor.publish("adminElections", ()->
         ]
     )
 )
+
+Meteor.publish("adminWhitelist", () ->
+  if not @userId
+    @ready()
+    return
+  user = User.fetchOne(@userId)
+  return Groups.find({slug: "global-whitelist", netIds: user.getNetId()})
+)
+
 Meteor.publish("voterElections", () ->
   groups = findUserGroups(@)
   if not groups
