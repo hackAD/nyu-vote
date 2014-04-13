@@ -202,9 +202,9 @@ Elections.before.insert((userId, doc) ->
 Elections.after.update((userId, doc, fieldNames, modifier, options) ->
   if doc.name != @previous.name
     newSlug = Utilities.generateSlug(doc.name, Elections)
-  Elections.update(doc._id, {
-    $set: {slug: newSlug}
-  })
+    Elections.update(doc._id, {
+      $set: {slug: newSlug}
+    })
 )
 
 # One can only create elections if they are on the whitelist. They are able to

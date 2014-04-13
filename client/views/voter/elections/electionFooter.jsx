@@ -19,7 +19,7 @@ ElectionsFooter = React.createClass({
         self.setState({hasVoted: true});
     });
   },
-  getButton: function() {
+  getButton: function(currentValid, allValid) {
     var questionIndex = parseInt(this.props.questionIndex);
     var ballot = this.props.ballot;
     var election = this.props.election;
@@ -30,18 +30,33 @@ ElectionsFooter = React.createClass({
         button = <a href="#">Casting Ballot</a>;
       else if (this.hasVoted)
         button = <a href={Router.path("home")}>Ballot Cast</a>;
+      else {
+        if (allValid)
+          button = <a href="#" onClick={this.vote}>Cast Ballot</a>;
+        else
+          button = <a href="#" className="disabled">Ballot Incomplete</a>;
+      }
+    } else if (questionIndex == election.questions.length - 1) {
+      if (allValid)
+        button = <a href={Router.path("electionsReview", {slug: election.slug})}>Review Ballot</a>;
       else
-        button = <a href="#" onClick={this.vote}>Cast Ballot</a>;
-    } else if (questionIndex == election.questions.length - 1)
-      button = <a href={Router.path("electionsReview", {slug: election.slug})}>Review Ballot</a>;
-    else
-      button = <a href={Router.path("electionsVote", {slug: election.slug, questionIndex: questionIndex + 1})}>Next</a>;
+        button = <a href="#" className="disabled">Ballot Incomplete</a>;
+    }
+    else {
+      if (currentValid)
+        button = <a href={Router.path("electionsVote", {slug: election.slug, questionIndex: questionIndex + 1})}>Next</a>;
+      else
+        button = <a href={Router.path("electionsVote", {slug: election.slug, questionIndex: questionIndex + 1})} className="disabled">Next</a>;
+    }
     return button;
   },
   render: function() {
     var self = this;
+    var currentValid, allValid;
     var progressBar = _.map(self.props.election.questions, function(question, index) {
-      isValid = self.props.ballot.validate(index);
+      var isValid = self.props.ballot.validate(index);
+      if (self.props.questionIndex == index)
+        currentValid = isValid;
       classes = React.addons.classSet({
         active: index == self.props.questionIndex,
         valid: isValid,
@@ -53,11 +68,12 @@ ElectionsFooter = React.createClass({
         </a>
       );
     });
-    isValid = this.props.ballot.isValid();
+    allValid = this.props.ballot.isValid();
     classes = React.addons.classSet({
       active: -1 == self.props.questionIndex,
-      valid: isValid,
-      invalid: !isValid
+      valid: allValid,
+      invalid: !allValid,
+      last: true
     });
     progressBar.push(
       <a className={classes} href={Router.path("electionsReview", {slug: this.props.election.slug})}>
@@ -67,7 +83,7 @@ ElectionsFooter = React.createClass({
     return(
       <div>
         {progressBar}
-        {this.getButton()}
+        {this.getButton(currentValid, allValid)}
       </div>
     );
   }

@@ -45,9 +45,23 @@ Meteor.publish("voterBallots", () ->
   user = Meteor.users.findOne(@userId)
   if not user
     @ready()
-    return false
+    return
   cursor = Ballots.find(
     netId: user.getNetId()
+  )
+  return cursor
+)
+
+Meteor.publish("userData", () ->
+  if not @userId
+    @ready()
+    return
+  cursor = Meteor.users.find(
+    {_id: @userId}
+    ,
+    {fields:
+      "profile": 1
+    }
   )
   return cursor
 )

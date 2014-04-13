@@ -6,7 +6,7 @@ Template.voterView.rendered = function() {
     switch(Router.current().route.name) {
       case "home":
         Deps.autorun(function() {
-          if (Meteor.user())
+          if (Meteor.userId())
             React.renderComponent(
               <ElectionsList />,
               self.find("#container")
