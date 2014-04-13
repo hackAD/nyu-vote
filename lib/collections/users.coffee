@@ -10,7 +10,6 @@ class User extends ReactiveClass(Meteor.users)
 
   isGlobalAdmin: ->
     globalAdminGroup = Group.fetchOne({slug: "global-admins"})
-    console.log(globalAdminGroup)
     if globalAdminGroup
       return _.contains(globalAdminGroup.admins, @getNetId())
     return false
@@ -26,7 +25,6 @@ class User extends ReactiveClass(Meteor.users)
     return whitelist.contains(user)
 
 User.setupTransform()
-
 
 root.User = User
   

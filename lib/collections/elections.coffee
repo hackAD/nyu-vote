@@ -9,6 +9,36 @@ class Election extends ReactiveClass(Elections)
     createValidation(@)
     Election.initialize.call(@)
 
+  # opens an election and locks it, also starts the vote counter
+  open: () ->
+    # This function can only be called on the server
+    if (Meteor.isClient)
+      return
+    if @status == "open"
+      throw new Meteor.Error(500, "Election is already open")
+    # If it has been temporarily closed, just open it again
+    else if @status == "closed"
+      @status = "open"
+      @update({$set: {status: @status}})
+    else if status == "unopened"
+      @status = open
+      # build the votes object which will hold our results
+      @votes = {}
+      for question in @questions
+        question_object = {}
+        for choice in question.choices
+          question_object[choice._id] = 0
+        @votes[question._id] = question_object
+      @update({$set:
+        {
+          status: @status,
+          votes: @votes
+        }
+      })
+        
+
+
+
   hasAdmin: (user) ->
     # They could be a global admin
     if user.isGlobalAdmin()
@@ -67,7 +97,6 @@ class Election extends ReactiveClass(Elections)
       name: name
       description: description
       image: image
-      votes: 0
     )
     return id
 
@@ -162,8 +191,8 @@ createValidation = (election) ->
 
 # We need to enforce slugs
 Elections.before.insert((userId, doc) ->
-  election.slug = Utilities.generateSlug(election.name, Elections)
-  election.status = "unopened"
+  doc.slug = Utilities.generateSlug(doc.name, Elections)
+  doc.status = "unopened"
   createValidation(doc)
   if userId
     user = User.fetchOne(userId)
@@ -200,6 +229,7 @@ Elections.deny(
     return (doc.status != "unopened" || "status" in fieldNames)
 )
 
+# You cannot update the creator of an election
 Elections.deny(
   update: (userId, doc, fieldNames, modifier) ->
     return 'creator' in fieldNames
@@ -214,6 +244,7 @@ Meteor.methods(
       options: options
     )
     election.update()
+
   createChoice: (electionId, questionId, name, description="", image="") ->
     election = Election.fetchOne(electionId)
     election.addChoice(
@@ -223,30 +254,6 @@ Meteor.methods(
       image: image
     )
     election.update()
-  vote: (election_id, choice_ids=[]) ->
-    if Meteor.isServer and !Meteor.call("hasNotVoted", election_id)
-      throw new Meteor.Error(500, "Error: Has already voted!")
-    if typeof(choice_ids) == "string"
-      choice_ids = [choice_ids]
-    election = Elections.findOne(election_id)
-    for question in election.questions
-      matched_choices = (choice for choice in question.choices when choice._id in choice_ids)
-      if !question.options?.allowAbstain
-        if question.options?.multi && matched_choices.length == 0
-          throw new Meteor.Error(500, "Error: At least one choice must be voted on!")
-        if !question.options?.multi && matched_choices.length != 1
-          throw new Meteor.Error(500, "Error: Exactly one choice must be voted on!")
-      else
-        if !question.options?.multi && matched_choices.length > 1
-          throw new Meteor.Error(500, "Error: You cannot vote on more than one choice!")
-      choice.votes.push(Meteor.user().profile.netId) for choice in matched_choices
-    Elections.update(
-      {_id: election_id}
-      $set:
-        questions: election.questions
-      $push:
-        voters: Meteor.user().profile.netId
-    )
 
   createElection: (name, description="", group_ids = []) ->
     if typeof(group_ids) == "string"

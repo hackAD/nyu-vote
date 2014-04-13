@@ -44,7 +44,7 @@ Meteor.publish("voterElections", () ->
 Meteor.publish("voterBallots", () ->
   user = Meteor.users.findOne(@userId)
   if not user
-    @ready
+    @ready()
     return false
   cursor = Ballots.find(
     netId: user.getNetId()

@@ -1,11 +1,5 @@
 /** @jsx React.DOM */
 
-
-        // <a href="#" onClick={this.loginWithDummy}>
-        //   Login With Dummy
-        // </a>
-
-
 Home = React.createClass({
   login: function() {
     Meteor.loginWithGoogle({
