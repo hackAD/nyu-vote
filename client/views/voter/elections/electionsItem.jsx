@@ -6,15 +6,14 @@ ElectionsItem = React.createClass({
   },
   render: function() {
     return(
-      <div>
-        <h1>
-          {this.props.election.name}
-        </h1>
-        <div>
-          {this.props.election.description}
+      <a onClick={this.goToElection}>
+        <div className="election-list-item">
+          <h3>
+            {this.props.election.name}
+          </h3>
+          <p className="right-arrow"> > </p>
         </div>
-        <button onClick={this.goToElection}>Show</button>
-      </div>
+      </a>
     );
   }
 });

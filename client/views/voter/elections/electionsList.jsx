@@ -15,7 +15,7 @@ ElectionsList = ReactMeteor.createClass({
     return(
       <div>
         <h1>This is the Elections List</h1>
-        <div>
+        <div className="green-bg">
           {this.state.openElectionNodes}
         </div>
         <div>

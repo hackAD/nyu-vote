@@ -43,7 +43,7 @@ seed = () ->
     )
 
     election = new Election(
-      name: "nyuad_2016_rep_election"
+      name: "NYUAD 2016 Rep Election"
       description: "Election for class representatives of NYUAD class of 2016."
       groups: [Groups.findOne({name:"nyuad_2016"})._id]
     )
@@ -63,7 +63,7 @@ seed = () ->
     election.put()
 
     election = new Election(
-      name: "gnu_best_election"
+      name: "The best of GNU Election"
       description: "Election for the best in everything."
       groups: [Groups.findOne({name:"nyu_2015"})._id]
     )
@@ -91,7 +91,7 @@ seed = () ->
     election.put()
 
     election = new Election(
-      name: "awesomest_election"
+      name: "Awesomest Person Election"
       description: "Who is the awesomest?"
       groups: [
         Groups.findOne({name:"nyuad_2016"})._id,
