@@ -1,6 +1,6 @@
 /** @jsx React.DOM */
 
-ElectionsVote = ReactMeteor.createClass({
+ElectionsReview = ReactMeteor.createClass({
   getMeteorState: function() {
     var activeElection = Election.getActive();
     var activeBallot = Ballot.getActive();
@@ -16,6 +16,10 @@ ElectionsVote = ReactMeteor.createClass({
     var questionNodes = [];
     var choiceFilter = function(choice, index) {
       var ballotChoice = ballot.questions[i].choices[index];
+      console.log(i)
+      console.log(index)
+      console.log(ballot);
+      console.log(ballotChoice)
       return ballotChoice.value === true;
     };
     var choiceMap = function(choice) {
@@ -29,7 +33,7 @@ ElectionsVote = ReactMeteor.createClass({
     for (var i = 0, length = election.questions.length; i < length; i++) {
       var question = election.questions[i];
       // TODO: implement for rank
-      if (questions.options.type == "pick") {
+      if (question.options.type == "pick") {
         var selectedChoices;
         selectedChoices = _.filter(question, choiceFilter);
         var selectedChoicesNodes = _.map(selectedChoices, choiceMap);

@@ -156,14 +156,14 @@ Election.setupTransform()
 root.Election = Election
 
 createValidation = (election) ->
-  election.slug = Utilities.generateSlug(election.name, Elections)
-  election.status = "unopened"
   election.questions ?= []
   return election
 
 
 # We need to enforce slugs
 Elections.before.insert((userId, doc) ->
+  election.slug = Utilities.generateSlug(election.name, Elections)
+  election.status = "unopened"
   createValidation(doc)
   if userId
     user = User.fetchOne(userId)
