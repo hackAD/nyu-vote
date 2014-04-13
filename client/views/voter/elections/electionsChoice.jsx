@@ -18,10 +18,7 @@ ElectionsChoice = React.createClass({
         <div>
           <h1>{choice.name}</h1>
           <p>{choice.description}</p>
-          {choice.image.length > 0 ?
-            <img src={choice.image} alt={choice.name} />
-            : <img src={defaultImage} alt={choice.name} />
-          }
+          <ElectionsChoiceImage choice={choice} />
           {ballot.isPicked(this.props.questionIndex, this.props.choiceIndex) ?
             <button onClick={this.toggleSelect}>Selected</button>
             : <button onClick={this.toggleSelect}>Select</button>
@@ -37,5 +34,19 @@ ElectionsChoice = React.createClass({
         </div>
       );
   }
+});
 
+ElectionsChoiceImage = React.createClass({
+  render: function() {
+    var defaultImage = "http://www.pentagram.com/en/NYUAD_Pattern_620W.gif";
+    var choice = this.props.choice;
+    if (choice.image.length > 0)
+      return(
+        <img src={choice.image} alt={choice.name} />
+      );
+    else
+      return(
+        <img src={defaultImage} alt={choice.name} />
+      );
+  }
 });

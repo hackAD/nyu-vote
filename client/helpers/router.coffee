@@ -4,7 +4,7 @@ Router.configure
 Router.onBeforeAction("loading")
 
 voterHandle = () ->
-  return electionsHandle
+  return [electionsHandle, ballotsHandle]
 
 setActiveElection = (newElectionSlug) ->
   Deps.nonreactive(() ->
@@ -34,14 +34,12 @@ Router.map ->
       if @params.questionIndex > (election.questions.length - 1)
         @redirect("electionsReview", {slug: @params.slug})
         return
-
       election.setActiveQuestion(@params.questionIndex)
   @route "electionsShow",
     path: "/:slug/"
     waitOn: voterHandle
     onAfterAction: () ->
-      election = Election.fetchOne({slug: @params.slug})
-      election.makeActive()
+      setActiveElection(@params.slug)
   @route "admin",
     path: "/admin"
     layoutTemplate: "adminMaster"

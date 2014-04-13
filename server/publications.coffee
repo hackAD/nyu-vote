@@ -1,5 +1,5 @@
 Meteor.publish("adminGroups", ()->
-  user = Meteor.users.findOne(this.userId)
+  user = Meteor.users.findOne(@userId)
   return Groups.find(
     $or:
       [
@@ -10,7 +10,7 @@ Meteor.publish("adminGroups", ()->
     )
 )
 Meteor.publish("adminElections", ()->
-  user = Meteor.users.findOne(this.userId)
+  user = Meteor.users.findOne(@userId)
   groups = Groups.
     find({admins: if user?.profile?.netId? then user.profile.netId else ""}).fetch()
   return Elections.find(
@@ -22,17 +22,12 @@ Meteor.publish("adminElections", ()->
         ]
     )
 )
-Meteor.publish("voters", () ->
-  user = Meteor.users.findOne(this.userId)
-  if not user
-    this.ready()
+Meteor.publish("voterElections", () ->
+  groups = findUserGroups(@)
+  if not groups
+    @ready()
     return
-  groups = Groups.
-    find({netIds: user.profile.netId}).fetch()
-  if groups.length == 0
-    this.ready()
-    return
-  handle = Elections.find(
+  cursor = Elections.find(
     groups:
       $in: _.map(groups, (g) -> g._id)
     ,
@@ -43,5 +38,27 @@ Meteor.publish("voters", () ->
       slug: 1
     }
   )
-  return handle
+  return cursor
 )
+
+Meteor.publish("voterBallots", () ->
+  user = Meteor.users.findOne(@userId)
+  if not user
+    @ready
+    return false
+  cursor = Ballots.find(
+    netId: user.getNetId()
+  )
+  return cursor
+)
+
+findUserGroups = (context) ->
+  user = Meteor.users.findOne(context.userId)
+  if not user
+    return false
+  groups = Groups.
+    find({netIds: user.profile.netId}).fetch()
+  if groups.length == 0
+    return false
+  return groups
+

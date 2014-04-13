@@ -1,6 +1,6 @@
 /** @jsx React.DOM */
 
-ElectionsVote = ReactMeteor.createClass({
+ElectionsReview = ReactMeteor.createClass({
   getMeteorState: function() {
     var activeElection = Election.getActive();
     var activeBallot = Ballot.getActive();
@@ -18,21 +18,32 @@ ElectionsVote = ReactMeteor.createClass({
       var ballotChoice = ballot.questions[i].choices[index];
       return ballotChoice.value === true;
     };
-    var choiceMap = function(choice) {
-      return(
-        <div>
-          <h1>{choice.name}</h1>
-          <p>{choice.description}</p>
-        </div>
-      );
+    var choiceMapFunction = function(questionIndex) {
+      return function(choice) {
+        return(
+          <div>
+            <h1>{choice.name}</h1>
+            <p>{choice.description}</p>
+            <ElectionsChoiceImage choice={choice} />
+            <a href={Router.path("electionsVote", {slug: election.slug, questionIndex: i}) }>Change</a>
+          </div>
+        );
+      };
     };
     for (var i = 0, length = election.questions.length; i < length; i++) {
       var question = election.questions[i];
       // TODO: implement for rank
-      if (questions.options.type == "pick") {
+      if (question.options.type == "pick") {
         var selectedChoices;
-        selectedChoices = _.filter(question, choiceFilter);
-        var selectedChoicesNodes = _.map(selectedChoices, choiceMap);
+        selectedChoices = _.filter(question.choices, choiceFilter);
+        var selectedChoicesNodes = _.map(selectedChoices, choiceMapFunction(i));
+        if (selectedChoicesNodes.length === 0)
+          selectedChoicesNodes = (
+            <div>
+              <h3>No Option Selected</h3>
+              <a href={Router.path("electionsVote", {slug: election.slug, questionIndex: i}) }>Change</a>
+            </div>
+          );
         questionNodes.push(
           <div>
             <div>
