@@ -1,6 +1,24 @@
 /** @jsx React.DOM */
 
 ElectionsFooter = React.createClass({
+  getInitialState: function() {
+    return {
+      voting: false,
+      hasVoted: this.props.ballot._id
+    };
+  },
+  vote: function() {
+    var self = this;
+    var ballot = this.props.ballot;
+    this.setState({voting: true});
+    ballot.put(function(err) {
+      self.setState({voting: false});
+      if (err)
+        Meteor.userError.throwError(err.reason);
+      else
+        self.setState({hasVoted: true});
+    });
+  },
   getButton: function() {
     var questionIndex = parseInt(this.props.questionIndex);
     var ballot = this.props.ballot;
@@ -8,7 +26,12 @@ ElectionsFooter = React.createClass({
     var question = ballot.questions[questionIndex];
     var button;
     if (questionIndex === -1) {
-      button = <a href="#" onClick={this.vote}>Cast Vote</a>;
+      if (this.state.voting)
+        button = <a href="#">Casting Ballot</a>;
+      else if (this.hasVoted)
+        button = <a href={Router.path("home")}>Ballot Cast</a>;
+      else
+        button = <a href="#" onClick={this.vote}>Cast Ballot</a>;
     } else if (questionIndex == election.questions.length - 1)
       button = <a href={Router.path("electionsReview", {slug: election.slug})}>Review Ballot</a>;
     else
