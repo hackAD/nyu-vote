@@ -12,45 +12,45 @@ ElectionsReview = ReactMeteor.createClass({
   render: function() {
     var election = this.state.election;
     var ballot = this.state.ballot;
-
     var questionNodes = [];
-    var choiceFilter = function(choice, index) {
-      var ballotChoice = ballot.questions[i].choices[index];
-      return ballotChoice.value === true;
-    };
-    var choiceMapFunction = function(questionIndex) {
-      return function(choice) {
-        return(
-          <div>
-            <h1>{choice.name}</h1>
-            <p>{choice.description}</p>
-            <ElectionsChoiceImage choice={choice} />
-            <a href={Router.path("electionsVote", {slug: election.slug, questionIndex: i}) }>Change</a>
-          </div>
-        );
-      };
+    var choiceMapFunction = function(choice) {
+      return(
+        <div>
+          <h1>{choice.name}</h1>
+          <p>{choice.description}</p>
+          <ElectionsChoiceImage choice={choice} />
+        </div>
+      );
     };
     for (var i = 0, length = election.questions.length; i < length; i++) {
       var question = election.questions[i];
+      var isValid = ballot.validate(i);
+      var classNames = React.addons.classSet({
+        valid: isValid,
+        invalid: !isValid
+      });
       // TODO: implement for rank
       if (question.options.type == "pick") {
-        var selectedChoices;
-        selectedChoices = _.filter(question.choices, choiceFilter);
-        var selectedChoicesNodes = _.map(selectedChoices, choiceMapFunction(i));
+        var selectedChoices = ballot.selectedChoices(i);
+        var selectedChoicesNodes = _.map(selectedChoices, choiceMapFunction);
         if (selectedChoicesNodes.length === 0)
           selectedChoicesNodes = (
             <div>
               <h3>No Option Selected</h3>
-              <a href={Router.path("electionsVote", {slug: election.slug, questionIndex: i}) }>Change</a>
             </div>
           );
         questionNodes.push(
           <div>
-            <div>
+            <div className={classNames}>
               <h1>{question.name}</h1>
               <p>{question.description}</p>
             </div>
+            {isValid ?
+              null :
+              <h2>This question has not been completed</h2>
+            }
             {selectedChoicesNodes}
+            <a href={Router.path("electionsVote", {slug: election.slug, questionIndex: i}) }>Change</a>
           </div>
         );
       }

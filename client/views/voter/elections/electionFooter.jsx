@@ -53,8 +53,14 @@ ElectionsFooter = React.createClass({
         </a>
       );
     });
+    isValid = this.props.ballot.isValid();
+    classes = React.addons.classSet({
+      active: -1 == self.props.questionIndex,
+      valid: isValid,
+      invalid: !isValid
+    });
     progressBar.push(
-      <a href={Router.path("electionsReview", {slug: this.props.election.slug})}>
+      <a className={classes} href={Router.path("electionsReview", {slug: this.props.election.slug})}>
         Go to Summary
       </a>
     );
