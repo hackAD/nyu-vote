@@ -6,6 +6,7 @@ class Election extends ReactiveClass(Elections)
   constructor: (fields) ->
     _.extend(@, fields)
     this._activeQuestionIndex = 0
+    createValidation(@)
     Election.initialize.call(@)
 
   hasAdmin: (user) ->
@@ -93,9 +94,6 @@ class Election extends ReactiveClass(Elections)
     Election.setActive(@)
 
   setActiveQuestion: (questionIndex) ->
-    console.log("Resetting active question")
-    console.log(questionIndex)
-    console.log(@)
     @set("_activeQuestionIndex", questionIndex)
     return @
 
@@ -151,21 +149,22 @@ class Election extends ReactiveClass(Elections)
     return @get("questions")[questionIndex].choices[trueChoiceIndex]
 
 
-
-
-
-Election.addOfflineFields(["activeQuestionIndex"]);
+Election.addOfflineFields(["activeQuestionIndex"])
 
 Election.setupTransform()
 # Promote it to the global scope
 root.Election = Election
 
+createValidation = (election) ->
+  election.slug = Utilities.generateSlug(election.name, Elections)
+  election.status = "unopened"
+  election.questions ?= []
+  return election
+
 
 # We need to enforce slugs
 Elections.before.insert((userId, doc) ->
-  doc.slug = Utilities.generateSlug(doc.name, Elections)
-  doc.status = "unopened"
-  doc.questions ?= []
+  createValidation(doc)
   if userId
     user = User.fetchOne(userId)
     doc.creator = user.getNetId()
