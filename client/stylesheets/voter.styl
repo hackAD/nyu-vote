@@ -12,6 +12,7 @@ light-blue = #55B7B6
 darkest-blue = #549090
 
 text-black = #4F4F4F
+light-grey = #c2c2c2
 
 thick = 700
 thin = 400
@@ -33,11 +34,6 @@ body
 .dark-blue-bg
 	background-color darkest-blue
 
-.header
-	height: 30px
-	line-height: 30px
-	vertical-align: middle
-
 #container
 	text-transform: uppercase
 	position: absolute
@@ -50,6 +46,15 @@ body
 		&:hover
 			background-color: rgba(255,255,255,0.4)
 			cursor: pointer
+	.header
+		height: 30px
+		line-height: 30px
+		vertical-align: middle
+		padding: 0 30px
+		a
+			float left
+			color light-grey
+
 .content-wrapper
 	height: 100%
 
@@ -103,11 +108,18 @@ h3
 		padding 0
 		height: 30px
 		margin-right: 20px
-.ballot-list
-	padding-top: 30px
-	padding-bottom: 30px
+		
+.centered-container
 	max-width 800px
 	margin 0 auto
+	padding-top: 30px
+	padding-bottom: 30px
+
+//BALLOT DESCRIPTION
+#ballot-description-wrapper
+	margin-top 10%
+	p
+		margin-bottom 30px
 
 .small-button
 	border 1px solid
@@ -122,3 +134,5 @@ h3
 		h1
 			padding-bottom 0
 			margin 0
+#login-button
+	padding 5px 50px

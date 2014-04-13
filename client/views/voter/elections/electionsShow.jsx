@@ -9,10 +9,17 @@ ElectionsShow = ReactMeteor.createClass({
   render: function() {
     return(
       <div>
-        <a href={Router.path("home")}>Exit</a>
-        <h1>{this.state.election.name}</h1>
-        <p>{this.state.election.description}</p>
-        <a href={Router.path("electionsVote", {slug: this.state.election.slug, questionIndex: 0})}>Cast Your Ballot</a>
+        <div className="white-bg header">
+          <a href={Router.path("home")}>
+            {"< "}Exit
+          </a>
+          ballot description
+        </div>
+        <div id="ballot-description-wrapper" className="centered-container">
+          <h1>{this.state.election.name}</h1>
+          <p>{this.state.election.description}</p>
+          <a id="login-button" href={Router.path("electionsVote", {slug: this.state.election.slug, questionIndex: 0})}>Start Ballot {"  >"}</a>
+        </div>
       </div>
     );
   }

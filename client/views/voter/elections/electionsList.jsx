@@ -24,7 +24,7 @@ ElectionsList = ReactMeteor.createClass({
           Welcome {Meteor.user().profile.name}
         </div>
         <div className="light-green-bg">
-          <div className="ballot-list">
+          <div className="centered-container">
             <div id="ballot-counter">
               <h3>You have</h3>
               <h1>{this.state.openElectionsCount}</h1>
@@ -34,7 +34,7 @@ ElectionsList = ReactMeteor.createClass({
           </div>
         </div>
         <div className="dark-blue-bg">
-          <div className="ballot-list">
+          <div className="centered-container">
             <h2>Closed Ballots</h2>
             {this.state.closedElectionNodes}
           </div>
