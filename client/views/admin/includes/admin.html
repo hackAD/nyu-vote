@@ -1,6 +1,26 @@
 <template name="admin">
-  <h5>You have {{electionsCount}} elections:</h5>
-    {{> electionsAdminList }}
-  <h5>You have {{groupsCount}} groups:</h5>
-    {{> groupsList }}
+  <div class="email-content">
+    <div class="email-content-header pure-g">
+        <div class="pure-u-1-2">
+            <h1 class="email-content-title">NYU Vote Admin Panel</h1>
+            <p class="email-content-subtitle">
+              <span>Created By</span> NYUAD Research and Development
+            </p>
+        </div>
+
+        <div class="email-content-controls pure-u-1-2">
+            <button class="secondary-button pure-button">Reply</button>
+            <button class="secondary-button pure-button">Forward</button>
+            <button class="secondary-button pure-button">Move to</button>
+        </div>
+    </div>
+
+    <div class="email-content-body">
+      <!-- start -->
+      <h1 class="centered black-text">Welcome to the NYU Vote Admin interface</h1>
+      <list>
+      </list>
+      <!-- end -->
+    </div>
+  </div>
 </template>

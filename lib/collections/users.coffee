@@ -14,15 +14,15 @@ class User extends ReactiveClass(Meteor.users)
       return _.contains(globalAdminGroup.admins, @getNetId())
     return false
 
-  getNetId: ->
-    return @profile.netId
-
   @fetchByNetId: (netId) ->
     return @fetchOne({"profile.netId": netId})
 
-  isWhitelisted: ->
-    whitelist = Group.fetchOne({slug: "Global Whitelist"})
-    return whitelist.contains(user)
+  isWhitelisted: () ->
+    whitelist = Group.fetchOne({slug: "global-whitelist"})
+    return whitelist.containsUser(@)
+
+  getNetId: ->
+    return @profile.netId
 
 User.setupTransform()
 

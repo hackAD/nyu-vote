@@ -2,8 +2,9 @@
 
 ElectionsList = ReactMeteor.createClass({
   getMeteorState: function() {
-    var openElections = Elections.find();
-    var closedEections = Elections.find();
+    var votedElections = Ballots.find().map(function(ballot) {return ballot.electionId;});
+    var openElections = Elections.find({_id: {$nin: votedElections}});
+    var closedEections = Elections.find({_id: {$in: votedElections}});
     return {
       openElectionsCount: openElections.count(),
       openElectionNodes: openElections.map(function(election) {

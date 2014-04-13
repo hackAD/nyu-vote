@@ -17,6 +17,9 @@ ElectionsFooter = React.createClass({
         Meteor.userError.throwError(err.reason);
       else
         self.setState({hasVoted: true});
+        Meteor.setTimeout(function() {
+          Router.go("home");
+        }, 1500);
     });
   },
   getButton: function(currentValid, allValid) {

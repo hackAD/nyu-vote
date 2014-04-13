@@ -175,15 +175,22 @@ Ballot.addOfflineFields(["random_map"])
 # fields
 Ballots.allow(
   insert: (userId, ballot) ->
+    console.log("checking insert")
     if not ballot.netId || not ballot.electionId || not ballot.questions
+      console.log("denying here one also1")
       return false
     if not userId
+      console.log("denying here one also2")
       return false
     user = User.fetchOne(userId)
     if not user.profile.netId
+      console.log("denying here one also3")
       return false
     if not ballot.netId == user.profile.netId
+      console.log("denying here one also4")
       return false
+    console.log("checking")
+    console.log(ballot.isValid())
     return ballot.isValid()
 )
 
@@ -191,14 +198,19 @@ Ballots.allow(
 # open. They alsso cannot be updated or removed
 Ballots.deny(
   insert: (userId, ballot) ->
+    console.log("Checking denyi")
     election = Election.fetchOne(ballot.electionId)
     if election.status != "open"
+      console.log("denying this one also")
       return true
     if Ballots.find({
       netId: ballot.netId,
       election: ballot.electionId
     }).count > 0
+      console.log("denying this one")
       return true
+    console.log("not denying")
+    return false
   update: () ->
     return true
   remove: () ->
@@ -208,14 +220,16 @@ Ballots.deny(
 # After a ballot is inserted, we need to incremenet all the voted regions of
 # the ballot
 Ballots.after.insert((userId, ballot) ->
+  console.log("calling after hook")
   if (Meteor.isClient)
     return
+  console.log("doing this part")
   toIncrement = {}
   for i in [0...ballot.questions.length]
     question = ballot.questions[i]
-    choices = ballot.selectedChoices(i)
+    choices = @transform().selectedChoices(i)
     _.each(choices, (choice) ->
-      toIncrement["questions." + question._id + "." + ballot._id] = 1
+      toIncrement["votes." + question._id + "." + choice._id] = 1
     )
   Elections.update(ballot.electionId, {
     "$inc": toIncrement

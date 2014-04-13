@@ -20,8 +20,8 @@ class Election extends ReactiveClass(Elections)
     else if @status == "closed"
       @status = "open"
       @update({$set: {status: @status}})
-    else if status == "unopened"
-      @status = open
+    else if @status == "unopened"
+      @status = "open"
       # build the votes object which will hold our results
       @votes = {}
       for question in @questions
@@ -35,9 +35,11 @@ class Election extends ReactiveClass(Elections)
           votes: @votes
         }
       })
-        
 
-
+  close: () ->
+    @update({$set:
+      {status: "closed"}
+    })
 
   hasAdmin: (user) ->
     # They could be a global admin
@@ -51,6 +53,20 @@ class Election extends ReactiveClass(Elections)
       if group.hasAdmin(user)
         return true
     return false
+
+  @findWithAdmin: (user) ->
+    if not user
+      return
+    groups = Group.findWithAdmin(user)
+    netId = user.getNetId()
+    return @collection.find(
+        $or:
+          [
+            {groups: {$in: if groups.length > 0 then _.map(groups, (g) -> g._id) else []}}
+            ,
+            {creator: netId}
+          ]
+      )
 
   getBallot: (user) ->
     oldBallot = Ballot.fetch({netId: user.getNetId(), electionId: @_id})
@@ -85,7 +101,6 @@ class Election extends ReactiveClass(Elections)
       throw new Meteor.Error(500, "You must specify a question to add this choice to")
     if (!name || name.length < 1)
       throw new Meteor.Error(500, "Choices must have a name")
-
     id = new Meteor.Collection.ObjectID().toHexString()
     description ?= ""
     image ?= ""
@@ -101,23 +116,23 @@ class Election extends ReactiveClass(Elections)
     return id
 
   # Stateful tracking of the active election
-  activeElectionDep = new Deps.Dependency
-  activeElection = undefined
+  activeElection = {
+    current: undefined
+    dep: new Deps.Dependency
+  }
   @setActive = (election, adminMode) ->
-    if activeElection?.slug == election.slug
-      return @
-    activeElectionDep.changed()
-    activeElection = election
+    activeElection.dep.changed()
+    activeElection.current = election
     # if we are an admin, we don't want the ballot
     if not adminMode
       Ballot.setActive(election)
     return @
 
   @getActive = () ->
-    activeElectionDep.depend()
-    if activeElection
-      activeElection.depend()
-    return activeElection
+    activeElection.dep.depend()
+    activeElection.current?.depend()
+    return activeElection.current
+  root.activeElection = activeElection
 
   makeActive: (adminMode) ->
     Election.setActive(@)
@@ -177,8 +192,7 @@ class Election extends ReactiveClass(Elections)
     trueChoiceIndex = getRandomElectionMap(@)[questionIndex][choiceIndex]
     return @get("questions")[questionIndex].choices[trueChoiceIndex]
 
-
-Election.addOfflineFields(["activeQuestionIndex"])
+Election.addOfflineFields(["_activeQuestionIndex", "creator", "votes", "status"])
 
 Election.setupTransform()
 # Promote it to the global scope
@@ -186,12 +200,16 @@ root.Election = Election
 
 createValidation = (election) ->
   election.questions ?= []
+  election.groups ?= []
+  election.creator = Meteor.user().profile.netId
   return election
 
 
 # We need to enforce slugs
 Elections.before.insert((userId, doc) ->
-  doc.slug = Utilities.generateSlug(doc.name, Elections)
+  console.log("this is here")
+  if doc.name != @previous.name
+    doc.slug = Utilities.generateSlug(doc.name, Elections)
   doc.status = "unopened"
   createValidation(doc)
   if userId
@@ -200,11 +218,13 @@ Elections.before.insert((userId, doc) ->
 )
 
 Elections.after.update((userId, doc, fieldNames, modifier, options) ->
+  console.log("this is running")
   if doc.name != @previous.name
     newSlug = Utilities.generateSlug(doc.name, Elections)
     Elections.update(doc._id, {
       $set: {slug: newSlug}
     })
+  console.log("It ended")
 )
 
 # One can only create elections if they are on the whitelist. They are able to
@@ -214,9 +234,9 @@ Elections.allow(
     user = User.fetchOne(userId)
     return user.isWhitelisted()
   update: (userId, doc, fieldNames, modifier) ->
+    return true
     user = User.fetchOne(userId)
     return doc.hasAdmin(user)
-
   remove: (userId, doc) ->
     user = User.fetchOne(userId)
     return doc.hasAdmin(user)
@@ -232,10 +252,18 @@ Elections.deny(
 # You cannot update the creator of an election
 Elections.deny(
   update: (userId, doc, fieldNames, modifier) ->
+    console.log("wallo")
     return 'creator' in fieldNames
 )
 
 Meteor.methods(
+  toggleElectionStatus: (electionId) ->
+    election = Election.fetchOne(electionId)
+    if election.status == "closed" || election.status == "unopened"
+      election.open()
+    else
+      election.close()
+
   createQuestion: (electionId, name, description, options = {}) ->
     election = Election.fetchOne(electionId)
     election.addQuestion(

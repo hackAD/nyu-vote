@@ -1,0 +1,25 @@
+<template name="electionsAdminCreate">
+  <div class="email-content">
+    <div class="email-content-header pure-g">
+        <div class="pure-u-1-2">
+            <h1 class="email-content-title">Create New Election</h1>
+        </div>
+    </div>
+
+    <div class="email-content-body">
+      <!-- start -->
+      <form id="newElection" class="pure-form pure-form-stacked">
+        <fieldset>
+          <label for="electionName" class="text-muted">Election Name: </label>
+          <input id="electionName" name="electionName" type="text"
+          placeholder="Election Name" >
+          <label for="electionDescription" class="text-muted">Election Description: </label>
+          <input id="electionDescription" name="electionDescription"
+          type="text" placeholder="Election Description" >
+          <button type="submit" class="pure-button pure-button-primary" >Create New Election</button>
+        </fieldset>
+      </form>
+      <!-- end -->
+    </div>
+  </div>
+</template>

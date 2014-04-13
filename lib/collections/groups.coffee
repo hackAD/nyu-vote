@@ -17,7 +17,16 @@ class Group extends ReactiveClass(Groups)
 
   # Finds which groups have a specific user as an admin
   @findWithAdmin = (user) ->
-    return @collection.find({admins: user._id})
+    netId = user.getNetId()
+    return @collection.find(
+      {
+        $or: [
+          admins: netId
+          ,
+          creator: netId
+          ]
+      }
+    )
 
 Group.setupTransform()
 # Registering offline fields
