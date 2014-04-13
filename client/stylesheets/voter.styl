@@ -27,6 +27,16 @@ body
 	background-color: purple
 .light-green-bg
 	background-color: light-green
+.white-bg
+	background-color: white
+	color: text-black
+.dark-blue-bg
+	background-color darkest-blue
+
+.header
+	height: 30px
+	line-height: 30px
+	vertical-align: middle
 
 #container
 	text-transform: uppercase
@@ -39,7 +49,7 @@ body
 		text-decoration: none
 		&:hover
 			background-color: rgba(255,255,255,0.4)
-		
+			cursor: pointer
 .content-wrapper
 	height: 100%
 
@@ -48,6 +58,10 @@ h1
 	position: relative
 	width: 100%
 	padding-bottom: 30px
+h2 
+	font-size: 2.5em
+h3
+	font-size: 1.8em
 
 // LOGIN SCREEN
 #login-info
@@ -64,18 +78,47 @@ h1
 	padding 5px 100px
 
 // ELECTION LIST
-.election-list-item
-	padding: 10px 0
-	font-size: 2em
-	h3
-		display: inline-block
-	.right-arrow
-		float: right
-
 #election-list
 	h1
 		padding-bottom 0
+		margin -5px 0
+	h2
+		margin-bottom 20px
+	#ballot-counter
+		margin-bottom 30px
+.election-list-item
+	padding: 20px 0
+	position relative
+	// .ballot-name
+	// 	padding 0 50px
+	h3
+		display: inline-block
+		padding 0 40px
+	.right-arrow
+		position: absolute
+		top: 0
+		right: 0
+		bottom: 0
+		margin: auto 0
+		padding 0
+		height: 30px
+		margin-right: 20px
+.ballot-list
+	padding-top: 30px
+	padding-bottom: 30px
+	max-width 800px
+	margin 0 auto
+
+.small-button
+	border 1px solid
+	padding 3px 50px
 
 @media screen and (max-width: 480px)
 	h1
 		font-size: 3.5em
+	h3
+		font-size 1.5em
+	#election-list
+		h1
+			padding-bottom 0
+			margin 0
