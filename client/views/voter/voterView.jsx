@@ -30,6 +30,12 @@ Template.voterView.rendered = function() {
           self.find("#container")
         );
         break;
+      case "electionsReview":
+        React.renderComponent(
+          <ElectionsReview />,
+          self.find("#container")
+        );
+        break;
     }
   });
 };

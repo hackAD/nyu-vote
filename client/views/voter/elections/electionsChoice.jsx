@@ -6,9 +6,10 @@ ElectionsChoice = React.createClass({
     ballot.abstain(this.props.questionIndex);
   },
   toggleSelect: function() {
+    var ballot = this.props.ballot;
+    ballot.pick(this.props.questionIndex, this.props.choiceIndex);
   },
   render: function() {
-    console.log(this);
     var choice = this.props.choice;
     var ballot = this.props.ballot;
     var defaultImage = "http://www.pentagram.com/en/NYUAD_Pattern_620W.gif";
@@ -22,8 +23,8 @@ ElectionsChoice = React.createClass({
             : <img src={defaultImage} alt={choice.name} />
           }
           {ballot.isPicked(this.props.questionIndex, this.props.choiceIndex) ?
-            <button onClick={this.toggleSelect}>Select</button>
-            : <button>Selected</button>
+            <button onClick={this.toggleSelect}>Selected</button>
+            : <button onClick={this.toggleSelect}>Select</button>
           }
         </div>
       );
