@@ -45,10 +45,7 @@ seed = () ->
     election = new Election(
       name: "nyuad_2016_rep_election"
       description: "Election for class representatives of NYUAD class of 2016."
-      status: "open"
-      creator: "random_admin_1"
       groups: [Groups.findOne({name:"nyuad_2016"})._id]
-      questions: []
     )
     questionId = election.addQuestion(
       name: "rep_question"
@@ -68,10 +65,7 @@ seed = () ->
     election = new Election(
       name: "gnu_best_election"
       description: "Election for the best in everything."
-      status: "open"
-      creator: "random_admin_3"
       groups: [Groups.findOne({name:"nyu_2015"})._id]
-      questions: []
     )
     questionId = election.addQuestion(
       name: "gnu_best_coder_question"
@@ -99,13 +93,10 @@ seed = () ->
     election = new Election(
       name: "awesomest_election"
       description: "Who is the awesomest?"
-      status: "closed"
-      creator: "devAdmin"
       groups: [
         Groups.findOne({name:"nyuad_2016"})._id,
         Groups.findOne({name:"nyu_2015"})._id
       ]
-      questions: []
     )
     questionId = election.addQuestion(
       name: "awesomest_question"

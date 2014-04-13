@@ -1,16 +1,34 @@
 Router.configure
   template: "voterView"
+  loadingTemplate: "loading"
+Router.onBeforeAction("loading")
+
+voterHandle = () ->
+  return electionsHandle
 
 Router.map ->
   @route "home",
     path: "/"
-  @route "electionsShow",
-    path: "/vote/:slug/"
-    onBeforeAction: () ->
-      Election.setActive(this.params.slug)
+  @route "electionsReview",
+    path: "/:slug/review"
+    waitOn: voterHandle
+    onAfterAction: () ->
+      election = Election.fetchOne({slug: this.params.slug})
+      election.makeActive()
+      election.setActiveQuestion(-1)
   @route "electionsVote",
-    path: "/:slug"
-
+    path: "/:slug/:questionIndex"
+    waitOn: voterHandle
+    onAfterAction: () ->
+      election = Election.fetchOne({slug: this.params.slug})
+      election.makeActive()
+      election.setActiveQuestion(this.params.questionIndex)
+  @route "electionsShow",
+    path: "/:slug/"
+    waitOn: voterHandle
+    onAfterAction: () ->
+      election = Election.fetchOne({slug: this.params.slug})
+      election.makeActive()
   @route "admin",
     path: "/admin"
     layoutTemplate: "adminMaster"

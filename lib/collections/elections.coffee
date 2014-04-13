@@ -5,6 +5,7 @@ root.Elections = new Meteor.Collection("elections")
 class Election extends ReactiveClass(Elections)
   constructor: (fields) ->
     _.extend(@, fields)
+    this._activeQuestionIndex = 0
     Election.initialize.call(@)
 
   hasAdmin: (user) ->
@@ -72,29 +73,101 @@ class Election extends ReactiveClass(Elections)
   # Stateful tracking of the active election
   activeElectionDep = new Deps.Dependency
   activeElection = undefined
-  @setActive = (newElectionSlug, adminMode) ->
-    if activeElection.slug == newElectionSlug
+  @setActive = (election, adminMode) ->
+    if activeElection?.slug == election.slug
       return @
     activeElectionDep.changed()
-    activeElection = @fetchOne({slug: newElectionSlug})
+    activeElection = election
     # if we are an admin, we don't want the ballot
     if not adminMode
-      Ballot.setActiveBallot(activeElection)
+      Ballot.setActive(election)
     return @
 
   @getActive = () ->
     activeElectionDep.depend()
+    if activeElection
+      activeElection.depend()
     return activeElection
 
+  makeActive: (adminMode) ->
+    Election.setActive(@)
+
+  setActiveQuestion: (questionIndex) ->
+    console.log("setting question index")
+    console.log(questionIndex)
+    @set("_activeQuestionIndex", questionIndex)
+    return @
+
+  getActiveQuestionIndex: () ->
+    return @get("_activeQuestionIndex")
+
+  getActiveQuestion: () ->
+    return @questions[@getActiveQuestionIndex()]
+
+  # how we deterministically shuffle the candidates based on the user's netId
+  random_map = {}
+
+  # returns a numerical SHA1 hash of a string as an integer
+  stringHash = (string) ->
+    sha1 = CryptoJS.SHA1(string).toString()
+    hash = parseInt(sha1, 16)
+    return hash
+
+  root.stringHash = stringHash
+
+  getRandomElectionMap = (election, user) ->
+    if !random_map[election._id]
+      user ?= Meteor.user()
+      random_map[election._id] = _.map(election.questions, (question) ->
+        # Keep a record of which hashes correspond to which indexes
+        choiceIndexes = {}
+        # Hash every choice with a combination of the choiceId, and the
+        # netId of the user
+        choiceHashes = _.map(question.choices, (choice, index) ->
+          seed = choice._id
+          if user
+            seed += user.profile.netId
+          hash = stringHash(seed)
+          choiceIndexes[hash] = index
+          return hash
+        )
+        # Sort the hashes
+        choiceHashes.sort()
+        # Return the shuffled list of indexes
+        return _.map(choiceHashes, (choiceHash) ->
+          return choiceIndexes[choiceHash]
+        )
+      )
+    return random_map[election._id]
+
+  # fetches the map of the random choices for a specific question
+  getRandomQuestionMap: (questionIndex) ->
+    return getRandomElectionMap(@)[questionIndex]
+
+  # returns the random choice for a specific question and choice index
+  getRandomChoice: (questionIndex, choiceIndex) ->
+    trueChoiceIndex = getRandomElectionMap(@)[questionIndex][choiceIndex]
+    return @get("questions")[questionIndex].choices[trueChoiceIndex]
+
+
+
+
+
+Election.addOfflineFields(["activeQuestionIndex"]);
 
 Election.setupTransform()
 # Promote it to the global scope
 root.Election = Election
 
+
 # We need to enforce slugs
 Elections.before.insert((userId, doc) ->
   doc.slug = Utilities.generateSlug(doc.name, Elections)
   doc.status = "unopened"
+  doc.questions ?= []
+  if userId
+    user = User.fetchOne(userId)
+    doc.creator = user.getNetId()
 )
 
 Elections.after.update((userId, doc, fieldNames, modifier, options) ->

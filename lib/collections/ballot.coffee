@@ -8,6 +8,65 @@ class Ballot extends ReactiveClass(Ballots)
     _.extend(@, fields)
     Ballot.initialize.call(@)
 
+  # For pick mode
+  isPicked: (questionIndex, choiceIndex) ->
+    @depend()
+    console.log("HERE")
+    console.log(questionIndex)
+    console.log(choiceIndex)
+    console.log(@)
+    choice = @questions[questionIndex].choices[choiceIndex]
+    return choice.value == true
+
+  # toggling a pick on a choice
+  pick: (questionIndex, choiceIndex) ->
+    @changed()
+    question = @questions[questionIndex]
+    choice = question.choices[choiceIndex]
+    choice.value = !choice.value
+    newValue = choice.value
+    # Changes if they just selected a choice
+    if newValue == true
+      # If it is not multiple choice, make sure all other choices are false
+      if (!question.options.multi)
+        _.each(question.choices, (choice, index) ->
+          if index != choiceIndex
+            choice.value = false
+        )
+      # Otherwise check if abstain is on, and if so, set it to false
+      else if (question.options.allowAbstain)
+        abstainChoice = question.choices[question.choices.length - 1]
+        abstainChoice.value = false
+    # Changes if they deselected a choice
+    else
+      if (question.options.allowAbstain)
+        # If it's not multiple choice or nothing else is selected
+        if (!question.options.multi || !_.find(question.choices, (choice) ->
+          return choice.value == true
+        ))
+          abstainChoice = question.choices[question.choices.length - 1]
+          abstainChoice.value = true
+    return @
+
+  abstain: (questionIndex) ->
+    @changed()
+    question = @questions[questionIndex]
+    # TODO: implement rank abstain
+    if (question.options.type == "pick")
+      # set all choice values to false
+      _.each(question.choices, (choice) ->
+        choice.value = false
+      )
+      abstainChoice = question.choices[question.choices.length - 1]
+      abstainChoice.value = true
+    return @
+
+  isAbstaining: (questionIndex) ->
+    question = @questions[questionIndex]
+    abstainChoice = question.choices[question.choices.length - 1]
+    @depend()
+    return abstainChoice.value
+
   @generateBallot = (election, user) ->
     if not election
       throw new Meteor.Error(500,
@@ -24,28 +83,21 @@ class Ballot extends ReactiveClass(Ballots)
     ballot.questions = _.map(election.questions, (question) ->
       transformedQuestion = _.omit(question,
         "description", "name", "choices")
-      console.log(transformedQuestion)
       # Transform each choice
       transformedQuestion.choices = _.map(question.choices, (choice, index) ->
         transformedChoice = _.omit(choice,
           "description", "image", "name", "votes")
         transformedChoice.value = switch (question.options.type)
-          when "pick" then {
-            selected: "no"
-          }
-          when "rank" then {
-            rank: 0
-          }
-          else {
-            selected: "no"
-          }
+          when "pick" then false
+          when "rank" then 0
+          else false
         return transformedChoice
       )
       if (transformedQuestion.options.allowAbstain)
-        transformedChoice.push({
+        transformedQuestion.choices.push({
           name: "abstain"
           _id: "abstain"
-          value: "true"
+          value: true
         })
       return transformedQuestion
     )
@@ -67,21 +119,18 @@ class Ballot extends ReactiveClass(Ballots)
   activeBallotDep = new Deps.Dependency
   activeBallot = undefined
   @setActive = (election) ->
-    if activeBallot.electionId == election._id
+    if activeBallot?.electionId == election._id
       return @
     activeBallotDep.changed()
     activeBallot = @getBallot(election)
-    Election.setActive(election.slug)
     return @
 
+  # Reactively fetch the active ballot
   @getActive = () ->
     activeBallotDep.depend()
+    if activeBallot
+      activeBallot.depend()
     return activeBallot
-
-  random_map = {}
-
-
-
 
 Ballot.setupTransform()
 

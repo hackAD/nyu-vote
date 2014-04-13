@@ -22,7 +22,7 @@ Meteor.publish("adminElections", ()->
         ]
     )
 )
-Meteor.publish("elections", () ->
+Meteor.publish("voters", () ->
   user = Meteor.users.findOne(this.userId)
   if not user
     this.ready()
@@ -39,30 +39,9 @@ Meteor.publish("elections", () ->
     {fields:
       name: 1,
       description: 1,
-      questions: 1
+      questions: 1,
+      slug: 1
     }
   )
   return handle
-)
-
-Meteor.publish("votedElections", () ->
-  user = Meteor.users.findOne(this.userId)
-  if not user
-    this.ready()
-    return
-  groups = Groups.
-    find({netIds: user.profile.netId}).fetch()
-  if groups.length == 0
-    this.ready()
-    return
-  return Elections.find(
-    groups:
-      $in: _.map(groups, (g) -> g._id)
-    status:"open"
-    ,
-    {fields:
-      name: 1
-      description: 1
-    }
-  )
 )

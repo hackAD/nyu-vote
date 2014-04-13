@@ -6,15 +6,12 @@ ElectionsShow = ReactMeteor.createClass({
       election: Election.getActive()
     };
   },
-  beginVote: function() {
-    Router.go("electionsVote", {slug: this.state.election.slug, page: 0});
-  },
   render: function() {
     return(
       <div>
         <h1>{this.state.election.name}</h1>
         <p>{this.state.election.description}</p>
-        <button onClick={beginVote}>Cast Your Ballot</button>
+        <a href={Router.path("electionsVote", {slug: this.state.election.slug, step: 0})}>Cast Your Ballot</a>
       </div>
     );
   }

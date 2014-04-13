@@ -6,7 +6,7 @@ ServiceConfiguration.configurations.insert
   secret: process.env.googleSecret,
 
 Accounts.onCreateUser( (options, user) ->
-  if user.username == "devAdmin" && isDevEnv()
+  if user.username == "devAdmin"
     user.profile =
       netId: "devAdmin"
     return user
