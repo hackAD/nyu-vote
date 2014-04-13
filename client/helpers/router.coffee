@@ -4,7 +4,7 @@ Router.configure
 Router.onBeforeAction("loading")
 
 voterHandle = () ->
-  return electionsHandle
+  return [electionsHandle, ballotsHandle]
 
 setActiveElection = (newElectionSlug) ->
   Deps.nonreactive(() ->
