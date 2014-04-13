@@ -1,0 +1,55 @@
+Group
+{
+        "name" : "Global Admins",
+        "description" : "This is the initial group.",
+        "creator" : "devAdmin",
+        "admins" : [
+                "devAdmin"
+        ],
+        "netIds" : [
+                "devAdmin"
+        ],
+        "_id" : "FwqFGBT64uJ6zPSfr",
+        "slug" : "global-admins"
+}
+
+Election
+{
+        "name" : "nyuad_2016_rep_election",
+        "description" : "Election for class representatives of NYUAD class of 2016.",
+        "status" : "unopened",
+        "creator" : "random_admin_1",
+        "groups" : [
+                "EgbFRY5F3XT8RxHED"
+        ],
+        "questions" : [
+                {
+                        "_id" : "f280a471c1ea1f859845f9e7",
+                        "name" : "rep_question",
+                        "description" : "Class rep.",
+                        "options" : {
+                                "type" : "pick",
+                                "multi" : false,
+                                "allowAbstain" : false
+                        },
+                        "choices" : [
+                                {
+                                        "_id" : "d2ecb73e2c8032e53ea4aaf7",
+                                        "name" : "2016_rep_choice_1",
+                                        "description" : "I am the best candidate because I am the first candidate",
+                                        "image" : "http://reggiestake.files.wordpress.com/2012/06/darth-vader-3.jpeg",
+                                        "votes" : 0
+                                },
+                                {
+                                        "_id" : "26dd60cd8c83aab1c75995f6",
+                                        "name" : "2016_rep_choice_2",
+                                        "description" : "I am the best candidate because I don't rely on numbering.",
+                                        "image" : "",
+                                        "votes" : 0
+                                }
+                        ]
+                }
+        ],
+        "_id" : "BB6K8uZe8sqcLBYEd",
+        "slug" : "nyuad_2016_rep_election"
+}
