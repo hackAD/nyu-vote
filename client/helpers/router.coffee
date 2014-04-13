@@ -15,9 +15,6 @@ setActiveElection = (newElectionSlug) ->
     return election
   )
 
-
-  
-
 Router.map ->
   @route "home",
     path: "/"
