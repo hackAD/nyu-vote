@@ -9,6 +9,12 @@ Router.onBeforeAction("loading")
 
 voterHandle = () ->
   return [electionsHandle, ballotsHandle, usersHandle]
+adminHandle = () ->
+  return [
+    Meteor.subscribe("adminElections"),
+    Meteor.subscribe("adminGroups"),
+    Meteor.subscribe("adminWhitelist")
+  ]
 
 setActiveElection = (newElectionSlug) ->
   Deps.nonreactive(() ->
@@ -25,6 +31,7 @@ Router.map ->
     waitOn: voterHandle
   @route "admin",
     path: "/admin"
+    waitOn: adminHandle
     layoutTemplate: "adminMaster"
     template: "admin"
   @route "about",

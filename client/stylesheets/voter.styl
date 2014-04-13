@@ -20,9 +20,7 @@ thin = 400
 // html, body, div, a
 //   color: black !important
 body
-	color: white
-	background-color: darkest-blue
-	text-align: center
+	font-family: Montserrat
 
 .purple-bg
 	background-color: purple
@@ -34,12 +32,38 @@ body
 .dark-blue-bg
 	background-color darkest-blue
 
+.header
+	height: 30px
+	line-height: 30px
+	vertical-align: middle
+
+.valid
+	color: green !important
+
+.invalid
+	color: red !important
+
+.current
+	border: solid 1px black
+
 #container
+	color: white
+	background-color: darkest-blue
+	text-align: center
 	text-transform: uppercase
 	position: absolute
 	min-width: 320px
 	width: 100%
 	height: 100%
+	h1
+		font-size: 6em
+		position: relative
+		width: 100%
+		padding-bottom: 30px
+	h2 
+		font-size: 2.5em
+	h3
+		font-size: 1.8em
 	a
 		color: white
 		text-decoration: none
@@ -54,19 +78,11 @@ body
 		a
 			float left
 			color light-grey
+			position absolute
+			display block
 
 .content-wrapper
 	height: 100%
-
-h1
-	font-size: 6em
-	position: relative
-	width: 100%
-	padding-bottom: 30px
-h2 
-	font-size: 2.5em
-h3
-	font-size: 1.8em
 
 // LOGIN SCREEN
 #login-info
