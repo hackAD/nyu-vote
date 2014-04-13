@@ -8,6 +8,43 @@ class Ballot extends ReactiveClass(Ballots)
     _.extend(@, fields)
     Ballot.initialize.call(@)
 
+  # Validates the entire Ballot
+  isValid: () ->
+    for i in [0...@questions.length]
+      if not @validate(i)
+        return false
+    return true
+
+  # Validates a specific question on the ballot
+  validate: (questionIndex) ->
+    valid = false
+    question = @questions[questionIndex]
+    # TODO: implemenent validation for rankings
+    if (question.options.type == "pick")
+      choices = question.choices
+      selectedChoices = @selectedChoices(questionIndex, true)
+      if (question.options.multi)
+        if @isAbstaining(questionIndex)
+          valid = selectedChoices.length == 1
+        else
+          valid = selectedChoices.length > 0
+      else
+        valid = selectedChoices.length == 1
+    return valid
+
+  selectedChoices: (questionIndex, returnBallots) ->
+    election = @getElection()
+    array = if returnBallots then @questions[questionIndex].choices else
+      election.questions[questionIndex].choices
+    selected = _.filter(array, (choice, index) ->
+      ballotChoice = @questions[questionIndex].choices[index]
+      return ballotChoice.value == true
+    )
+    return selected
+
+  getElection: () ->
+    Election.fetchOne(@electionId)
+
   # For pick mode
   isPicked: (questionIndex, choiceIndex) ->
     @depend()

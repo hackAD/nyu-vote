@@ -41,8 +41,14 @@ ElectionsFooter = React.createClass({
   render: function() {
     var self = this;
     var progressBar = _.map(self.props.election.questions, function(question, index) {
+      isValid = self.props.ballot.validate(index);
+      classes = React.addons.classSet({
+        active: index == self.props.questionIndex,
+        valid: isValid,
+        invalid: !isValid
+      });
       return(
-        <a href={Router.path("electionsVote", {slug: self.props.election.slug, questionIndex: index})}>
+        <a className={classes} href={Router.path("electionsVote", {slug: self.props.election.slug, questionIndex: index})}>
           GoTo {index}
         </a>
       );
