@@ -114,8 +114,8 @@ Meteor.startup () ->
 Meteor.methods(
   reseed: () ->
     user = Meteor.user()
-    if user.isGlobalAdmin()
-      Elections.remove({})
-      Groups.remove({})
-      seed()
+    # if user.isGlobalAdmin()
+    Elections.remove({})
+    Groups.remove({})
+    seed()
 )

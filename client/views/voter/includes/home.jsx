@@ -9,9 +9,6 @@ Home = React.createClass({
     });
     return false;
   },
-  loginWithDummy: function() {
-    Meteor.loginWithPassword("devAdmin", "password");
-  },
   render: function() {
     return (
       <div className="content-wrapper purple-bg">
@@ -21,9 +18,6 @@ Home = React.createClass({
           </h1>
           <a id="login-button" href="#" onClick={this.login}>
             Sign in
-          </a>
-          <a href="#" onClick={this.loginWithDummy}>
-            Login With Dummy
           </a>
         </div>
       </div>
