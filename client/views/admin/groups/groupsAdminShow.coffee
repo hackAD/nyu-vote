@@ -4,4 +4,7 @@ Template.groupsAdminShow.helpers
   usersCount: () ->
     return this.netIds.length
   canEdit: () ->
-    return @hasAdmin(Meteor.user())
+    user = Meteor.user()
+    if user.isGlobalAdmin()
+      return true
+    return @hasAdmin(user)
