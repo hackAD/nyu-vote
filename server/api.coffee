@@ -8,7 +8,7 @@ Router.map ->
         this.response.end("Bad secret")
         return
       electionData = this.request.body
-      Election.create(electionData)
+      election = Election.create(electionData)
       this.response.writeHead(200, {'Content-Type': "text/plain"})
       this.response.end("Ok")
   @route "createGroupAPI",

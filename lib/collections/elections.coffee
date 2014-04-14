@@ -52,7 +52,8 @@ class Election extends ReactiveClass(Elections)
       return true
     # They can be the admin of any of the groups
     for group in @groups
-      if group.hasAdmin(user)
+      groupObj = Group.fetchOne(group)
+      if groupObj.hasAdmin(user)
         return true
     return false
 
@@ -199,10 +200,9 @@ Election.setupTransform()
 # Promote it to the global scope
 root.Election = Election
 
-createValidation = (election) ->
+createValidation = (election, userId) ->
   election.questions ?= []
   election.groups ?= []
-  election.creator = Meteor.user().profile.netId
   return election
 
 
@@ -210,10 +210,10 @@ createValidation = (election) ->
 Elections.before.insert((userId, doc) ->
   doc.slug = Utilities.generateSlug(doc.name, Elections)
   doc.status = "unopened"
-  createValidation(doc)
   if userId
     user = User.fetchOne(userId)
     doc.creator = user.getNetId()
+  return doc
 )
 
 Elections.after.update((userId, doc, fieldNames, modifier, options) ->
@@ -278,6 +278,24 @@ Meteor.methods(
       image: image
     )
     election.update()
+
+  resetElection: (electionId) ->
+    election = Election.fetchOne(electionId)
+    if not election.hasAdmin(Meteor.user())
+      return
+    Ballots.remove({electionId: election._id})
+    election.update({
+      $set: {
+        status: "unopened"
+      }
+    })
+
+  deleteElection: (electionId) ->
+    election = Election.fetchOne(electionId)
+    if not election.hasAdmin(Meteor.user())
+      return
+    Ballots.remove({electionId: election._id})
+    election.remove()
 
   createElection: (name, description="", group_ids = []) ->
     if typeof(group_ids) == "string"
