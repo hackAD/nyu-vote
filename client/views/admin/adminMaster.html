@@ -1,23 +1,81 @@
 <template name="adminMaster">
-	<div id = "header">
-    <a href="/"><div id="nyuvote">NYUVote</div></a>
-	</div>
   {{> userErrors}}
-  {{#if loggedIn}}
-    {{#if canAccess}}
-      {{> yield}}
-    {{else}}
-      <p>
-        Sorry! You are not currently logged in as an admin
-        of NYUVote. Please contact lingliang.zhang (at) nyu.edu
-        if you want like to use NYUVote for your program.
-      </p>
-    {{/if}}
-  {{else}}
-    <h1>
-      You are not Logged In
-    </h1>
-    <button class="login">Login</button>
-  {{/if}}
-  {{> footer}}
+
+  <div id="layout" class="content pure-g">
+      <div id="nav" class="pure-u">
+          <a href="#" class="nav-menu-button">Menu</a>
+          <div class="nav-inner">
+              <div class="pure-menu pure-menu-open">
+                  <ul>
+                      <li><h2 class="white-text center">NYU Vote</h2></li>
+                      <li class="pure-menu-heading">{{username}}</li>
+                      <li><a href="#" 
+                        class="switch-election {{#if isElections}}bold{{/if}}">
+                        <span class="email-label-personal"></span>Elections<span
+                          class="email-count">({{electionsCount}})</span></a></li>
+                      <li><a href="#" 
+                        class="switch-group {{#if isElections}}{{else}}bold{{/if}}">
+                       <span class="email-label-travel"></span> Groups <span
+                          class="email-count">({{groupsCount}})</span></a></li>
+                      <li><a href="#">Logout</a></li>
+                  </ul>
+              </div>
+          </div>
+      </div>
+
+      <div id="list" class="pure-u-1">
+        <div class="email-item pure-g {{#if isElections}} yellow-background {{else}} green-background {{/if}} ">
+          <div class="pure-u">
+          </div>
+          <div class="pure-u-3-4">
+            <h3 class="email-name white-text">Showing {{collectionName}}s</h3>
+          </div>
+        </div>
+
+        <div class="email-item email-item-unread pure-g item-unread">
+          <div class="pure-u">
+          </div>
+          <div class="pure-u-3-4">
+            <a href="{{#if isElections}} {{pathFor 'adminElectionsCreate'}}
+              {{else}} {{pathFor 'adminGroupsCreate'}} {{/if}} ">
+              <h5 class="email-name">Create New {{collectionName}}</h5>
+            </a>
+          </div>
+        </div>
+        {{#each listItems}}
+        <div class="email-item {{#if isSelected}}email-item-selected {{/if}} pure-g">
+          <a href="{{#if isElections}} {{pathFor 'adminElectionsShow'}}
+            {{else}} {{pathFor 'adminGroupsShow'}} {{/if}}">
+            <div class="pure-u">
+            </div>
+            <div class="pure-u-3-4">
+              <h5 class="email-name">{{name}}</h5>
+              <p class="email-desc">
+                {{description}}
+              </p>
+            </div>
+          </a>
+        </div>
+        {{/each}}
+      </div>
+
+      <div id="main" class="pure-u-1">
+          {{#if loggedIn}}
+            {{#if canAccess}}
+              {{> yield}}
+            {{else}}
+              <p>
+                Sorry! You are not currently logged in as an admin
+                of NYUVote. Please contact lingliang.zhang (at) nyu.edu
+                if you want like to use NYUVote for your program.
+              </p>
+            {{/if}}
+          {{else}}
+            <h1>
+              You are not Logged In
+            </h1>
+            <button class="login">Login</button>
+          {{/if}}
+    </div>
+  </div>
 </template>

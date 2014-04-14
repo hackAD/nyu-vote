@@ -1,70 +1,179 @@
-<template name="electionsAdminModify">
-  <form class="election-form form-horizontal">
-    <input type="hidden" name="_id" value="{{_id}}">
-    <div class="table-responsive">
-      <table border="1" class="table table-striped table-bordered table-hover table-condensed">
-        <tr>
-          <td><button class="submitElection btn btn-success btn-block" href="#">Save Election</button></td>
-          <td><button class="cancelSubmitElection btn btn-warning btn-block" href="#">Cancel Modify</button></td>
-          <td><button class="deleteElection btn btn-danger btn-block" href="#">Delete Election</button></td>
-        </tr>
-        <tr><td><label class="text-muted" for="election-name">Name: </label><input id="election-name" name="name" class="form-control election name" type="text" placeholder="{{name}}" value="{{name}}"></td></tr>
-        <tr><td><label class="text-muted" for="election-description">Description:</label><input id="election-description" name="description" class="form-control election description" type="text" placeholder="{{description}}" value="{{description}}"></td></tr>
-        <tr><td>Creator: {{creator}}</td></tr>
-        <tr><td>Groups: </td></tr>
-        <tr><td>
-        {{#each groups}}
-          <input name="group" class="election group" type="checkbox"
-          value="{{_id}}" checked="{{hasGroup _id ../groups }}">{{name}}<br />
-        {{/each}}
-        </td></tr>
-        <tr><td>Questions: </td></tr>
-        {{#each questions}}
-        <tr class="success"><td></td><td><label class="text-muted" for="question-{{_id}}-name">Name:</label><input id="question-{{_id}}-name" name="questionName" class="form-control question name" type="text" placeholder="{{name}}" value="{{name}}"></td></tr>
-        <tr><td></td><td><label class="text-muted" for="question-{{_id}}-description">Description:</label><input id="question-{{_id}}-description" name="questionDescription" class="form-control question description" type="text" placeholder="{{description}}" value="{{description}}"></td></tr>
-          <tr>
-            <td></td><td><input id="allow-abstain" name="questionAllowAbstain"
-              class="question allowAbstain" type="checkbox"
-              checked="{{allowAbstain}}"><label for="allow-abstain">Allow Abstention</label></td>
-          </tr>
-          <tr>
-            <td></td><td><input id="multi" name="questionMulti"
-              class="question multi" type="checkbox" checked="{{multi}}"><label for="multi">Multiple Choice</label></td>
-          </tr>
-          <tr><td></td><td>Choices: </td></tr>
-          {{#each choices}}
-            <tr class="warning"><td></td><td></td><td><label class="text-muted" for="choice-{{_id}}-name">Name:</label><input id="choice-{{_id}}-name"  name="choiceName" class="form-control choice name" type="text" placeholder="{{name}}" value="{{name}}"></td></tr>
-            <tr><td></td><td></td><td><label class="text-muted" for="choice-{{_id}}-description">Description::</label><input id="choice-{{_id}}-description" name="choiceDescription" class="form-control choice description" type="text" placeholder="{{description}}" value="{{description}}"></td></tr>
-            <tr><td></td><td></td><td><label class="text-muted" for="choice-{{_id}}-url">Image url:</label><input id="choice-{{_id}}-url" name="choiceImage" class="form-control choice image" type="text" placeholder="{{image}}" value="{{image}}"></td></tr>
-          {{/each}}
-          <tr class="warning">
-            <td></td><td><h6>New Choice</h6></td>
-            <td></td>
-          </tr>
-          <tr><td></td><td></td><td><input class="form-control new choice name" type="text" placeholder="Choice Name"></td></tr>
-          <tr><td></td><td></td><td><input class="form-control new choice description" type="text" placeholder="Choice Description"></td></tr>
-          <tr><td></td><td></td><td><input class="form-control new choice image" type="text" placeholder="Choice Image URL"></td></tr>
-          <tr><td></td><td></td><td><a class="submitChoice btn btn-success btn-block" href="#">Add Choice</a></td></tr>
-        {{/each}}
-        <tr class="success">
-          <td><h6>New Question</h6></td>
-          <td></td>
-        </tr>
-        <tr><td></td><td><input class="form-control new question name" type="text" placeholder="Question Name"></td></tr>
-        <tr><td></td><td><input class="form-control new question description" type="text" placeholder="Question Description"></td></tr>
-        <tr>
-          <td></td><td><input id="new-question-abstain" class="new question allowAbstain" type="checkbox" value="allowAbstain"><label for="new-question-abstain">Allow Abstention</label></td>
-        </tr>
-        <tr>
-          <td></td><td><input id="new-question-multi" class="new question multi" type="checkbox" value="multi"><label for="new-question-multi">Multiple Choice</label></td>
-        </tr>
-        <tr><td></td><td><a class="submitQuestion btn btn-success btn-block" href="#">Add Question</a><br/><br/></td></tr>
-        <tr>
-          <td><button class="submitElection btn btn-success btn-block" href="#">Save Election</button></td>
-          <td><button class="cancelSubmitElection btn btn-warning btn-block" href="#">Cancel Modify</button></td>
-          <td><button class="deleteElection btn btn-danger btn-block" href="#">Delete Election</button></td>
-        </tr>
-      </table>
+<template name="electionsAdminEdit">
+  {{#with election}}
+    <div class="email-content">
+      <div class="email-content-header pure-g">
+          <div class="pure-u-1-2">
+              <h1 class="email-content-title">Editing Election {{ name }}</h1>
+              <p class="email-content-subtitle">
+              <span>Created By</span> {{creator}}
+              </p>
+          </div>
+          <div class="email-content-controls pure-u-1-2">
+            {{#if canEdit}}
+              <button class="pure-button button-success save-election">Save Election</button>
+            {{else}}
+              <button class="pure-button button-success" disabled>Election
+                Locked After First Open</button>
+            {{/if}}
+              <a href={{pathFor 'adminElectionsShow'}} class="pure-button
+                pure-button-primary">Cancel Edit Election</a>
+              <button class="pure-button button-error delete-election">Delete Election</button>
+          </div>
+      </div>
+      <div class="email-content-body">
+        <!-- start -->
+        <form class="pure-form pure-form-aligned">
+          <input type="hidden" name="_id" value="{{_id}}">
+              <fieldset>
+                <div class="pure-control-group">
+                  <label 
+                    for="election-name">Name</label><input id="election-name"
+                  name="name" class="election name pure-input-1-2" type="text" placeholder="{{name}}" value="{{name}}">
+                </div>
+                <div class="pure-control-group">
+                  <label 
+                    for="election-description">Description</label>
+                  <textarea
+                      id="election-description" name="description"
+                      class="pure-input-1-2 election description" type="text"
+                      placeholder="Type a
+                      description">{{description}}</textarea>
+                </div>
+                <div class="pure-controls">
+                  <h2>
+                    Groups 
+                  </h2>
+                  
+                  {{#each groups}}
+                    <label for="{{_id}}" class="pure-checkbox">
+                      <input name="group" id="{{_id}}" class="election group" type="checkbox"
+                      value="{{_id}}" checked="{{hasGroup _id ../groups
+                    }}">{{name}}</label>
+                  {{/each}}
+                </div>
+              </fieldset>
+              
+              <div class="pure-controls">
+                <h2>Questions </h2>
+              </div>
+              {{#each questions}}
+              <fieldset>
+                <div class="pure-controls">
+                  <h3>Question #{{questionCount}}</h3>
+                </div>
+                <div class="pure-control-group">
+                  <label for="question-{{_id}}-name">Name</label>
+                  <input id="question-{{_id}}-name" name="questionName" class="pure-input-1-2 question name" type="text" placeholder="{{name}}" value="{{name}}">
+                </div>
+                <div class="pure-control-group">
+                  <label for="question-{{_id}}-description">Description</label>
+                  <textarea
+                    id="question-{{_id}}-description" name="questionDescription"
+                    class="pure-input-1-2 question description" type="text"
+                    placeholder="Question
+                    Description">{{description}}</textarea>
+                </div>
+                <div class="pure-controls">
+                  <label for="allow-abstain" class="pure-checkbox">
+                  <input id="allow-abstain" name="questionAllowAbstain"
+                        class="question allowAbstain" type="checkbox"
+                        checked="{{allowAbstain}}">
+                    Allow Abstention</label>
+                  <label for="multi" class="pure-checkbox">
+                    <input id="multi" name="questionMulti"
+                    class="question multi" type="checkbox"
+                        checked="{{multi}}">
+                    Multiple Choice</label>
+                </div>
+              </fieldset>
+                
+              <div class="pure-controls">
+                <h4>Choices</h4>
+              </div>
+                {{#each choices}}
+                <fieldset>
+                  <div class="pure-controls">
+                    <h4>Choice #{{choiceCount}}</h4>
+                  </div>
+                  <div class="pure-control-group">
+                    <label for="choice-{{_id}}-name">Name</label>
+                    <input id="choice-{{_id}}-name"  name="choiceName" class="pure-input-1-2 choice name" type="text" placeholder="{{name}}" value="{{name}}">
+                  </div>
+                  <div class="pure-control-group">
+                    <label for="choice-{{_id}}-description">Description</label>
+                    <textarea id="choice-{{_id}}-description"
+                        name="choiceDescription" class="pure-input-1-2 choice
+                        description" type="text" placeholder="Choice
+                        Description"
+                        >Description</textarea>
+                  </div>
+                  <div class="pure-control-group">
+                    <label for="choice-{{_id}}-url">Image url</label>
+                    <input id="choice-{{_id}}-url" name="choiceImage" class="pure-input-1-2 choice image" type="text" placeholder="{{image}}" value="{{image}}">
+                  </div>
+                </fieldset>
+                {{/each}}
+
+              <div class="pure-controls">
+                <h4>New Choice</h4>
+              </div>
+                  
+              <fieldset>
+                <div class="pure-control-group">
+                  <label for="new-choice-name-{{_id}}">Choice Name</label>
+                  <input id="new-choice-name-{{_id}}" class="pure-input-1-2 new choice
+                  name" type="text" placeholder="Name">
+                </div>
+                <div class="pure-control-group">
+                  <label for="new-choice-description-{{_id}}">Choice Description</label>
+                  <input id="new-choice-description-{{_id}}" class="pure-input-1-2 new choice description"
+                  type="text" placeholder="Description">
+                </div>
+                <div class="pure-control-group">
+                  <label for="new-choice-image-{{_id}}">Choice Image</label>
+                  <input id="new-choice-image-{{_id}}" class="pure-input-1-2 new choice image" type="text"
+                  placeholder="http://...">
+                </div>
+                <div class="pure-controls">
+                  <button class="submitChoice pure-button"
+                    href="#" value={{_id}}>Add Choice</button>
+                </div>
+              </fieldset>
+              {{/each}}
+              <fieldset>
+                <div class="pure-controls">
+                  <h3>New Question</h3>
+                </div>
+                <div class="pure-control-group">
+                  <label for="new-question-name">Question Name</label>
+                  <input id="new-question-name" class="pure-input-1-2 new question name" type="text" placeholder="Name...">
+                </div>
+                <div class="pure-control-group">
+                  <label for="new-question-description">Question Description</label>
+                  <input id="new-question-description" class="pure-input-1-2 new question description" type="text" placeholder="Description...">
+                </div>
+                <div class="pure-controls">
+                  <label for="new-question-abstain" class="pure-checkbox">
+                  <input id="new-question-abstain" class="new question
+                      allowAbstain" type="checkbox"
+                      value="allowAbstain">
+                    Allow
+                          Abstention</label>
+                  <label
+                    for="new-question-multi" class="pure-checkbox">
+                  <input id="new-question-multi" class="new question
+                      multi" type="checkbox"
+                      value="multi">
+                    Multiple
+                          Choice</label>
+                </div>
+                <div class="pure-controls">
+                  <button class="submitQuestion pure-button button-secondary" href="#">Add Question</button>
+                </div>
+              </fieldset>
+        </form>
+        <!-- end -->
+      </div>
     </div>
-  </form>
+  {{/with}}
 </template>

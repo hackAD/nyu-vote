@@ -1,9 +1,6 @@
 Router.configure
   template: "voterView"
   loadingTemplate: "loading"
-  onBeforeAction: () ->
-    $('html,body').animate({scrollTop:0}, 300)
-
 
 Router.onBeforeAction("loading")
 
@@ -17,36 +14,78 @@ adminHandle = () ->
   ]
 
 setActiveElection = (newElectionSlug) ->
-  Deps.nonreactive(() ->
-    election = Election.getActive()
-    if election?.slug != newElectionSlug
-      election = Election.fetchOne({slug: newElectionSlug})
-      election.makeActive()
-    return election
-  )
+  Session.set("listMode", "elections")
+  election = Elections.findOne({slug: newElectionSlug})
+  election.makeActive()
+  return election
+
+setActiveGroup = (newGroupSlug) ->
+  Session.set("listMode", "groups")
+  group = Groups.findOne({slug: newGroupSlug})
+  group.makeActive()
+  return group
 
 Router.map ->
   @route "home",
     path: "/"
     waitOn: voterHandle
+    onAfterAction: () ->
+      $('html,body').animate({scrollTop:0}, 300)
   @route "admin",
     path: "/admin"
     waitOn: adminHandle
     layoutTemplate: "adminMaster"
     template: "admin"
-  @route "about",
-    path: "/about"
+  @route "adminElectionsCreate",
+    path: "/admin/elections/create"
+    waitOn: adminHandle
     layoutTemplate: "adminMaster"
-    template: "about"
+    template: "electionsAdminCreate"
+  @route "adminElectionsEdit",
+    path: "/admin/elections/:slug/edit"
+    waitOn: adminHandle
+    layoutTemplate: "adminMaster"
+    template: "electionsAdminEdit"
+    onAfterAction: () ->
+      election = setActiveElection(@params.slug)
+  @route "adminElectionsShow",
+    path: "/admin/elections/:slug"
+    waitOn: adminHandle
+    layoutTemplate: "adminMaster"
+    template: "electionsAdminShow"
+    onAfterAction: () ->
+      election = setActiveElection(@params.slug)
+  @route "adminGroupsCreate",
+    path: "/admin/groups/create"
+    waitOn: adminHandle
+    layoutTemplate: "adminMaster"
+    template: "groupsAdminCreate"
+  @route "adminGroupsEdit",
+    path: "/admin/groups/:slug/edit"
+    waitOn: adminHandle
+    layoutTemplate: "adminMaster"
+    template: "groupsAdminEdit"
+    onAfterAction: () ->
+      group = setActiveGroup(@params.slug)
+  @route "adminGroupsShow",
+    path: "/admin/groups/:slug"
+    waitOn: adminHandle
+    layoutTemplate: "adminMaster"
+    template: "groupsAdminShow"
+    onAfterAction: () ->
+      group = setActiveGroup(@params.slug)
+      console.log(group)
   @route "electionsReview",
     path: "/:slug/review"
     waitOn: voterHandle
     onAfterAction: () ->
       setActiveElection(@params.slug)
+      $('html,body').animate({scrollTop:0}, 300)
   @route "electionsVote",
     path: "/:slug/:questionIndex"
     waitOn: voterHandle
     onAfterAction: () ->
+      $('html,body').animate({scrollTop:0}, 300)
       election = setActiveElection(@params.slug)
       if @params.questionIndex < 0
         @redirect("electionsVote", {slug: @params.slug, questionIndex: 0})
@@ -60,3 +99,4 @@ Router.map ->
     waitOn: voterHandle
     onAfterAction: () ->
       setActiveElection(@params.slug)
+      $('html,body').animate({scrollTop:0}, 300)

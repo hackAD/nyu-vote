@@ -1,34 +1,62 @@
-Template.electionsAdminModify.helpers
+questionCount = 0
+choiceCount = 0
+Template.electionsAdminEdit.helpers
+  election: () ->
+    questionCount = 0
+    return Election.getActive()
   allowAbstain: () ->
-    return if this.options.allowAbstain == true then "checked" else ""
+    return if this.options.allowAbstain then "checked" else null
   multi: () ->
-    return if this.options.multi == true then "checked" else ""
+    return if this.options.multi == true then "checked" else null
+  canEdit: () ->
+    this.status == "unopened"
   groups: () ->
-    return Groups.find()
-  hasGroup: (id, groups) ->
-    console.log "checking group"
-    console.log id
-    console.log groups
-    return if id in groups then "checked" else ""
+    seen = {}
+    existingGroups = _.map(@groups, (groupId) ->
+      seen[groupId] = true
+      localGroup = Group.fetchOne(groupId)
+      if localGroup
+        return localGroup
+      else
+        return  {
+          _id: groupId
+          name: "hidden group"
+        }
+    )
+    Groups.find().forEach((group) ->
+      if seen[group._id]
+        return
+      existingGroups.push(group)
+    )
+    return existingGroups
 
-Template.electionsAdminModify.events
-  "click .submitElection, submit .election-form": (e) ->
+  hasGroup: (id, groups) ->
+    return if id in groups then "checked" else null
+  questionCount: () ->
+    choiceCount = 0
+    questionCount += 1
+    return questionCount
+  choiceCount: () ->
+    choiceCount += 1
+    return choiceCount
+
+Template.electionsAdminEdit.events
+  "click .save-election, submit .election-form": (e) ->
     e.preventDefault()
     groups = $(".election.groups").val()
-    #Elections.update({_id: this._id},$set:{name: name,description: description},$addToSet:{groups:$each:groups})
-    oldElection = Elections.findOne(this._id)
+    oldElection = @
     questionIndex = -1
     choiceIndex = -1
-    Session.set("modifyingElection", "0")
-    values = $('.election-form').serializeArray()
+    values = $('form').serializeArray()
     allowAbstain = $('')
     newGroups = []
+    console.log values
     for field in values
       switch field.name
         when "group"
           newGroups.push(field.value)
         when "name"
-          oldElection.name = field.value 
+          oldElection.name = field.value
         when "description"
           oldElection.description = field.value
         when "questionName"
@@ -58,28 +86,64 @@ Template.electionsAdminModify.events
         questions: oldElection.questions
         groups: newGroups
     )
-  "click .cancelSubmitElection": (e) ->
-    e.preventDefault()
-    Session.set("modifyingElection", "0")
   "click .submitQuestion": (e) ->
     e.preventDefault()
+    election = Election.getActive()
     name = $(".new.question.name").val()
     description = $(".new.question.description").val()
-    if $(".new.question.allowAbstain").attr('checked') == "checked"
-      allowAbstain = true 
-    else 
+    if $(".new.question.allowAbstain").is(':checked')
+      allowAbstain = true
+    else
       allowAbstain = false
-    if $(".new.question.multi").attr('checked') == "checked"
-      multi = true 
-    else 
+    if $(".new.question.multi").is(':checked')
+      multi = true
+    else
       multi = false
-    Meteor.call("createQuestion", this._id, name, description, {allowAbstain: allowAbstain, multi: multi})
+    console.log(allowAbstain)
+    election.addQuestion({
+      name: name
+      description: description
+      options: {
+        type: "pick"
+        allowAbstain: allowAbstain
+        multi: multi
+      }
+    })
+    election.update((err) ->
+      if not err
+        $(".new.question.name").val("")
+        $(".new.question.description").val("")
+        $(".new.question.multi").attr("checked", false)
+        $(".new.question.allowAbstain").attr("checked", false)
+      else
+        Meteor.userError.throwError(err.message)
+    )
   "click .submitChoice": (e, template) ->
     e.preventDefault()
-    electionId = template.data._id
-    name = $(".new.choice.name").val()
-    description = $(".new.choice.description").val()
-    image = $(".new.choice.image").val()
-    console.log "creating choice"
-    console.log name
-    Meteor.call("createChoice", electionId, this._id, name, description, image)
+    id = e.target.value
+    election = Election.getActive()
+    questionId = @_id
+    name = $("#new-choice-name-" + id).val()
+    description = $("#new-choice-description-" + id).val()
+    image = $("#new-choice-image-" + id).val()
+    console.log(name)
+    election.addChoice(questionId, {
+      name: name
+      description: description
+      image: image
+    })
+    election.update((err) ->
+      if not err
+        $("#new-choice-name-" + id).val("")
+        $("#new-choice-description-" + id).val("")
+        $("#new-choice-image-" + id).val("")
+      else
+        Meteor.userError.throwError(err.message)
+    )
+
+  "click .delete-election": (e) ->
+    e.preventDefault()
+    if confirm("Are you sure you want to delete this election?")
+      election = Election.getActive()
+      election.remove()
+      Router.go("admin")

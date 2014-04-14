@@ -22,8 +22,3 @@ Meteor.methods(
       voters: {$ne: if Meteor.user()?.profile?.netId? then Meteor.user().profile.netId else ""},
     ).count() == 1
 )
-
-Ballots.deny(
-  insert: () ->
-    true
-)

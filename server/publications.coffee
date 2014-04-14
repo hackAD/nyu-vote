@@ -3,30 +3,12 @@ Meteor.publish("adminGroups", ()->
     @ready()
     return
   user = Meteor.users.findOne(@userId)
-  return Groups.find(
-    $or:
-      [
-        {admins: if user?.profile?.netId? then user.profile.netId else "" }
-        ,
-        {creator: user?.profile?.netId}
-      ]
-    )
+  return Group.findWithAdmin(user)
 )
 Meteor.publish("adminElections", ()->
-  groups = findUserGroups(@)
-  if not groups
-    @ready()
-    return
-  return Elections.find(
-      $or:
-        [
-          {groups: {$in: if groups.length > 0 then _.map(groups, (g) -> g._id) else []}}
-          ,
-          {creator: user?.profile?.netId}
-        ]
-    )
+  user = User.fetchOne(@userId)
+  return Election.findWithAdmin(user)
 )
-
 Meteor.publish("adminWhitelist", () ->
   if not @userId
     @ready()
@@ -43,6 +25,7 @@ Meteor.publish("voterElections", () ->
   cursor = Elections.find(
     groups:
       $in: _.map(groups, (g) -> g._id)
+    status: "open"
     ,
     {fields:
       name: 1,
