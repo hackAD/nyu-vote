@@ -16,7 +16,9 @@ ElectionsList = ReactMeteor.createClass({
     };
   },
   logout: function() {
-    Meteor.logout();
+    Meteor.logout(function() {
+      window.location = "http://accounts.google.com/logout";
+    });
   },
   render: function() {
     return(

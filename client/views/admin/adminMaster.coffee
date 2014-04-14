@@ -40,4 +40,6 @@ Template.adminMaster.events
     Session.set("listMode", "groups")
   "click .admin-logout": (e) ->
     e.preventDefault()
-    Meteor.logout()
+    Meteor.logout(() ->
+      window.location = "http://accounts.google.com/logout"
+    )
