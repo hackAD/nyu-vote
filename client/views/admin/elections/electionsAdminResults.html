@@ -1,48 +1,38 @@
-<template name="electionsAdminShow">
+<template name="electionsAdminResults">
   {{#with election}}
     <div class="email-content">
       <div class="email-content-header pure-g">
           <div class="pure-u-1-2">
-              <h1 class="email-content-title">Showing Election: {{ name }}</h1>
+              <h1 class="email-content-title">Showing Results: {{ name }}</h1>
               <p class="email-content-subtitle">
               <span>Created By</span> {{creator}}
               </p>
           </div>
           <div class="email-content-controls pure-u-1-2">
-              <button class="pure-button {{openCloseClass}} openCloseElection">{{openCloseElection}} Election</button>
+            <a href={{pathFor 'adminElectionsShow'}} class="pure-button button-success" disabled>Back to
+              Info</a>
               {{#if canEdit}}
-                <button class="pure-button pure-button-primary" disabled>Election Not Started</button>
                 <a href={{pathFor 'adminElectionsEdit'}} class="pure-button
                   button-warning">Edit This Election</a>
                 <button class="pure-button
                   button-error">Delete Election</button>
               {{else}}
-                <a href={{pathFor 'adminElectionsResult'}} class="pure-button pure-button-primary">View Results</a>
                 <button class="pure-button
                   button-warning" disabled>Election Locked After First Edit</button>
                 <button class="pure-button
                   button-error">Delete Election</button>
               {{/if}}
-
           </div>
       </div>
       <div class="email-content-body">
         <!-- start -->
-        <h1>Election Data</h1>
+        <h1>Election Results</h1>
         <table class="pure-table pure-table-bordered">
           <thead>
             <tr><th>Name</th><th>{{name}}</th></tr>
           </thead>
           <tbody>
             <tr><td>Description</td><td>{{description}}</td></tr>
-          </tbody>
-        </table>
-        <h2>Groups</h2>
-        <table class="pure-table pure-table-horizontal">
-          <tbody>
-            {{#each groups}}
-              <tr><td>{{name}}</td></tr>
-            {{/each}}
           </tbody>
         </table>
         <h2>Questions</h2>
@@ -53,22 +43,10 @@
             </thead>
             <tbody>
                 <tr><td>Description</td><td>{{description}}</td></tr>
-                <tr class="pure-table-odd">
-                  <td colspan=2>{{type}}</td>
-                </tr>
-                <tr>
-                  <td colspan=2>{{allowAbstain}} Abstention</td>
-                </tr>
-                <tr>
-                  <td colspan=2>{{multi}} Choice</td>
-                </tr>
-                <tr class="pure-table-odd">
-                  <td colspan=2>Choices:</td>
-                </tr>
                 {{#each choices}}
                   <tr class="pure-table-odd"><td>Name</td><td>{{name}}</td></tr>
                   <tr><td>Description</td><td>{{description}}</td></tr>
-                  <tr><td>Image</td><td>{{image}}</td></tr>
+                  <tr><td>Votes</td><td>{{votes _id ../_id ../../votes }}</td></tr>
                 {{/each}}
             </tbody>
           </table>

@@ -30,10 +30,6 @@ Template.electionsAdminShow.helpers
     if this.options?.multi then return "Multiple" else return "Single"
 
 Template.electionsAdminShow.events
-  "click .deleteElection": (e) ->
-    e.preventDefault()
-    if confirm("Are you sure you want to delete election '" + this.name + "'?")
-      Elections.remove({_id: this._id})
   "click .openCloseElection": (e) ->
     e.preventDefault()
     if (this.status != "unopened" ||

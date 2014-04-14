@@ -41,6 +41,13 @@ Router.map ->
     waitOn: adminHandle
     layoutTemplate: "adminMaster"
     template: "electionsAdminCreate"
+  @route "adminElectionsResult",
+    path: "/admin/elections/:slug/result"
+    waitOn: adminHandle
+    layoutTemplate: "adminMaster"
+    template: "electionsAdminResults"
+    onAfterAction: () ->
+      election = setActiveElection(@params.slug)
   @route "adminElectionsEdit",
     path: "/admin/elections/:slug/edit"
     waitOn: adminHandle
