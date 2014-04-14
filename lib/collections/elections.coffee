@@ -199,10 +199,9 @@ Election.setupTransform()
 # Promote it to the global scope
 root.Election = Election
 
-createValidation = (election) ->
+createValidation = (election, userId) ->
   election.questions ?= []
   election.groups ?= []
-  election.creator = Meteor.user().profile.netId
   return election
 
 
@@ -210,10 +209,10 @@ createValidation = (election) ->
 Elections.before.insert((userId, doc) ->
   doc.slug = Utilities.generateSlug(doc.name, Elections)
   doc.status = "unopened"
-  createValidation(doc)
   if userId
     user = User.fetchOne(userId)
     doc.creator = user.getNetId()
+  return doc
 )
 
 Elections.after.update((userId, doc, fieldNames, modifier, options) ->
@@ -278,6 +277,15 @@ Meteor.methods(
       image: image
     )
     election.update()
+
+  resetElection: (electionId) ->
+    election = Election.fetchOne(electionId)
+    Ballots.remove({electionId: election._id})
+    election.update({
+      $set: {
+        status: "unopened"
+      }
+    })
 
   createElection: (name, description="", group_ids = []) ->
     if typeof(group_ids) == "string"

@@ -41,3 +41,8 @@ Template.electionsAdminShow.events
       election = Election.getActive()
       election.remove()
       Router.go("admin")
+  "click .reset-election": (e) ->
+    e.preventDefault()
+    election = Election.getActive()
+    if confirm("Are you sure you want to reset this election? All votes will be discarded")
+      Meteor.call("resetElection", election._id)

@@ -22,7 +22,7 @@ ElectionsFooter = React.createClass({
         self.setState({hasVoted: true, voting: false});
         Meteor.setTimeout(function() {
           Router.go("home");
-        }, 1800);
+        }, 1500);
       }
     });
   },

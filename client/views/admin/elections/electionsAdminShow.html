@@ -15,13 +15,13 @@
                 <a href={{pathFor 'adminElectionsEdit'}} class="pure-button
                   button-warning">Edit This Election</a>
                 <button class="pure-button
-                  button-error">Delete Election</button>
+                  button-error delete-election">Delete Election</button>
               {{else}}
                 <a href={{pathFor 'adminElectionsResult'}} class="pure-button pure-button-primary">View Results</a>
                 <button class="pure-button
-                  button-warning" disabled>Election Locked After First Edit</button>
+                  button-warning reset-election">Reset Election</button>
                 <button class="pure-button
-                  button-error">Delete Election</button>
+                  button-error delete-election">Delete Election</button>
               {{/if}}
 
           </div>

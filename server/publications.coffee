@@ -5,6 +5,26 @@ Meteor.publish("adminGroups", ()->
   user = Meteor.users.findOne(@userId)
   return Group.findWithAdmin(user)
 )
+Meteor.publish("globalAdminGroups", () ->
+  if not @userId
+    @ready()
+  user = Meteor.users.findOne(@userId)
+  if user.isGlobalAdmin()
+    return Groups.find()
+  else
+    @ready()
+    return null
+)
+Meteor.publish("globalAdminElections", () ->
+  if not @userId
+    @ready()
+  user = Meteor.users.findOne(@userId)
+  if user.isGlobalAdmin()
+    return Elections.find()
+  else
+    @ready()
+    return null
+)
 Meteor.publish("adminElections", ()->
   user = User.fetchOne(@userId)
   return Election.findWithAdmin(user)
