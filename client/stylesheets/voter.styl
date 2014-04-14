@@ -38,6 +38,8 @@ body
 	background-color light-blue
 .green-bg
 	background-color green
+.incomplete-bg
+	background-color: #F0B1B4
 
 .header
 	height: 30px
@@ -67,10 +69,14 @@ body
 		position: relative
 		width: 100%
 		padding-bottom: 30px
+		margin 0 auto
 	h2 
 		font-size: 2.5em
+		margin 0 auto
 	h3
 		font-size: 1.8em
+		margin 0 auto
+		font-weight 400
 	a
 		color: white
 		text-decoration: none
@@ -134,7 +140,7 @@ body
 	h3
 		display: inline-block
 		padding 0 40px
-	.right-arrow
+	#right-arrow
 		position: absolute
 		top: 0
 		right: 0
@@ -147,7 +153,7 @@ body
 .centered-container
 	max-width 800px
 	margin 0 auto
-	padding 30px 0
+	padding 30px 20px
 
 //BALLOT DESCRIPTION
 #ballot-description-wrapper
@@ -167,6 +173,7 @@ body
 	background-position: center
 	background-repeat: no-repeat
 #voting-screen
+	padding-bottom 140px
 	.centered-container
 		padding 20px 20px
 	//Just for the header description
@@ -176,6 +183,7 @@ body
 			text-align	center
 
 #election-footer
+	height 120px
 	padding 10px 0
 	color text-black
 	position fixed
@@ -186,6 +194,7 @@ body
 	p
 		font-size 1.6em
 		font-weight 600
+		margin 0
 	.button-black
 		background-color: #1F1F1F
 		border: 2px solid #5C5C5C
@@ -197,28 +206,38 @@ body
 	.review-final
 		background-color green
 	.progress-circle
-		margin: 0 3px
+		margin: 4px 3px
 		height 30px
 		width 30px
 		display inline-block
 		border-radius 50%
-		
+	#election-footer-wrapper
+		padding 0
+
 //REVIEW SCREEN
-.deep-blue-bg
-	.centered-container
-		padding-bottom: 0
+#review-screen
+	padding-bottom 140px
+	.deep-blue-bg
+		#question-description
+			margin-bottom 0
+	#question-container
+		padding-top 10px
+		padding-bottom 10px
 
 @media screen and (max-width: 480px)
-	h1
-		font-size: 3.5em
-	h2
-		font-size 2.3em
-	h3
-		font-size 1.5em
-	#election-list
+	#container
 		h1
-			padding-bottom 0
-			margin 0
-	#voting-screen
-		.centered-container
-			padding 10px 20px
+			font-size: 3.5em
+		h2
+			font-size 2.0em
+			padding-top 10px
+			padding-bottom 10px
+		h3
+			font-size 1.5em
+		#election-list
+			h1
+				padding-bottom 0
+				margin 0
+		#voting-screen
+			.centered-container
+				padding 10px 20px

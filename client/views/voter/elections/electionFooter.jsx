@@ -85,9 +85,11 @@ ElectionsFooter = React.createClass({
     );
     return(
       <div id="election-footer">
-        <p>Progress: 3/7</p>
-        {progressBar}
-        {this.getButton(currentValid, allValid)}
+        <div id="election-footer-wrapper" className="centered-container">
+          <p>Progress: 3/7</p>
+          {progressBar}
+          {this.getButton(currentValid, allValid)}
+        </div>
       </div>
     );
   }
