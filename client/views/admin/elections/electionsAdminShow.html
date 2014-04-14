@@ -14,14 +14,8 @@
                 <button class="pure-button pure-button-primary" disabled>Election Not Started</button>
                 <a href={{pathFor 'adminElectionsEdit'}} class="pure-button
                   button-warning">Edit This Election</a>
-                <button class="pure-button
-                  button-error delete-election">Delete Election</button>
               {{else}}
                 <a href={{pathFor 'adminElectionsResult'}} class="pure-button pure-button-primary">View Results</a>
-                <button class="pure-button
-                  button-warning reset-election">Reset Election</button>
-                <button class="pure-button
-                  button-error delete-election">Delete Election</button>
               {{/if}}
 
           </div>

@@ -8,11 +8,3 @@ Template.electionsAdminResults.helpers
     return votes[questionId][choiceId]
   allowAbstain: () ->
     return @options.allowAbstain
-
-Template.electionsAdminResults.events
-  "click .delete-election": (e) ->
-    e.preventDefault()
-    if confirm("Are you sure you want to delete this election?")
-      election = Election.getActive()
-      election.remove()
-      Router.go("admin")

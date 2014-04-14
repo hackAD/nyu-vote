@@ -280,12 +280,21 @@ Meteor.methods(
 
   resetElection: (electionId) ->
     election = Election.fetchOne(electionId)
+    if not election.hasAdmin(Meteor.user())
+      return
     Ballots.remove({electionId: election._id})
     election.update({
       $set: {
         status: "unopened"
       }
     })
+
+  deleteElection: (electionId) ->
+    election = Election.fetchOne(electionId)
+    if not election.hasAdmin(Meteor.user())
+      return
+    Ballots.remove({electionId: election._id})
+    election.remove()
 
   createElection: (name, description="", group_ids = []) ->
     if typeof(group_ids) == "string"

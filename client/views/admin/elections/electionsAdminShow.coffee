@@ -35,14 +35,3 @@ Template.electionsAdminShow.events
         confirm("Once you open this election, it can no longer be modified." +
         " Are you sure you want to do this?"))
       Meteor.call("toggleElectionStatus", this._id)
-  "click .delete-election": (e) ->
-    e.preventDefault()
-    if confirm("Are you sure you want to delete this election?")
-      election = Election.getActive()
-      election.remove()
-      Router.go("admin")
-  "click .reset-election": (e) ->
-    e.preventDefault()
-    election = Election.getActive()
-    if confirm("Are you sure you want to reset this election? All votes will be discarded")
-      Meteor.call("resetElection", election._id)
