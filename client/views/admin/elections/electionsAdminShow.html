@@ -12,12 +12,11 @@
               <button class="pure-button {{openCloseClass}} openCloseElection">{{openCloseElection}} Election</button>
               {{#if canEdit}}
                 <button class="pure-button pure-button-primary" disabled>Election Not Started</button>
-                <a href={{pathFor 'adminElectionsEdit'}} class="pure-button
-                  button-warning">Edit This Election</a>
               {{else}}
                 <a href={{pathFor 'adminElectionsResult'}} class="pure-button pure-button-primary">View Results</a>
               {{/if}}
-
+                <a href={{pathFor 'adminElectionsEdit'}} class="pure-button
+                  button-warning">Edit This Election</a>
           </div>
       </div>
       <div class="email-content-body">
