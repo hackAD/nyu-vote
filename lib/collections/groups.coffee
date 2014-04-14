@@ -20,7 +20,6 @@ class Group extends ReactiveClass(Groups)
   # Finds which groups have a specific user as an admin
   @findWithAdmin = (user) ->
     netId = user.getNetId()
-    console.log(netId)
     return @collection.find(
       {
         $or: [
@@ -54,9 +53,10 @@ root.Group = Group
 
 # Registering Hooks
 Groups.before.insert((userId, doc) ->
-  user = User.fetchOne(userId)
   doc.slug = Utilities.generateSlug(doc.name, Groups)
-  doc.creator = user.netId
+  user = User.fetchOne(userId)
+  if user
+    doc.creator = user.netId
   return doc
 )
 Groups.after.update((userId, doc, fieldNames, modifier, options) ->
