@@ -9,7 +9,7 @@ ElectionsItem = React.createClass({
             {this.props.election.name}
           </h3>
           {this.props.open ?
-            <h3 className="right-arrow"> > </h3>
+            <h3 id="right-arrow"> > </h3>
             : null
           }
         </div>

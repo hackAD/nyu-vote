@@ -45,16 +45,17 @@ ElectionsReview = ReactMeteor.createClass({
         //     </div>
         //   );
         questionNodes.push(
-          <div className="deep-blue-bg">
-            <div className="centered-container">
+          <div className="light-blue-bg">
+            <div className="centered-container" id="question-container">
               <h2>{question.name}</h2>
-              <p className="body-text">{question.description}</p>
             </div>
             {isValid ?
               null :
-              <div className="dark-blue-bg">
-                <h2>This question has not been completed</h2>
-                <a className="large-button" href={Router.path("electionsVote", {slug: election.slug, questionIndex: i}) }>Change</a>
+              <div className="incomplete-bg">
+                <div className="centered-container">
+                  <h2>question not complete</h2>
+                  <a className="large-button" href={Router.path("electionsVote", {slug: election.slug, questionIndex: i}) }>Change</a>
+                </div>
               </div>
             }
             {selectedChoicesNodes}
@@ -68,7 +69,7 @@ ElectionsReview = ReactMeteor.createClass({
           <a href={Router.path("home")}>{"<  "}Exit</a>
           {election.name}
         </div>
-        <div>
+        <div className="deep-blue-bg">
           <h2>Please review your ballot</h2>
         </div>
         <div>
