@@ -14,9 +14,16 @@ adminHandle = () ->
   ]
 
 setActiveElection = (newElectionSlug) ->
+  Session.set("listMode", "elections")
   election = Elections.findOne({slug: newElectionSlug})
   election.makeActive()
   return election
+
+setActiveGroup = (newGroupSlug) ->
+  Session.set("listMode", "groups")
+  group = Groups.findOne({slug: newGroupSlug})
+  group.makeActive()
+  return group
 
 Router.map ->
   @route "home",
@@ -48,10 +55,26 @@ Router.map ->
     template: "electionsAdminShow"
     onAfterAction: () ->
       election = setActiveElection(@params.slug)
-  @route "about",
-    path: "/about"
+  @route "adminGroupsCreate",
+    path: "/admin/groups/create"
+    waitOn: adminHandle
     layoutTemplate: "adminMaster"
-    template: "about"
+    template: "groupsAdminCreate"
+  @route "adminGroupsEdit",
+    path: "/admin/groups/:slug/edit"
+    waitOn: adminHandle
+    layoutTemplate: "adminMaster"
+    template: "groupsAdminEdit"
+    onAfterAction: () ->
+      group = setActiveGroup(@params.slug)
+  @route "adminGroupsShow",
+    path: "/admin/groups/:slug"
+    waitOn: adminHandle
+    layoutTemplate: "adminMaster"
+    template: "groupsAdminShow"
+    onAfterAction: () ->
+      group = setActiveGroup(@params.slug)
+      console.log(group)
   @route "electionsReview",
     path: "/:slug/review"
     waitOn: voterHandle

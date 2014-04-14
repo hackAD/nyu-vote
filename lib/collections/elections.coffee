@@ -132,7 +132,6 @@ class Election extends ReactiveClass(Elections)
     activeElection.dep.depend()
     activeElection.current?.depend()
     return activeElection.current
-  root.activeElection = activeElection
 
   makeActive: (adminMode) ->
     Election.setActive(@)

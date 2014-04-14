@@ -4,6 +4,8 @@ root.Groups = new Meteor.Collection("groups")
 class Group extends ReactiveClass(Groups)
   constructor: (fields) ->
     _.extend(@, fields)
+    if fields.name && not this.slug
+      this.slug = Utilities.generateSlug(fields.name, Groups)
     Group.initialize.call(@)
   
   hasAdmin: (user) ->
@@ -18,15 +20,31 @@ class Group extends ReactiveClass(Groups)
   # Finds which groups have a specific user as an admin
   @findWithAdmin = (user) ->
     netId = user.getNetId()
+    console.log(netId)
     return @collection.find(
       {
         $or: [
-          admins: netId
-          ,
-          creator: netId
-          ]
+          {admins: netId}, {creator: netId}
+        ]
       }
     )
+
+  activeGroup = {
+    current: undefined
+    dep: new Deps.Dependency
+  }
+  @setActive = (group) ->
+    activeGroup.dep.changed()
+    activeGroup.current = group
+    return @
+
+  @getActive = () ->
+    activeGroup.dep.depend()
+    activeGroup.current?.depend()
+    return activeGroup.current
+
+  makeActive: () ->
+    Group.setActive(@)
 
 Group.setupTransform()
 # Registering offline fields
@@ -36,7 +54,10 @@ root.Group = Group
 
 # Registering Hooks
 Groups.before.insert((userId, doc) ->
+  user = User.fetchOne(userId)
   doc.slug = Utilities.generateSlug(doc.name, Groups)
+  doc.creator = user.netId
+  return doc
 )
 Groups.after.update((userId, doc, fieldNames, modifier, options) ->
   if doc.name != @previous.name
