@@ -8,6 +8,8 @@ Template.electionsAdminEdit.helpers
     return if this.options.allowAbstain then "checked" else null
   multi: () ->
     return if this.options.multi == true then "checked" else null
+  canEdit: () ->
+    this.status == "unopened"
   groups: () ->
     seen = {}
     existingGroups = _.map(@groups, (groupId) ->
@@ -138,3 +140,10 @@ Template.electionsAdminEdit.events
       else
         Meteor.userError.throwError(err.message)
     )
+
+  "click .delete-election": (e) ->
+    e.preventDefault()
+    if confirm("Are you sure you want to delete this election?")
+      election = Election.getActive()
+      election.remove()
+      Router.go("admin")

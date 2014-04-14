@@ -206,9 +206,7 @@ createValidation = (election) ->
 
 # We need to enforce slugs
 Elections.before.insert((userId, doc) ->
-  console.log("this is here")
-  if doc.name != @previous.name
-    doc.slug = Utilities.generateSlug(doc.name, Elections)
+  doc.slug = Utilities.generateSlug(doc.name, Elections)
   doc.status = "unopened"
   createValidation(doc)
   if userId
@@ -217,13 +215,11 @@ Elections.before.insert((userId, doc) ->
 )
 
 Elections.after.update((userId, doc, fieldNames, modifier, options) ->
-  console.log("this is running")
   if doc.name != @previous.name
     newSlug = Utilities.generateSlug(doc.name, Elections)
     Elections.update(doc._id, {
       $set: {slug: newSlug}
     })
-  console.log("It ended")
 )
 
 # One can only create elections if they are on the whitelist. They are able to

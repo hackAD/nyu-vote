@@ -9,10 +9,15 @@
               </p>
           </div>
           <div class="email-content-controls pure-u-1-2">
+            {{#if canEdit}}
               <button class="pure-button button-success save-election">Save Election</button>
+            {{else}}
+              <button class="pure-button button-success" disabled>Election
+                Locked After First Open</button>
+            {{/if}}
               <a href={{pathFor 'adminElectionsShow'}} class="pure-button
                 pure-button-primary">Cancel Edit Election</a>
-              <button class="pure-button button-error">Delete Election</button>
+              <button class="pure-button button-error delete-election">Delete Election</button>
           </div>
       </div>
       <div class="email-content-body">

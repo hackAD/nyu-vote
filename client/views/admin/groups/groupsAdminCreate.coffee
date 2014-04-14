@@ -13,7 +13,6 @@ Template.groupsAdminCreate.events
     }, (err) ->
       if not err
         group.refresh()
-        console.log(group)
         Router.go("adminGroupsShow", {slug: group.slug})
       else
         console.log(err)

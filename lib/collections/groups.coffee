@@ -62,9 +62,9 @@ Groups.before.insert((userId, doc) ->
 Groups.after.update((userId, doc, fieldNames, modifier, options) ->
   if doc.name != @previous.name
     newSlug = Utilities.generateSlug(doc.name, Groups)
-  Groups.update(doc._id, {
-    $set: {slug: newSlug}
-  })
+    Groups.update(doc._id, {
+      $set: {slug: newSlug}
+    })
 )
 
 # They must be on the whitelist to create groups but they can edit groups that
