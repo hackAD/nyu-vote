@@ -31,6 +31,9 @@ Router.map ->
     waitOn: voterHandle
     onAfterAction: () ->
       $('html,body').animate({scrollTop:0}, 300)
+  @route "about",
+    path: "/about"
+    template: "about"
   @route "admin",
     path: "/admin"
     waitOn: adminHandle

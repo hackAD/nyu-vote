@@ -38,3 +38,6 @@ Template.adminMaster.events
   "click .switch-group": (e) ->
     e.preventDefault()
     Session.set("listMode", "groups")
+  "click .admin-logout": (e) ->
+    e.preventDefault()
+    Meteor.logout()

@@ -43,6 +43,7 @@ ElectionsList = ReactMeteor.createClass({
         <div className="centered-container">
           <a className="large-button" href="#" onClick={this.logout}>Logout</a>
         </div>
+        <a href={Router.path("about")} alt="about" class="soft">About This Project</a>
       </div>
     );
   }

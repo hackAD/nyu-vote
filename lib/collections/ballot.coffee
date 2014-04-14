@@ -197,7 +197,14 @@ Ballots.allow(
     if not userId
       return false
     user = User.fetchOne(userId)
-    if not user.profile.netId
+    if not user || not user.profile.netId
+      return false
+    election = Election.fetchOne(ballot.electionId)
+    commonGroup = Groups.findOne({
+      _id: {$in: election.groups},
+      netIds: user.getNetId()
+    })
+    if not commonGroup
       return false
     if not ballot.netId == user.profile.netId
       return false

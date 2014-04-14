@@ -15,9 +15,12 @@ Home = React.createClass({
           <h1>
             NYU Vote
           </h1>
-          <p id="login-caption">
+          <p className="login-caption">
             Developed by NYU Abu Dhabi Research and Development. Sponsored by NYU SSC.
           </p>
+          <a className="login-caption light-grey" href={Router.path("about")}>
+            Learn More
+          </a>
           <div className="centered-container">
             <a className="large-button" href="#" onClick={this.login}>
               Sign in

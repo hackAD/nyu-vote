@@ -7,7 +7,7 @@ Router.map ->
         this.response.writeHead(401, {'Content-Type': "text/plain"})
         this.response.end("Bad secret")
         return
-      electionData = JSON.parse(this.request.body)
+      electionData = this.request.body
       Election.create(electionData)
       this.response.writeHead(200, {'Content-Type': "text/plain"})
       this.response.end("Ok")
