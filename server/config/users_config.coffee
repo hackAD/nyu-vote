@@ -6,8 +6,6 @@ ServiceConfiguration.configurations.insert
   secret: process.env.googleSecret,
 
 Accounts.onCreateUser((options, user) ->
-  console.log("Trying to create user")
-  console.log(user)
   if user.username == "devAdmin"
     user.profile =
       netId: "devAdmin"
