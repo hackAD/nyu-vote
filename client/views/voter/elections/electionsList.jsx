@@ -39,7 +39,7 @@ ElectionsList = ReactMeteor.createClass({
             {this.state.closedElectionNodes}
           </div>
         </div>
-      <a id="login-button" href="#" onClick={this.logout}>Logout</a>
+      <a className="large-button" href="#" onClick={this.logout}>Logout</a>
       </div>
     );
   }

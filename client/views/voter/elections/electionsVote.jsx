@@ -34,7 +34,7 @@ ElectionsVote = ReactMeteor.createClass({
         <ElectionsChoice ballot={ballot} isAbstain={true} />
       );
     return(
-      <div>
+      <div id="voting-screen">
         <div className="header white-bg">
           <a href={Router.path("home")}>{"<  "}Exit</a>
           {election.name}
@@ -42,7 +42,7 @@ ElectionsVote = ReactMeteor.createClass({
         <div className="deep-blue-bg">
           <div className="centered-container">
             <h2>{question.name}</h2>
-            <p>{question.description}</p>
+            <p className="body-text">{question.description}</p>
           </div>
         </div>
         <div>

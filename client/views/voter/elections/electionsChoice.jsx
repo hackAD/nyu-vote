@@ -24,8 +24,8 @@ ElectionsChoice = React.createClass({
             <ElectionsChoiceImage choice={choice} />
             <p className="body-text">{choice.description}</p>
             {isPicked ?
-              <a className="green-bg" id="login-button" onClick={this.toggleSelect}>Selected</a>
-              : <a id="login-button" onClick={this.toggleSelect}>Select</a>
+              <a className="large-button" onClick={this.toggleSelect}>Selected</a>
+              : <a className="large-button" onClick={this.toggleSelect}>Select</a>
             }
           </div>
         </div>

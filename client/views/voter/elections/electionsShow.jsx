@@ -18,7 +18,7 @@ ElectionsShow = ReactMeteor.createClass({
         <div id="ballot-description-wrapper" className="centered-container">
           <h1>{this.state.election.name}</h1>
           <p>{this.state.election.description}</p>
-          <a id="login-button" href={Router.path("electionsVote", {slug: this.state.election.slug, questionIndex: 0})}>Start Ballot {"  >"}</a>
+          <a className="large-button" href={Router.path("electionsVote", {slug: this.state.election.slug, questionIndex: 0})}>Start Ballot {"  >"}</a>
         </div>
       </div>
     );

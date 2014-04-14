@@ -32,21 +32,21 @@ ElectionsFooter = React.createClass({
         button = <a href={Router.path("home")}>Ballot Cast</a>;
       else {
         if (allValid)
-          button = <a href="#" onClick={this.vote}>Cast Ballot</a>;
+          button = <a className="large-button review-final" href="#" onClick={this.vote}>Cast Ballot</a>;
         else
-          button = <a href="#" className="disabled">Ballot Incomplete</a>;
+          button = <a href="#" className="disabled large-button">Ballot Incomplete</a>;
       }
     } else if (questionIndex == election.questions.length - 1) {
       if (allValid)
-        button = <a href={Router.path("electionsReview", {slug: election.slug})}>Review Ballot</a>;
+        button = <a className="review large-button" href={Router.path("electionsReview", {slug: election.slug})}>Review Ballot</a>;
       else
-        button = <a href="#" className="disabled">Ballot Incomplete</a>;
+        button = <a href="#" className="disabled large-button">Ballot Incomplete</a>;
     }
     else {
       if (currentValid)
-        button = <a href={Router.path("electionsVote", {slug: election.slug, questionIndex: questionIndex + 1})}>Next</a>;
+        button = <a className="large-button button-black" href={Router.path("electionsVote", {slug: election.slug, questionIndex: questionIndex + 1})}>Next</a>;
       else
-        button = <a href={Router.path("electionsVote", {slug: election.slug, questionIndex: questionIndex + 1})} className="disabled">Next</a>;
+        button = <a href={Router.path("electionsVote", {slug: election.slug, questionIndex: questionIndex + 1})} className="disabled large-button">Next</a>;
     }
     return button;
   },
@@ -63,8 +63,8 @@ ElectionsFooter = React.createClass({
         invalid: !isValid
       });
       return(
-        <a className={classes} href={Router.path("electionsVote", {slug: self.props.election.slug, questionIndex: index})}>
-          GoTo {index}
+        <a href={Router.path("electionsVote", {slug: self.props.election.slug, questionIndex: index})}>
+          <div className={classes + " progress-circle"}></div>
         </a>
       );
     });
@@ -76,12 +76,13 @@ ElectionsFooter = React.createClass({
       last: true
     });
     progressBar.push(
-      <a className={classes} href={Router.path("electionsReview", {slug: this.props.election.slug})}>
-        Go to Summary
+      <a href={Router.path("electionsReview", {slug: this.props.election.slug})}>
+        <div className={classes + " progress-circle"}></div>
       </a>
     );
     return(
-      <div>
+      <div id="election-footer">
+        <p>Progress: 3/7</p>
         {progressBar}
         {this.getButton(currentValid, allValid)}
       </div>

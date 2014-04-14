@@ -45,10 +45,10 @@ body
 	vertical-align: middle
 
 .valid
-	color: green !important
+	background-color: green !important
 
 .invalid
-	color: red !important
+	background-color: blue !important
 
 .current
 	border: solid 1px black
@@ -59,7 +59,7 @@ body
 	text-align: center
 	text-transform: uppercase
 	position: absolute
-	min-width: 320px
+	min-width: 300px
 	width: 100%
 	height: 100%
 	h1
@@ -74,9 +74,7 @@ body
 	a
 		color: white
 		text-decoration: none
-		&:hover
-			background-color: rgba(255,255,255,0.4)
-			cursor: pointer
+
 	.header
 		height: 30px
 		line-height: 30px
@@ -92,6 +90,7 @@ body
 		text-transform: none
 		font-weight 300
 		margin 20px 0
+		text-align left
 
 .content-wrapper
 	height: 100%
@@ -105,13 +104,16 @@ body
 	left: 0
 	bottom: 0
 	margin: auto
-#login-button
-	display block
+.large-button
 	margin 0 auto
 	font-size: 1.3em
 	border: 1px solid
-	padding 5px 100px
-	width: 300px
+	padding 5px 20px
+	display block
+	max-width 300px
+	&:hover
+		background-color: rgba(255,255,255,0.4)
+		cursor: pointer
 
 // ELECTION LIST
 #election-list
@@ -164,19 +166,59 @@ body
 	background-size: cover
 	background-position: center
 	background-repeat: no-repeat
+#voting-screen
+	.centered-container
+		padding 20px 20px
+	//Just for the header description
+	.deep-blue-bg
+		.body-text
+			margin: 10px 0 0 0
+			text-align	center
 
-.small-button
-	border 1px solid
-	padding 3px 50px
+#election-footer
+	padding 10px 0
+	color text-black
+	position fixed
+	right 0
+	left 0
+	bottom 0
+	background-color rgba(255,255,255,0.8)
+	p
+		font-size 1.6em
+		font-weight 600
+	.button-black
+		background-color: #1F1F1F
+		border: 2px solid #5C5C5C
+	.disabled
+		background-color: #D1D1D1
+		border: 2px solid #5C5C5C
+	.review
+		background-color: light-green
+	.review-final
+		background-color green
+	.progress-circle
+		margin: 0 3px
+		height 30px
+		width 30px
+		display inline-block
+		border-radius 50%
+		
+//REVIEW SCREEN
+.deep-blue-bg
+	.centered-container
+		padding-bottom: 0
 
 @media screen and (max-width: 480px)
 	h1
 		font-size: 3.5em
+	h2
+		font-size 2.3em
 	h3
 		font-size 1.5em
 	#election-list
 		h1
 			padding-bottom 0
 			margin 0
-#login-button
-	padding 5px 50px
+	#voting-screen
+		.centered-container
+			padding 10px 20px
