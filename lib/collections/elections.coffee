@@ -52,7 +52,8 @@ class Election extends ReactiveClass(Elections)
       return true
     # They can be the admin of any of the groups
     for group in @groups
-      if group.hasAdmin(user)
+      groupObj = Group.fetchOne(group)
+      if groupObj.hasAdmin(user)
         return true
     return false
 

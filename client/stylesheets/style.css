@@ -321,3 +321,10 @@ a {
 .email-content-body table td:first-child {
   width: 150px; 
 }
+.image-preview {
+  height: 100px;
+  width: 100px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

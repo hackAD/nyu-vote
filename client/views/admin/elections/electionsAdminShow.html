@@ -61,7 +61,8 @@
                 {{#each choices}}
                   <tr class="pure-table-odd"><td>Name</td><td>{{name}}</td></tr>
                   <tr><td>Description</td><td>{{description}}</td></tr>
-                  <tr><td>Image</td><td>{{image}}</td></tr>
+                  <tr><td>Image</td><td><div class="image-preview"
+                        style="background-image:url({{image}})"></div> </td></tr>
                 {{/each}}
             </tbody>
           </table>
