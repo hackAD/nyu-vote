@@ -15,9 +15,11 @@ Home = React.createClass({
           <h1>
             NYU Vote
           </h1>
-          <a className="large-button" href="#" onClick={this.login}>
-            Sign in
-          </a>
+          <div className="centered-container">
+            <a className="large-button" href="#" onClick={this.login}>
+              Sign in
+            </a>
+          </div>
         </div>
       </div>
     );

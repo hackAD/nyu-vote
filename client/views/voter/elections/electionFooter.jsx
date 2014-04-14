@@ -37,13 +37,13 @@ ElectionsFooter = React.createClass({
         if (allValid)
           button = <a className="large-button review-final" href="#" onClick={this.vote}>Cast Ballot</a>;
         else
-          button = <a href="#" className="disabled large-button">Ballot Incomplete</a>;
+          button = <a href="#" className="disabled large-button">Incomplete</a>;
       }
     } else if (questionIndex == election.questions.length - 1) {
       if (allValid)
         button = <a className="review large-button" href={Router.path("electionsReview", {slug: election.slug})}>Review Ballot</a>;
       else
-        button = <a href="#" className="disabled large-button">Ballot Incomplete</a>;
+        button = <a href="#" className="disabled large-button">Incomplete</a>;
     }
     else {
       if (currentValid)
@@ -54,6 +54,9 @@ ElectionsFooter = React.createClass({
     return button;
   },
   render: function() {
+    var questionIndex = parseInt(this.props.questionIndex);
+    if (questionIndex > -1)
+      var totalQuestions = this.props.election.questions[questionIndex].choices.length;
     var self = this;
     var currentValid, allValid;
     var progressBar = _.map(self.props.election.questions, function(question, index) {
@@ -86,7 +89,10 @@ ElectionsFooter = React.createClass({
     return(
       <div id="election-footer">
         <div id="election-footer-wrapper" className="centered-container">
-          <p>Progress: 3/7</p>
+          { questionIndex > -1 ? 
+            <p>Progress: {questionIndex+1}/{totalQuestions}</p>
+            : <p>Review Ballot</p>
+          }
           {progressBar}
           {this.getButton(currentValid, allValid)}
         </div>
