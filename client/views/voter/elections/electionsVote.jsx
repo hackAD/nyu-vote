@@ -29,9 +29,9 @@ ElectionsVote = ReactMeteor.createClass({
         <ElectionsChoice ballot={ballot} choice={choice} choiceIndex={trueIndex} questionIndex={questionIndex} isAbstain={false} />
       );
     }
-    if (question.options.abstain)
+    if (question.options.allowAbstain)
       choices.push(
-        <ElectionsChoice ballot={ballot} isAbstain={true} />
+        <ElectionsChoice ballot={ballot} questionIndex={questionIndex} isAbstain={true} />
       );
     return(
       <div id="voting-screen">

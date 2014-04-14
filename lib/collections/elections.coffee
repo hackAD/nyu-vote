@@ -28,6 +28,8 @@ class Election extends ReactiveClass(Elections)
         question_object = {}
         for choice in question.choices
           question_object[choice._id] = 0
+        if question.options.allowAbstain
+          question_object["abstain"] = 0
         @votes[question._id] = question_object
       @update({$set:
         {

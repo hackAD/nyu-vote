@@ -85,8 +85,8 @@ Router.map ->
     path: "/:slug/review"
     waitOn: voterHandle
     onAfterAction: () ->
-      setActiveElection(@params.slug)
       $('html,body').animate({scrollTop:0}, 300)
+      setActiveElection(@params.slug)
   @route "electionsVote",
     path: "/:slug/:questionIndex"
     waitOn: voterHandle
@@ -104,5 +104,5 @@ Router.map ->
     path: "/:slug/"
     waitOn: voterHandle
     onAfterAction: () ->
-      setActiveElection(@params.slug)
       $('html,body').animate({scrollTop:0}, 300)
+      setActiveElection(@params.slug)

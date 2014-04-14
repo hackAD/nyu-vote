@@ -18,7 +18,6 @@ Template.electionsAdminShow.helpers
   canEdit: () ->
     this.status == "unopened" && this.hasAdmin(Meteor.user())
   openCloseElection: () ->
-    console.log("RRUNNINGGG")
     if this.status == "open" then return "Close" else return "Open"
   openCloseClass: () ->
     if this.status == "open" then return "button-secondary" else return "button-success"

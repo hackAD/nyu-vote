@@ -15,6 +15,5 @@ Template.groupsAdminCreate.events
         group.refresh()
         Router.go("adminGroupsShow", {slug: group.slug})
       else
-        console.log(err)
         Meteor.userError.throwError(500, err.message)
     )

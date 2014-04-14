@@ -24,7 +24,7 @@ class Ballot extends ReactiveClass(Ballots)
       choices = question.choices
       selectedChoices = @selectedChoices(questionIndex, true)
       if (question.options.multi)
-        if @isAbstaining(questionIndex)
+        if (question.options.allowAbstain && @isAbstaining(questionIndex))
           valid = selectedChoices.length == 1
         else
           valid = selectedChoices.length > 0
@@ -34,6 +34,21 @@ class Ballot extends ReactiveClass(Ballots)
 
   selectedChoices: (questionIndex, returnBallots) ->
     election = @getElection()
+    # if we are abstaining, just return the abstain object
+    if @isAbstaining(questionIndex)
+      choices = @questions[questionIndex].choices
+      if returnBallots
+        return [{
+          _id: "abstain"
+          value: true
+        }]
+      else
+        return [{
+          _id: "abstain"
+          name: "Abstain"
+          description: "Abstain from this vote"
+          image: ""
+        }]
     if questionIndex > @questions.length - 1
       throw new Meteor.Error(500, questionIndex + " is out of bounds")
     array = if returnBallots then @questions[questionIndex].choices else
@@ -98,6 +113,8 @@ class Ballot extends ReactiveClass(Ballots)
 
   isAbstaining: (questionIndex) ->
     question = @questions[questionIndex]
+    if not question.options.allowAbstain
+      return false
     abstainChoice = question.choices[question.choices.length - 1]
     @depend()
     return abstainChoice.value
@@ -192,12 +209,13 @@ Ballots.allow(
 Ballots.deny(
   insert: (userId, ballot) ->
     election = Election.fetchOne(ballot.electionId)
-    if election.status != "open"
-      return true
+    if (Meteor.isServer)
+      if election.status != "open"
+        return true
     if Ballots.find({
       netId: ballot.netId,
-      election: ballot.electionId
-    }).count > 0
+      electionId: ballot.electionId
+    }).count() > 0
       return true
     return false
   update: () ->

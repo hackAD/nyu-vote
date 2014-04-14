@@ -2,9 +2,10 @@
 
 ElectionsFooter = React.createClass({
   getInitialState: function() {
+    activeElection = Election.getActive();
     return {
       voting: false,
-      hasVoted: this.props.ballot._id
+      hasVoted: Ballots.findOne({electionId: activeElection})
     };
   },
   vote: function() {
@@ -12,14 +13,17 @@ ElectionsFooter = React.createClass({
     var ballot = this.props.ballot;
     this.setState({voting: true});
     ballot.put(function(err) {
-      self.setState({voting: false});
-      if (err)
+      if (err) {
+        self.setState({hasVoted: false, voting: true});
+        $('html,body').animate({scrollTop:0}, 300);
         Meteor.userError.throwError(err.reason);
-      else
-        self.setState({hasVoted: true});
+      }
+      else {
+        self.setState({hasVoted: true, voting: false});
         Meteor.setTimeout(function() {
           Router.go("home");
-        }, 1500);
+        }, 1800);
+      }
     });
   },
   getButton: function(currentValid, allValid) {
@@ -30,9 +34,9 @@ ElectionsFooter = React.createClass({
     var button;
     if (questionIndex === -1) {
       if (this.state.voting)
-        button = <a href="#">Casting Ballot</a>;
-      else if (this.hasVoted)
-        button = <a href={Router.path("home")}>Ballot Cast</a>;
+        button = <a className="large-button review-final" href="#">Casting Ballot</a>;
+      else if (this.state.hasVoted)
+        button = <a className="large-button review-final" href={Router.path("home")}>Ballot Cast</a>;
       else {
         if (allValid)
           button = <a className="large-button review-final" href="#" onClick={this.vote}>Cast Ballot</a>;
@@ -56,7 +60,7 @@ ElectionsFooter = React.createClass({
   render: function() {
     var questionIndex = parseInt(this.props.questionIndex);
     if (questionIndex > -1)
-      var totalQuestions = this.props.election.questions[questionIndex].choices.length;
+      var totalQuestions = this.props.election.questions.length;
     var self = this;
     var currentValid, allValid;
     var progressBar = _.map(self.props.election.questions, function(question, index) {

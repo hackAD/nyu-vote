@@ -50,7 +50,6 @@ Template.electionsAdminEdit.events
     values = $('form').serializeArray()
     allowAbstain = $('')
     newGroups = []
-    console.log values
     for field in values
       switch field.name
         when "group"
@@ -99,7 +98,6 @@ Template.electionsAdminEdit.events
       multi = true
     else
       multi = false
-    console.log(allowAbstain)
     election.addQuestion({
       name: name
       description: description
@@ -126,7 +124,6 @@ Template.electionsAdminEdit.events
     name = $("#new-choice-name-" + id).val()
     description = $("#new-choice-description-" + id).val()
     image = $("#new-choice-image-" + id).val()
-    console.log(name)
     election.addChoice(questionId, {
       name: name
       description: description

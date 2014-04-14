@@ -13,8 +13,9 @@ ElectionsChoice = React.createClass({
     var choice = this.props.choice;
     var ballot = this.props.ballot;
     var defaultImage = "http://www.pentagram.com/en/NYUAD_Pattern_620W.gif";
-    var isPicked = ballot.isPicked(this.props.questionIndex, this.props.choiceIndex);
-    if (!this.props.isAbstain)
+    var isPicked;
+    if (!this.props.isAbstain) {
+      isPicked = ballot.isPicked(this.props.questionIndex, this.props.choiceIndex);
       return(
         <div className={isPicked ? "light-green-bg" : "dark-blue-bg"}>
           <div className={isPicked ? "green-bg" : "light-blue-bg"}>
@@ -30,14 +31,19 @@ ElectionsChoice = React.createClass({
           </div>
         </div>
       );
-    else
+    } else {
+      isPicked = ballot.isAbstaining(this.props.questionIndex);
       return(
         <div className={isPicked ? "light-green-bg" : "dark-blue-bg"}>
           <h2 className={isPicked ? "green-bg" : "light-blue-bg"}>Abstain</h2>
           <p>Abstain from answering this question</p>
-          <button>Select</button>
+          {isPicked ?
+            <a className="large-button" onClick={this.abstain}>Selected</a>
+            : <a className="large-button" onClick={this.abstain}>Select</a>
+          }
         </div>
       );
+    }
   }
 });
 

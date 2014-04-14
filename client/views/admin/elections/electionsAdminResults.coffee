@@ -6,6 +6,8 @@ Template.electionsAdminResults.helpers
     this.status == "unopened" && this.hasAdmin(Meteor.user())
   votes: (choiceId, questionId, votes) ->
     return votes[questionId][choiceId]
+  allowAbstain: () ->
+    return @options.allowAbstain
 
 Template.electionsAdminResults.events
   "click .delete-election": (e) ->
