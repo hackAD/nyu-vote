@@ -7,6 +7,9 @@ seed = () ->
       profile:
         name: "devAdmin"
         netId: "devAdmin"
+      services:
+        google:
+          email: "admin@nyu.edu"
     )
   if Groups.find().count() == 0
     Groups.insert(

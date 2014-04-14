@@ -247,7 +247,6 @@ Elections.deny(
 # You cannot update the creator of an election
 Elections.deny(
   update: (userId, doc, fieldNames, modifier) ->
-    console.log("wallo")
     return 'creator' in fieldNames
 )
 

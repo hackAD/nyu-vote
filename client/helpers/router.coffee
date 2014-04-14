@@ -74,7 +74,6 @@ Router.map ->
     template: "groupsAdminShow"
     onAfterAction: () ->
       group = setActiveGroup(@params.slug)
-      console.log(group)
   @route "electionsReview",
     path: "/:slug/review"
     waitOn: voterHandle
