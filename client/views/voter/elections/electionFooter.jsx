@@ -92,13 +92,15 @@ ElectionsFooter = React.createClass({
     );
     return(
       <div id="election-footer">
-        <div id="election-footer-wrapper" className="centered-container">
+        <div id="election-footer-wrapper">
           { questionIndex > -1 ? 
             <p>Progress: {questionIndex+1}/{totalQuestions}</p>
             : <p>Review Ballot</p>
           }
           {progressBar}
-          {this.getButton(currentValid, allValid)}
+          <div id="election-footer-button" className="centered-container">
+            {this.getButton(currentValid, allValid)}
+          </div>
         </div>
       </div>
     );
