@@ -199,13 +199,14 @@ Ballots.allow(
     user = User.fetchOne(userId)
     if not user || not user.profile.netId
       return false
-    election = Election.fetchOne(ballot.electionId)
-    commonGroup = Groups.findOne({
-      _id: {$in: election.groups},
-      netIds: user.getNetId()
-    })
-    if not commonGroup
-      return false
+    if (Meteor.isServer)
+      election = Election.fetchOne(ballot.electionId)
+      commonGroup = Groups.findOne({
+        _id: {$in: election.groups},
+        netIds: user.getNetId()
+      })
+      if not commonGroup
+        return false
     if not ballot.netId == user.profile.netId
       return false
     return ballot.isValid()
@@ -215,15 +216,15 @@ Ballots.allow(
 # open. They alsso cannot be updated or removed
 Ballots.deny(
   insert: (userId, ballot) ->
-    election = Election.fetchOne(ballot.electionId)
     if (Meteor.isServer)
+      election = Election.fetchOne(ballot.electionId)
       if election.status != "open"
         return true
-    if Ballots.find({
-      netId: ballot.netId,
-      electionId: ballot.electionId
-    }).count() > 0
-      return true
+      if Ballots.find({
+        netId: ballot.netId,
+        electionId: ballot.electionId
+      }).count() > 0
+        return true
     return false
   update: () ->
     return true
