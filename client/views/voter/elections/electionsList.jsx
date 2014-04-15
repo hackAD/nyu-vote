@@ -42,10 +42,12 @@ ElectionsList = ReactMeteor.createClass({
             {this.state.closedElectionNodes}
           </div>
         </div>
-        <div className="centered-container">
-          <a className="large-button" href="#" onClick={this.logout}>Logout</a>
+        <div id="ballot-list-footer" className="dark-blue-bg">
+          <div className="centered-container">
+            <a className="large-button" href="#" onClick={this.logout}>Logout</a>
+          </div>
+          <a id="about-link" href={Router.path("about")} alt="about" className="light-grey">About This Project</a>
         </div>
-        <a href={Router.path("about")} alt="about" class="soft">About This Project</a>
       </div>
     );
   }

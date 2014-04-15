@@ -22,6 +22,7 @@ thin = 400
 //   color: black !important
 body
 	font-family: Montserrat
+	word-break: break-word
 
 .purple-bg
 	background-color: purple
@@ -42,7 +43,7 @@ body
 	background-color: #F0B1B4
 
 .header
-	line-height: 30px
+	line-height: 20px
 	vertical-align: middle
 
 .valid
@@ -79,9 +80,10 @@ body
 	a
 		color: white
 		text-decoration: none
-
+	.light-grey
+		color: light-grey
 	.header
-		padding: 0 75px
+		padding: 5px 75px
 		vertical-align: middle
 		word-break normal
 		white-space normal
@@ -108,15 +110,13 @@ body
 	left: 0
 	bottom: 0
 	margin: auto
-	.light-grey
-		color: light-grey
 	h1
 		padding-bottom 15px
-	.login-caption
-		font-family lato
-		font-weight 300
-		text-transform none
-		margin 0
+.login-caption
+	font-family lato
+	font-weight 300
+	text-transform none
+	margin 0
 .large-button
 	margin 0 auto
 	font-size: 1.3em
@@ -128,6 +128,18 @@ body
 		background-color: rgba(255,255,255,0.4)
 		cursor: pointer
 
+//ABOUT SCREEN
+#about-screen
+	.light-grey
+		color: light-grey
+	.centered-container
+		max-width 500px
+	.large-button
+		margin-top 30px
+	// p
+	// 	max-width: 50%
+	// 	margin: 0 auto !important
+
 // ELECTION LIST
 #election-list
 	h1
@@ -137,6 +149,13 @@ body
 		margin-bottom 20px
 	#ballot-counter
 		margin-bottom 30px
+	#ballot-list-footer
+		padding-bottom: 50px
+	#about-link
+		margin-bottom: 20px
+	.header
+		padding 5px 20px
+
 .election-list-item
 	padding: 20px 0
 	position relative
@@ -248,11 +267,3 @@ body
 		#voting-screen
 			.centered-container
 				padding 10px 20px
-
-.about
-	#login-info
-		height: 600px
-	p
-		max-width: 50%
-		margin: 0 auto !important
-
