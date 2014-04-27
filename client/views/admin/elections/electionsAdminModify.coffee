@@ -153,6 +153,12 @@ Template.electionsAdminEdit.events
       + " All votes will be discarded")
       Meteor.call("resetElection", election._id)
 
+  "change .allowAbstain": (e) ->
+    election = Election.getActive()
+    question = election.getQuestion($(e.target).attr("data-questionId"))
+    question.options.allowAbstain = $(e.target).prop("checked")
+    election.changed()
+
   "change .vote-type": (e) ->
     election = Election.getActive()
     question = election.getQuestion($(e.target).attr("data-questionId"))
@@ -174,7 +180,6 @@ Template.electionsAdminEdit.events
       else
         delete question.options.pickNVal
     election.changed()
-
 
   "blur .pickNVal": (e) ->
     election = Election.getActive()

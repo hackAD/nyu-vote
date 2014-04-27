@@ -3,7 +3,10 @@
 ElectionsChoice = React.createClass({
   abstain: function() {
     var ballot = this.props.ballot;
-    ballot.abstain(this.props.questionIndex);
+    if (ballot.isAbstaining(this.props.questionIndex))
+      ballot.unAbstain(this.props.questionIndex);
+    else
+      ballot.abstain(this.props.questionIndex);
   },
   toggleSelect: function() {
     var ballot = this.props.ballot;
@@ -11,8 +14,7 @@ ElectionsChoice = React.createClass({
   },
   render: function() {
     var choice = this.props.choice;
-    var ballot = this.props.ballot;
-    var defaultImage = "http://www.pentagram.com/en/NYUAD_Pattern_620W.gif";
+    var ballot = this.props.ballot; var defaultImage = "http://www.pentagram.com/en/NYUAD_Pattern_620W.gif";
     var isPicked;
     if (!this.props.isAbstain) {
       isPicked = ballot.isPicked(this.props.questionIndex, this.props.choiceIndex);

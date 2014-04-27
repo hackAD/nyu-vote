@@ -20,7 +20,9 @@ class Ballot extends ReactiveClass(Ballots)
     valid = false
     question = @questions[questionIndex]
     # TODO: implemenent validation for rankings
-    if (question.options.type == "pick")
+    if question.options.allowAbstain && @isAbstaining(questionIndex)
+      valid = true
+    else if (question.options.type == "pick")
       choices = question.choices
       selectedChoices = @selectedChoices(questionIndex, true)
       if (question.options.voteMode == "multi")
@@ -29,12 +31,9 @@ class Ballot extends ReactiveClass(Ballots)
         else
           valid = selectedChoices.length > 0
       else if (question.options.voteMode == "pickN")
-        console.log("In here")
         valid = selectedChoices.length == question.options.pickNVal
       else
         valid = selectedChoices.length == 1
-    console.log(selectedChoices.length)
-    console.log(valid)
 
     return valid
 
@@ -81,14 +80,24 @@ class Ballot extends ReactiveClass(Ballots)
     choice = question.choices[choiceIndex]
     choice.value = !choice.value
     newValue = choice.value
+    console.log("changed")
+    console.log(newValue)
     # If they just selected a choice
     if newValue == true
-      # If it is not multiple choice, make sure all other choices are false
-      if (question.options.voteMode == "single")
+      console.log("disabling others")
+      # If it is not multiple choice, or they picked abstain, make sure all
+      # other choices are false
+      if (question.options.voteMode == "single") || choice._id == "abstain"
         _.each(question.choices, (choice, index) ->
           if index != choiceIndex
             choice.value = false
         )
+      else if (choice._id != "abstain") && @isAbstaining(questionIndex)
+        _.find(question.choices, (choice, index) ->
+          if choice._id == "abstain"
+            choice.value = false
+        )
+
     return @
 
   abstain: (questionIndex) ->
@@ -102,6 +111,16 @@ class Ballot extends ReactiveClass(Ballots)
       )
       abstainChoice = question.choices[question.choices.length - 1]
       abstainChoice.value = true
+    return @
+
+  unAbstain: (questionIndex) ->
+    @changed()
+    question = @questions[questionIndex]
+    if not question.options.allowAbstain
+      console.log("not allowed")
+      return false
+    abstainChoice = question.choices[question.choices.length - 1]
+    abstainChoice.value = false
     return @
 
   isAbstaining: (questionIndex) ->
