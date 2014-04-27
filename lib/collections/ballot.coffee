@@ -28,8 +28,14 @@ class Ballot extends ReactiveClass(Ballots)
           valid = selectedChoices.length == 1
         else
           valid = selectedChoices.length > 0
+      else if (question.options.voteMode == "pickN")
+        console.log("In here")
+        valid = selectedChoices.length == question.options.pickNVal
       else
         valid = selectedChoices.length == 1
+    console.log(selectedChoices.length)
+    console.log(valid)
+
     return valid
 
   selectedChoices: (questionIndex, returnBallots) ->
@@ -83,19 +89,6 @@ class Ballot extends ReactiveClass(Ballots)
           if index != choiceIndex
             choice.value = false
         )
-      # Otherwise check if abstain is on, and if so, set it to false
-      else if (question.options.allowAbstain)
-        abstainChoice = question.choices[question.choices.length - 1]
-        abstainChoice.value = false
-    # If they deselected a choice
-    else
-      if (question.options.allowAbstain)
-        # If it's not multiple choice or nothing else is selected
-        if (question.options.voteMode == "single" || !_.find(question.choices, (choice) ->
-          return choice.value == true
-        ))
-          abstainChoice = question.choices[question.choices.length - 1]
-          abstainChoice.value = true
     return @
 
   abstain: (questionIndex) ->

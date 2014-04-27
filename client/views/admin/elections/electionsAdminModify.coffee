@@ -179,6 +179,6 @@ Template.electionsAdminEdit.events
   "blur .pickNVal": (e) ->
     election = Election.getActive()
     question = election.getQuestion($(e.target).attr("data-questionId"))
-    question.options.pickNVal = e.target.value
+    question.options.pickNVal = parseInt(e.target.value)
     election.changed()
 
