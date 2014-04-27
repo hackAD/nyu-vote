@@ -5,7 +5,7 @@ root.Elections = new Meteor.Collection("elections")
 class Election extends ReactiveClass(Elections)
   constructor: (fields) ->
     _.extend(@, fields)
-    this._activeQuestionIndex = 0
+    @_activeQuestionIndex = 0
     createValidation(@)
     Election.initialize.call(@)
 
@@ -88,7 +88,7 @@ class Election extends ReactiveClass(Elections)
     options ?= {}
     options.type ?= "pick"
     if (options.type == "pick")
-      options.multi ?= false
+      options.voteMode ?= "single"
     options.allowAbstain ?= false
     @questions.push(
       _id: id
@@ -148,6 +148,9 @@ class Election extends ReactiveClass(Elections)
 
   getActiveQuestion: () ->
     return @questions[@getActiveQuestionIndex()]
+
+  getQuestion: (questionId) ->
+    return _.find(@questions, (question) -> return question._id == questionId)
 
   # how we deterministically shuffle the candidates based on the user's netId
   random_map = {}

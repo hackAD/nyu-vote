@@ -25,11 +25,8 @@ Template.groupsAdminEdit.events
     group.admins = admins
     group.netIds = netIds
     group.update((err) ->
-      if not err
-        group.refresh()
-        Router.go("adminGroupsShow", {slug: group.slug})
-      else
-        Meteor.userError.throwError(500, err.message)
+      group.refresh()
+      Router.go("adminGroupsShow", {slug: group.slug})
     )
 
   "click .delete-group": (e) ->

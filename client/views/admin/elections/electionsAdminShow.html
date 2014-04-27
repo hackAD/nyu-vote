@@ -47,14 +47,16 @@
             <tbody>
                 <tr><td>Description</td><td>{{description}}</td></tr>
                 <tr class="pure-table-odd">
-                  <td colspan=2>{{type}}</td>
+                  <td>Vote Type</td><td>{{options.type}}</td>
                 </tr>
                 <tr>
-                  <td colspan=2>{{allowAbstain}} Abstention</td>
+                  <td>Vote mode</td><td>{{options.voteMode}}</td>
                 </tr>
-                <tr>
-                  <td colspan=2>{{multi}} Choice</td>
-                </tr>
+                {{#if isPickN}}
+                  <tr>
+                    <td>Pick N Value</td><td>{{options.pickNVal}}</td>
+                  </tr>
+                {{/if}}
                 <tr class="pure-table-odd">
                   <td colspan=2>Choices:</td>
                 </tr>

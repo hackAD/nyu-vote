@@ -45,12 +45,10 @@
                   <h2>
                     Groups 
                   </h2>
-                  
                   {{#each groups}}
                     <label for="{{_id}}" class="pure-checkbox">
                       <input name="group" id="{{_id}}" class="election group" type="checkbox"
-                      value="{{_id}}" checked="{{hasGroup _id ../groups
-                    }}">{{name}}</label>
+                      value="{{_id}}" checked="{{hasGroup _id ../groups }}">{{name}}</label>
                   {{/each}}
                 </div>
               </fieldset>
@@ -81,11 +79,35 @@
                         class="question allowAbstain" type="checkbox"
                         checked="{{allowAbstain}}">
                     Allow Abstention</label>
-                  <label for="multi" class="pure-checkbox">
-                    <input id="multi" name="questionMulti"
-                    class="question multi" type="checkbox"
-                        checked="{{multi}}">
-                    Multiple Choice</label>
+                  <div class="pure-controls">
+                    <h4>Voting Mode</h4>
+                  </div>
+                  <label for="pick-{{_id}}" class="pure-radio">
+                      <input id="pick-{{_id}}" type="radio" name="type" value="pick" checked={{pick}} class="vote-type" data-questionId={{_id}}>
+                      Pick Candidates
+                  </label>
+                  <label for="rank-{{_id}}" class="pure-radio">
+                      <input id="rank-{{_id}}" type="radio" name="type" value="rank" checked={{rank}} class="vote-type" data-questionId={{_id}}>
+                      Rank Candidates
+                  </label>
+                  {{#if isPickQuestion .. }}
+                    <div class="pure-controls">
+                      <h4>{{options.type}} Parameters</h4>
+                    </div>
+                    <label for="single-{{_id}}" class="pure-radio">
+                        <input id="single-{{_id}}" type="radio" name="pickMode" value="single" checked={{single}} class="vote-mode" data-questionId={{_id}}>
+                        Pick One
+                    </label>
+                    <label for="multi-{{_id}}" class="pure-radio">
+                      <input id="multi-{{_id}}" type="radio" name="pickMode" value="multi" checked={{multi}} class="vote-mode" data-questionId={{_id}}>
+                        Pick Many
+                    </label>
+                    <label for="pickN-{{_id}}" class="pure-radio">
+                        <input id="pickN-{{_id}}" type="radio" name="pickMode" value="pickN" checked={{pickN}} class="vote-mode" data-questionId={{_id}} >
+                        Pick N
+                        <input id="pickNVal-{{_id}}" type="text" name="pickNVal" value={{pickNVal}} placeholder="1" disabled="{{unlessPickN}}" class="pickNVal" data-questionId={{_id}}>
+                    </label>
+                  {{/if}}
                 </div>
               </fieldset>
                 
@@ -153,21 +175,6 @@
                 <div class="pure-control-group">
                   <label for="new-question-description">Question Description</label>
                   <input id="new-question-description" class="pure-input-1-2 new question description" type="text" placeholder="Description...">
-                </div>
-                <div class="pure-controls">
-                  <label for="new-question-abstain" class="pure-checkbox">
-                  <input id="new-question-abstain" class="new question
-                      allowAbstain" type="checkbox"
-                      value="allowAbstain">
-                    Allow
-                          Abstention</label>
-                  <label
-                    for="new-question-multi" class="pure-checkbox">
-                  <input id="new-question-multi" class="new question
-                      multi" type="checkbox"
-                      value="multi">
-                    Multiple
-                          Choice</label>
                 </div>
                 <div class="pure-controls">
                   <button class="submitQuestion pure-button button-secondary" href="#">Add Question</button>

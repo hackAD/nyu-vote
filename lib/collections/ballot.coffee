@@ -23,7 +23,7 @@ class Ballot extends ReactiveClass(Ballots)
     if (question.options.type == "pick")
       choices = question.choices
       selectedChoices = @selectedChoices(questionIndex, true)
-      if (question.options.multi)
+      if (question.options.voteMode == "multi")
         if (question.options.allowAbstain && @isAbstaining(questionIndex))
           valid = selectedChoices.length == 1
         else
@@ -75,10 +75,10 @@ class Ballot extends ReactiveClass(Ballots)
     choice = question.choices[choiceIndex]
     choice.value = !choice.value
     newValue = choice.value
-    # Changes if they just selected a choice
+    # If they just selected a choice
     if newValue == true
       # If it is not multiple choice, make sure all other choices are false
-      if (!question.options.multi)
+      if (question.options.voteMode == "single")
         _.each(question.choices, (choice, index) ->
           if index != choiceIndex
             choice.value = false
@@ -87,11 +87,11 @@ class Ballot extends ReactiveClass(Ballots)
       else if (question.options.allowAbstain)
         abstainChoice = question.choices[question.choices.length - 1]
         abstainChoice.value = false
-    # Changes if they deselected a choice
+    # If they deselected a choice
     else
       if (question.options.allowAbstain)
         # If it's not multiple choice or nothing else is selected
-        if (!question.options.multi || !_.find(question.choices, (choice) ->
+        if (question.options.voteMode == "single" || !_.find(question.choices, (choice) ->
           return choice.value == true
         ))
           abstainChoice = question.choices[question.choices.length - 1]

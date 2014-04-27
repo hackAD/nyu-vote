@@ -16,22 +16,20 @@ Template.electionsAdminShow.helpers
         }
     )
   canEdit: () ->
-    this.status == "unopened" && this.hasAdmin(Meteor.user())
+    @status == "unopened" && @hasAdmin(Meteor.user())
   openCloseElection: () ->
-    if this.status == "open" then return "Close" else return "Open"
+    if @status == "open" then return "Close" else return "Open"
   openCloseClass: () ->
-    if this.status == "open" then return "button-secondary" else return "button-success"
-  type: () ->
-    return this.options.type
-  allowAbstain: () ->
-    if this.options?.allowAbstain then return "Allows" else return "Forbids"
-  multi: () ->
-    if this.options?.multi then return "Multiple" else return "Single"
+    if @status == "open" then return "button-secondary" else return "button-success"
+  isPickN: () ->
+    return @options.voteMode == "pickN"
+
+
 
 Template.electionsAdminShow.events
   "click .openCloseElection": (e) ->
     e.preventDefault()
-    if (this.status != "unopened" ||
+    if (@status != "unopened" ||
         confirm("Once you open this election, it can no longer be modified." +
         " Are you sure you want to do this?"))
-      Meteor.call("toggleElectionStatus", this._id)
+      Meteor.call("toggleElectionStatus", @_id)

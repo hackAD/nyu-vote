@@ -1,15 +1,32 @@
 questionCount = 0
 choiceCount = 0
+
 Template.electionsAdminEdit.helpers
   election: () ->
     questionCount = 0
     return Election.getActive()
   allowAbstain: () ->
-    return if this.options.allowAbstain then "checked" else null
+    return if @options.allowAbstain then "checked" else null
+  pick: () ->
+    return if @options.type == "pick" then "checked" else null
+  single: () ->
+    return if @options.voteMode == "single" then "checked" else null
   multi: () ->
-    return if this.options.multi == true then "checked" else null
+    return if @options.voteMode == "multi" then "checked" else null
+  pickN: () ->
+    return if @options.voteMode == "pickN" then "checked" else null
+  pickNVal: () ->
+    election = Election.getActive()
+    console.log("rerunning")
+    election.depend()
+    return @options.pickNVal
+  unlessPickN: () ->
+    election = Election.getActive()
+    election.depend()
+    isPickN = @options.voteMode == "pickN"
+    return if isPickN then null else "disabled"
   canEdit: () ->
-    this.status == "unopened"
+    @status == "unopened"
   groups: () ->
     seen = {}
     existingGroups = _.map(@groups, (groupId) ->
@@ -39,6 +56,9 @@ Template.electionsAdminEdit.helpers
   choiceCount: () ->
     choiceCount += 1
     return choiceCount
+  isPickQuestion: (election) ->
+    election.depend()
+    return @options.type == "pick"
 
 Template.electionsAdminEdit.events
   "click .save-election, submit .election-form": (e) ->
@@ -48,7 +68,6 @@ Template.electionsAdminEdit.events
     questionIndex = -1
     choiceIndex = -1
     values = $('form').serializeArray()
-    allowAbstain = $('')
     newGroups = []
     for field in values
       switch field.name
@@ -62,14 +81,8 @@ Template.electionsAdminEdit.events
           choiceIndex = -1
           questionIndex += 1
           oldElection.questions[questionIndex].name = field.value
-          oldElection.questions[questionIndex].options.allowAbstain = false
-          oldElection.questions[questionIndex].options.multi = false
         when "questionDescription"
           oldElection.questions[questionIndex].description = field.value
-        when "questionAllowAbstain"
-          oldElection.questions[questionIndex].options.allowAbstain = if field.value == "on" then true else false
-        when "questionMulti"
-          oldElection.questions[questionIndex].options.multi = if field.value == "on" then true else false
         when "choiceName"
           choiceIndex += 1
           oldElection.questions[questionIndex].choices[choiceIndex].name = field.value
@@ -77,42 +90,30 @@ Template.electionsAdminEdit.events
           oldElection.questions[questionIndex].choices[choiceIndex].description = field.value
         when "choiceImage"
           oldElection.questions[questionIndex].choices[choiceIndex].image = field.value
-    Elections.update(
-      {_id: this._id},
-      $set:
-        name: oldElection.name
-        description: oldElection.description
-        questions: oldElection.questions
-        groups: newGroups
+    oldElection.update(() =>
+      console.log("update successful")
+      console.log(@slug)
+      Router.go("adminElectionsShow", {slug: @slug})
     )
+
   "click .submitQuestion": (e) ->
     e.preventDefault()
     election = Election.getActive()
     name = $(".new.question.name").val()
     description = $(".new.question.description").val()
-    if $(".new.question.allowAbstain").is(':checked')
-      allowAbstain = true
-    else
-      allowAbstain = false
-    if $(".new.question.multi").is(':checked')
-      multi = true
-    else
-      multi = false
     election.addQuestion({
       name: name
       description: description
       options: {
         type: "pick"
-        allowAbstain: allowAbstain
-        multi: multi
+        voteMode: "single"
+        allowAbstain: true
       }
     })
     election.update((err) ->
       if not err
         $(".new.question.name").val("")
         $(".new.question.description").val("")
-        $(".new.question.multi").attr("checked", false)
-        $(".new.question.allowAbstain").attr("checked", false)
       else
         Meteor.userError.throwError(err.message)
     )
@@ -148,5 +149,36 @@ Template.electionsAdminEdit.events
   "click .reset-election": (e) ->
     e.preventDefault()
     election = Election.getActive()
-    if confirm("Are you sure you want to reset this election? All votes will be discarded")
+    if confirm("Are you sure you want to reset this election?"
+      + " All votes will be discarded")
       Meteor.call("resetElection", election._id)
+
+  "change .vote-type": (e) ->
+    election = Election.getActive()
+    question = election.getQuestion($(e.target).attr("data-questionId"))
+    question.options.type = e.target.value
+    if e.target.value == "pick"
+      question.options.voteMode = "single"
+    if e.target.value == "rank"
+      question.options.voteMode = "simple"
+      delete question.options.pickNVal
+    election.changed()
+
+  "change .vote-mode": (e, template) ->
+    election = Election.getActive()
+    question = election.getQuestion($(e.target).attr("data-questionId"))
+    question.options.voteMode = e.target.value
+    switch e.target.value
+      when "pickN"
+        question.options.pickNVal = 1
+      else
+        delete question.options.pickNVal
+    election.changed()
+
+
+  "blur .pickNVal": (e) ->
+    election = Election.getActive()
+    question = election.getQuestion($(e.target).attr("data-questionId"))
+    question.options.pickNVal = e.target.value
+    election.changed()
+
