@@ -76,7 +76,11 @@ Template.electionsAdminEdit.events
         when "name"
           oldElection.name = field.value
         when "description"
+          console.log "changing description"
+          console.log oldElection
           oldElection.description = field.value
+          console.log field
+          console.log oldElection
         when "questionName"
           choiceIndex = -1
           questionIndex += 1
@@ -90,6 +94,7 @@ Template.electionsAdminEdit.events
           oldElection.questions[questionIndex].choices[choiceIndex].description = field.value
         when "choiceImage"
           oldElection.questions[questionIndex].choices[choiceIndex].image = field.value
+    oldElection.groups = newGroups
     oldElection.update(() =>
       console.log("update successful")
       console.log(@slug)
