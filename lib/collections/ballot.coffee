@@ -161,7 +161,7 @@ class Ballot extends ReactiveClass(Ballots)
         transformedQuestion.choices.push({
           name: "abstain"
           _id: "abstain"
-          value: true
+          value: false
         })
       return transformedQuestion
     )
