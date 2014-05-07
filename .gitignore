@@ -1,2 +1,3 @@
 *.swp
 server/config/_environment.coffee
+scripts/mongo_keys.txt
