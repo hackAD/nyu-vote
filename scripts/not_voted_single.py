@@ -3,8 +3,8 @@ import re
 
 def main():
   with open("mongo_keys.txt") as f
-    mongo_uri = f.read()
-  client = pymongo.MongoClient(mongo_uri)
+    mongo_uri = f.read().strip()
+  client = pymongo.MongoClient(mongo_uri, 10048)
   db = client["nyu-vote"]
   netIds = set()
   group = db.groups.find_one({"slug": "student-government-elections"})

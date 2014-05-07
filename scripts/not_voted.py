@@ -2,8 +2,8 @@ import pymongo
 import re
 
 def main():
-  with open("mongo_keys.txt") as f
-    mongo_uri = f.read()
+  with open("mongo_keys.txt") as f:
+    mongo_uri = f.read().strip()
   client = pymongo.MongoClient(mongo_uri)
   db = client["nyu-vote"]
   netIds = set()
