@@ -1,2 +1,0 @@
-process.env.googleId = ""
-process.env.googleSecret = ""
