@@ -16,4 +16,4 @@ if [ -e $DIR/../config ]; then
   ENV_ARGS=${ENV_ARGS:1}
 fi
 
-docker run $ENV_ARGS --rm --name nyu-vote -p 3000:3000 lingz/nyu-vote
+docker run -i -t $ENV_ARGS --rm --name nyu-vote -p 3000:3000 lingz/nyu-vote
