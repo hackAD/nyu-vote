@@ -6,7 +6,7 @@ ADD . /srv/nyu-vote
 
 WORKDIR /srv/nyu-vote
 
-RUN MRT INSTALL
+RUN mrt install && mrt update
 
 EXPOSE 3000
 
