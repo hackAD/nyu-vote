@@ -54,9 +54,11 @@ root.Group = Group
 # Registering Hooks
 Groups.before.insert((userId, doc) ->
   doc.slug = Utilities.generateSlug(doc.name, Groups)
-  user = User.fetchOne(userId)
-  if user
+  if userId
+    user = User.fetchOne(userId)
     doc.creator = user.netId
+    if not netId in doc.admins
+      doc.admins.push(netId)
   return doc
 )
 Groups.after.update((userId, doc, fieldNames, modifier, options) ->

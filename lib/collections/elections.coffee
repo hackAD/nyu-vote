@@ -215,7 +215,10 @@ Elections.before.insert((userId, doc) ->
   doc.status = "unopened"
   if userId
     user = User.fetchOne(userId)
+    netId = user.getNetId()
     doc.creator = user.getNetId()
+    if not netId in doc.admins
+      doc.admins.push(netId)
   return doc
 )
 
