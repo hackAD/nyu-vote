@@ -11,7 +11,8 @@ class Group extends ReactiveClass(Groups)
   hasAdmin: (user) ->
     if user.isGlobalAdmin()
       return true
-    return _.contains(@admins, user.getNetId())
+    netId = user.getNetId()
+    return _.contains(@admins, netId) || @creator == netId
 
   # Whether a user is present in a group as a voter
   containsUser: (user) ->
@@ -54,10 +55,12 @@ root.Group = Group
 # Registering Hooks
 Groups.before.insert((userId, doc) ->
   doc.slug = Utilities.generateSlug(doc.name, Groups)
+  console.log("CREATING GROUP")
   if userId
     user = User.fetchOne(userId)
-    doc.creator = user.netId
-    if not netId in doc.admins
+    netId = user.getNetId()
+    doc.creator = netId
+    if netId not in doc.admins
       doc.admins.push(netId)
   return doc
 )

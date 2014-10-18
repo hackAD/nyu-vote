@@ -216,9 +216,7 @@ Elections.before.insert((userId, doc) ->
   if userId
     user = User.fetchOne(userId)
     netId = user.getNetId()
-    doc.creator = user.getNetId()
-    if not netId in doc.admins
-      doc.admins.push(netId)
+    doc.creator = netId
   return doc
 )
 
