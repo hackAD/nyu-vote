@@ -8,6 +8,12 @@ allow concurrent elections to occur without information leakage.
 
 Contact lz781@nyu.edu for more info.
 
+Documentation
+============
+
+Detailed usage documentation can be found here:
+https://docs.google.com/document/d/18qsoORoz7B6R_f45JJMU8bvnA1ux5EhjHrnW2LpV8sQ/edit?usp=sharing
+
 Configuration
 =============
 

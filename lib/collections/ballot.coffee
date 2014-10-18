@@ -80,11 +80,8 @@ class Ballot extends ReactiveClass(Ballots)
     choice = question.choices[choiceIndex]
     choice.value = !choice.value
     newValue = choice.value
-    console.log("changed")
-    console.log(newValue)
     # If they just selected a choice
     if newValue == true
-      console.log("disabling others")
       # If it is not multiple choice, or they picked abstain, make sure all
       # other choices are false
       if (question.options.voteMode == "single") || choice._id == "abstain"
@@ -117,7 +114,6 @@ class Ballot extends ReactiveClass(Ballots)
     @changed()
     question = @questions[questionIndex]
     if not question.options.allowAbstain
-      console.log("not allowed")
       return false
     abstainChoice = question.choices[question.choices.length - 1]
     abstainChoice.value = false
@@ -127,7 +123,10 @@ class Ballot extends ReactiveClass(Ballots)
     question = @questions[questionIndex]
     if not question.options.allowAbstain
       return false
+    console.log("DEBUG")
+    console.log(question.choices)
     abstainChoice = question.choices[question.choices.length - 1]
+    console.log(abstainChoice)
     @depend()
     return abstainChoice.value
 
