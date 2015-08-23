@@ -36,6 +36,30 @@ without SSL, and on port 80 with SSL (which is handled by the full
 stack deployment), as these are the only redirect_uris allowed on
 the Google Cloud API console currently.
 
+Start Development Server
+=========
+
+This is for running just the nyu-vote server during development.
+
+First make sure you have docker installed
+
+```
+curl -sSL https://get.docker.com/ | sh
+```
+
+Then build the docker config
+
+```
+./scripts/build.sh
+```
+
+Finally, run the dev script and start the server
+
+```
+./scripts/dev.sh
+mrt
+```
+
 Deployment (full stack)
 =========
 
@@ -43,21 +67,4 @@ It is recommended you deploy the entire app stack. Visit the repo
 [https://github.com/hackAD/docker-nyu-vote-server](hackAD/docker-nyu-vote-server)
 for instructions.
 
-### Configuration
-
-
-Deployment (standalone)
-==========
-
-This is is if, for some reason, you only want to run this app in isolation.
-
-
-First install docker:
-```
-curl https://raw.githubusercontent.com/lingz/Scripts/master/install/docker.sh | bash
-```
-
-Then to start the app:
-```
-./scripts/start.sh
-```
+The script in ./scripts/start.sh does not currently work
