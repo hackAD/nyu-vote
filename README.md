@@ -19,7 +19,9 @@ Configuration
 
 The app requires a Google API ID and secret. Copy the config.example
 at the root of the app, and fill in the appropriate details. An external
-mongoDB URI may also be specified.
+mongoDB URI may also be specified. You can also change the SITE_URL
+if you are developing on a remote server (be sure to also add
+that URL to the Google Apps callback)
 
 No configuration is necessary for this if run in full stack mode as it
 will inherit it from the fig configuration in the parent.
@@ -59,6 +61,8 @@ Finally, run the dev script and start the server
 ./scripts/dev.sh
 mrt
 ```
+
+By default, you should now have a server running on port 3000.
 
 Deployment (full stack)
 =========
