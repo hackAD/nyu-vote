@@ -123,10 +123,7 @@ class Ballot extends ReactiveClass(Ballots)
     question = @questions[questionIndex]
     if not question.options.allowAbstain
       return false
-    console.log("DEBUG")
-    console.log(question.choices)
     abstainChoice = question.choices[question.choices.length - 1]
-    console.log(abstainChoice)
     @depend()
     return abstainChoice.value
 

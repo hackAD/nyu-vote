@@ -1,7 +1,7 @@
 root = global ? window
 Deps.autorun(() ->
   root.usersHandle = Meteor.subscribe("userData")
-  if /admin/.test(Router.current()?.route.name)
+  if /admin/.test(Router.current()?.route.getName())
     root.adminElectionsHandle = Meteor.subscribe("adminElections")
     root.adminGroupsHandle = Meteor.subscribe("adminGroups")
     root.adminWhitelistHandle = Meteor.subscribe("adminWhitelist")

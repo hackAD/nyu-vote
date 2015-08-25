@@ -9,10 +9,9 @@ accounts-base
 accounts-password
 stylus
 service-configuration
-iron-router
 accounts-google
 google
-collection-hooks
-reactive-class
-react-meteor
-userErrors
+react
+mrt:reactive-class
+matb33:collection-hooks
+iron:router

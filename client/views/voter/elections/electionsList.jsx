@@ -1,7 +1,6 @@
-/** @jsx React.DOM */
-
-ElectionsList = ReactMeteor.createClass({
-  getMeteorState: function() {
+ElectionsList = React.createClass({
+  mixins: [ReactMeteorData],
+  getMeteorData: function() {
     var votedElections = Ballots.find().map(function(ballot) {return ballot.electionId;});
     var openElections = Elections.find({_id: {$nin: votedElections}});
     var closedEections = Elections.find({_id: {$in: votedElections}});
@@ -30,16 +29,16 @@ ElectionsList = ReactMeteor.createClass({
           <div className="centered-container">
             <div id="ballot-counter">
               <h3>You have</h3>
-              <h1>{this.state.openElectionsCount}</h1>
+              <h1>{this.data.openElectionsCount}</h1>
               <h3>Open Ballots</h3>
             </div>
-            {this.state.openElectionNodes}
+            {this.data.openElectionNodes}
           </div>
         </div>
         <div className="dark-blue-bg">
           <div className="centered-container">
             <h2>Closed Ballots</h2>
-            {this.state.closedElectionNodes}
+            {this.data.closedElectionNodes}
           </div>
         </div>
         <div id="ballot-list-footer" className="dark-blue-bg">

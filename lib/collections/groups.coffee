@@ -55,7 +55,6 @@ root.Group = Group
 # Registering Hooks
 Groups.before.insert((userId, doc) ->
   doc.slug = Utilities.generateSlug(doc.name, Groups)
-  console.log("CREATING GROUP")
   if userId
     user = User.fetchOne(userId)
     netId = user.getNetId()

@@ -25,6 +25,8 @@ setActiveGroup = (newGroupSlug) ->
   group.makeActive()
   return group
 
+#Router.route "/",
+  #onAfterAction: ()
 Router.map ->
   @route "home",
     path: "/"

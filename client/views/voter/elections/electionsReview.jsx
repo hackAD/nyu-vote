@@ -1,7 +1,6 @@
-/** @jsx React.DOM */
-
-ElectionsReview = ReactMeteor.createClass({
-  getMeteorState: function() {
+ElectionsReview = React.createClass({
+  mixins: [ReactMeteorData],
+  getMeteorData: function() {
     var activeElection = Election.getActive();
     var activeBallot = Ballot.getActive();
     return {
@@ -10,8 +9,8 @@ ElectionsReview = ReactMeteor.createClass({
     };
   },
   render: function() {
-    var election = this.state.election;
-    var ballot = this.state.ballot;
+    var election = this.data.election;
+    var ballot = this.data.ballot;
     var questionNodes = [];
     var choiceMapFunction = function(choice) {
       return(

@@ -6,70 +6,16 @@
   },
   "dependencies": {
     "basePackages": {
-      "router": {},
-      "iron-router": {},
-      "collection-hooks": {},
-      "reactive-class": {},
       "react-meteor": {
         "git": "https://github.com/lingz/react-meteor.git",
         "branch": "master"
       }
     },
     "packages": {
-      "router": {
-        "git": "https://github.com/tmeasday/meteor-router.git",
-        "tag": "v0.6.1",
-        "commit": "8ec75fec7affdefc787d19f23b36fd6d1d44ef04"
-      },
-      "iron-router": {
-        "git": "https://github.com/EventedMind/iron-router.git",
-        "tag": "v0.8.2",
-        "commit": "05415a8891ea87a00fb1e2388585f2ca5a38e0da"
-      },
-      "collection-hooks": {
-        "git": "https://github.com/matb33/meteor-collection-hooks.git",
-        "tag": "v0.7.2",
-        "commit": "261f61f07b371ae913463fba8964a9b93cab531b"
-      },
-      "reactive-class": {
-        "git": "https://github.com/lingz/meteor-reactive-class.git",
-        "tag": "v1.2.0",
-        "commit": "0a92a2d22139e9d35124ccd5af1d5ac16d8f8f54"
-      },
       "react-meteor": {
         "git": "https://github.com/lingz/react-meteor.git",
         "branch": "master",
         "commit": "d631bae3ffe33a101950666467bfcd96ab96606e"
-      },
-      "page-js-ie-support": {
-        "git": "https://github.com/tmeasday/meteor-page-js-ie-support.git",
-        "tag": "v1.3.5",
-        "commit": "b99ed8380aefd10b2afc8f18d9eed4dd0d8ea9cb"
-      },
-      "HTML5-History-API": {
-        "git": "https://github.com/tmeasday/meteor-HTML5-History-API.git",
-        "tag": "v4.1.2",
-        "commit": "b5fca79f9ae8936e5f748a04f475295f4fa1cc7a"
-      },
-      "iron-layout": {
-        "git": "https://github.com/EventedMind/iron-layout.git",
-        "tag": "v0.2.0",
-        "commit": "4a2d53e35ba036b0c189c7ceca34be494d4c6c97"
-      },
-      "blaze-layout": {
-        "git": "https://github.com/EventedMind/blaze-layout.git",
-        "tag": "v0.2.5",
-        "commit": "273e3ab7d005d91a1a59c71bd224533b4dae2fbd"
-      },
-      "iron-core": {
-        "git": "https://github.com/EventedMind/iron-core.git",
-        "tag": "v0.2.0",
-        "commit": "0e48b5dc50d03f01025b7b900fb5ce2f13d52cad"
-      },
-      "iron-dynamic-template": {
-        "git": "https://github.com/EventedMind/iron-dynamic-template.git",
-        "tag": "v0.2.1",
-        "commit": "4dd1185c4d9d616c9abdb3f33e4a7d5a88db7e18"
       }
     }
   }

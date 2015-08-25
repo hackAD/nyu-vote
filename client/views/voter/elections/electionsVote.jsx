@@ -1,7 +1,6 @@
-/** @jsx React.DOM */
-
-ElectionsVote = ReactMeteor.createClass({
-  getMeteorState: function() {
+ElectionsVote = React.createClass({
+  mixins: [ReactMeteorData],
+  getMeteorData: function() {
     var activeElection = Election.getActive();
     var activeBallot = Ballot.getActive();
     return {
@@ -12,13 +11,13 @@ ElectionsVote = ReactMeteor.createClass({
     };
   },
   beginVote: function() {
-    Router.go("electionsVote", {slug: this.state.election.slug, questionIndex: 0});
+    Router.go("electionsVote", {slug: this.data.election.slug, questionIndex: 0});
   },
   render: function() {
-    var election = this.state.election;
-    var questionIndex = this.state.questionIndex;
-    var ballot = this.state.ballot;
-    var question = this.state.question;
+    var election = this.data.election;
+    var questionIndex = this.data.questionIndex;
+    var ballot = this.data.ballot;
+    var question = this.data.question;
 
     var choices = [];
     var randomMap = election.getRandomQuestionMap(questionIndex);

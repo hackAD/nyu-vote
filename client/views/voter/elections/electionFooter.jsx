@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 ElectionsFooter = React.createClass({
   getInitialState: function() {
     activeElection = Election.getActive();
@@ -16,7 +14,7 @@ ElectionsFooter = React.createClass({
       if (err) {
         self.setState({hasVoted: false, voting: true});
         $('html,body').animate({scrollTop:0}, 300);
-        Meteor.userError.throwError(err.reason);
+        alert("Error: " + err.reason);
       }
       else {
         self.setState({hasVoted: true, voting: false});

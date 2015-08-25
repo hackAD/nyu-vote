@@ -31,10 +31,8 @@ cp config.example config
 nano config
 ```
 
-Note: this app with default hackAD keys can only run on port 3000
-without SSL, and on port 80 with SSL (which is handled by the full
-stack deployment), as these are the only redirect_uris allowed on
-the Google Cloud API console currently.
+Note: Make sure to check the Google Cloud Console to make sure the
+redirect uris are the same as the URIs you are using
 
 Deployment (full stack)
 =========
@@ -49,12 +47,17 @@ for instructions.
 Deployment (standalone)
 ==========
 
-This is is if, for some reason, you only want to run this app in isolation.
+This is is if you only want to run this app on its own.
 
 
 First install docker:
 ```
 curl https://raw.githubusercontent.com/lingz/Scripts/master/install/docker.sh | bash
+```
+
+Make sure to build the app the first time and after any changes
+```
+./scripts/build.sh
 ```
 
 Then to start the app:

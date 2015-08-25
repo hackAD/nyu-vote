@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 ElectionsChoice = React.createClass({
   abstain: function() {
     var ballot = this.props.ballot;

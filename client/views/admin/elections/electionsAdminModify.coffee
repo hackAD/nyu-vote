@@ -17,7 +17,6 @@ Template.electionsAdminEdit.helpers
     return if @options.voteMode == "pickN" then "checked" else null
   pickNVal: () ->
     election = Election.getActive()
-    console.log("rerunning")
     election.depend()
     return @options.pickNVal
   unlessPickN: () ->
@@ -76,11 +75,7 @@ Template.electionsAdminEdit.events
         when "name"
           oldElection.name = field.value
         when "description"
-          console.log "changing description"
-          console.log oldElection
           oldElection.description = field.value
-          console.log field
-          console.log oldElection
         when "questionName"
           choiceIndex = -1
           questionIndex += 1
@@ -96,8 +91,6 @@ Template.electionsAdminEdit.events
           oldElection.questions[questionIndex].choices[choiceIndex].image = field.value
     oldElection.groups = newGroups
     oldElection.update(() =>
-      console.log("update successful")
-      console.log(@slug)
       Router.go("adminElectionsShow", {slug: @slug})
     )
 
@@ -120,7 +113,7 @@ Template.electionsAdminEdit.events
         $(".new.question.name").val("")
         $(".new.question.description").val("")
       else
-        Meteor.userError.throwError(err.message)
+        alert("Error: " + err.message)
     )
   "click .submitChoice": (e, template) ->
     e.preventDefault()
@@ -141,7 +134,7 @@ Template.electionsAdminEdit.events
         $("#new-choice-description-" + id).val("")
         $("#new-choice-image-" + id).val("")
       else
-        Meteor.userError.throwError(err.message)
+        alert("Error: " + err.message)
     )
 
   "click .delete-election": (e) ->

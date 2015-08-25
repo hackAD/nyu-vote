@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 ElectionsItem = React.createClass({
   render: function() {
     return(
