@@ -226,8 +226,14 @@ Elections.before.insert((userId, doc) ->
 Elections.before.update((userId, doc, fieldNames, modifier, options) ->
   if (Meteor.isServer)
     user = User.fetchOne(userId)
-    Log.warn(user + " is making modification " + JSON.stringify(modifier) +
-      " on election " + JSON.stringify(doc))
+    ## reduced log for $inc updates that happen with votes
+    modOps = Object.keys(modifier)
+    if modOps.length == 1 and "$inc" in modOps
+      Log.warn(user + " is incrementing with " +
+        JSON.stringify(modifier) + " on electionId: " + doc._id)
+    else
+      Log.warn(user + " is making modification " + JSON.stringify(modifier) +
+        " on election " + JSON.stringify(doc))
 )
 
 Elections.after.update((userId, doc, fieldNames, modifier, options) ->
