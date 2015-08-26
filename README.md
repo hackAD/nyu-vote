@@ -91,3 +91,14 @@ Then to start the app:
 ```
 
 It should now be running on Port 3000
+
+Docker Builds
+============
+
+There is a githook on this repo to build a new Docker image whenever there is
+a push to master. **Therefore ONLY push stable, tested branches to master. If you
+don't do this, new instances of NYU Vote could be broken**. Do development on
+another branch, and push to master only when it is stable. Our docker image
+can be found here:
+
+[Docker Hub hackad/nyu-vote](https://hub.docker.com/r/hackad/nyu-vote/)
