@@ -2,37 +2,21 @@ Meteor.publish("adminGroups", ()->
   if not @userId
     @ready()
     return
-  user = Meteor.users.findOne(@userId)
-  return Group.findWithAdmin(user)
-)
-Meteor.publish("globalAdminGroups", () ->
-  if not @userId
-    @ready()
-    return
-  user = Meteor.users.findOne(@userId)
+  user = User.fetchOne(@userId)
   if user.isGlobalAdmin()
     return Groups.find()
   else
-    @ready()
-    return null
-)
-Meteor.publish("globalAdminElections", () ->
-  if not @userId
-    @ready()
-    return
-  user = Meteor.users.findOne(@userId)
-  if user.isGlobalAdmin()
-    return Elections.find()
-  else
-    @ready()
-    return null
+    return Group.findWithAdmin(user)
 )
 Meteor.publish("adminElections", ()->
   if not @userId
     @ready()
     return
   user = User.fetchOne(@userId)
-  return Election.findWithAdmin(user)
+  if user.isGlobalAdmin()
+    return Elections.find()
+  else
+    return Election.findWithAdmin(user)
 )
 Meteor.publish("adminWhitelist", () ->
   if not @userId
@@ -42,12 +26,13 @@ Meteor.publish("adminWhitelist", () ->
   return Groups.find({slug: "global-whitelist", netIds: user.getNetId()})
 )
 
-Meteor.publish("voterElections", () ->
+Meteor.publish("voterElectionsAndBallots", () ->
+  user = Meteor.users.findOne(@userId)
   groups = findUserGroups(@)
   if not groups
     @ready()
     return
-  cursor = Elections.find(
+  electionsCursor = Elections.find(
     groups:
       $in: _.map(groups, (g) -> g._id)
     status: "open"
@@ -59,18 +44,19 @@ Meteor.publish("voterElections", () ->
       slug: 1
     }
   )
-  return cursor
-)
-
-Meteor.publish("voterBallots", () ->
-  user = Meteor.users.findOne(@userId)
-  if not user
-    @ready()
-    return
-  cursor = Ballots.find(
-    netId: user.getNetId()
+  openElections = electionsCursor.map((election) ->
+    return election._id
   )
-  return cursor
+  ballotsCursor = Ballots.find(
+    netId: user.getNetId()
+    electionId:
+      $in: openElections
+  )
+
+  return [
+    electionsCursor,
+    ballotsCursor
+  ]
 )
 
 Meteor.publish("userData", () ->

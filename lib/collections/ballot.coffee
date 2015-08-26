@@ -7,6 +7,8 @@ class Ballot extends ReactiveClass(Ballots)
   constructor: (fields) ->
     _.extend(@, fields)
     Ballot.initialize.call(@)
+    if not @election
+      @election = Election.fetchOne(@electionId)
 
   # Validates the entire Ballot
   isValid: () ->
@@ -17,28 +19,48 @@ class Ballot extends ReactiveClass(Ballots)
 
   # Validates a specific question on the ballot
   validate: (questionIndex) ->
-    valid = false
-    question = @questions[questionIndex]
+    question = @election.questions[questionIndex]
     # TODO: implemenent validation for rankings
     if question.options.allowAbstain && @isAbstaining(questionIndex)
-      valid = true
-    else if (question.options.type == "pick")
-      choices = question.choices
-      selectedChoices = @selectedChoices(questionIndex, true)
+      return true
+    choices = question.choices
+    selectedChoices = @selectedChoices(questionIndex, true)
+
+    if Meteor.isServer
+      # checks all IDs on the choices are unique
+      allChoicesUnique = _.reduce(selectedChoices, (seen, selectedChoice) ->
+        if selectedChoice._id not in seen
+          seen.push(selectedChoice._id)
+        return seen
+      , []).length == selectedChoices.length
+      if not allChoicesUnique
+        return false
+
+      # checks all IDs on the choices match real IDs
+      allChoicesValid = _.filter(selectedChoices, (selectedChoice) ->
+        return _.find(choices, (choice) ->
+          return selectedChoice._id == choice._id
+        )
+      ).length == selectedChoices.length
+      if not allChoicesValid
+        return false
+
+    if (question.options.type == "pick")
       if (question.options.voteMode == "multi")
         if (question.options.allowAbstain && @isAbstaining(questionIndex))
-          valid = selectedChoices.length == 1
+          return selectedChoices.length == 1
         else
-          valid = selectedChoices.length > 0
+          return selectedChoices.length > 0
       else if (question.options.voteMode == "pickN")
-        valid = selectedChoices.length == question.options.pickNVal
+        return selectedChoices.length == question.options.pickNVal
       else
-        valid = selectedChoices.length == 1
+        return selectedChoices.length == 1
 
-    return valid
+    Log.error("validation logic failed, election: " + JSON.stringify(@election) +
+      " ballot: " + JSON.stringify(@))
+    return false
 
   selectedChoices: (questionIndex, returnBallots) ->
-    election = @getElection()
     # if we are abstaining, just return the abstain object
     if @isAbstaining(questionIndex)
       choices = @questions[questionIndex].choices
@@ -57,7 +79,7 @@ class Ballot extends ReactiveClass(Ballots)
     if questionIndex > @questions.length - 1
       throw new Meteor.Error(500, questionIndex + " is out of bounds")
     array = if returnBallots then @questions[questionIndex].choices else
-      election.questions[questionIndex].choices
+      @election.questions[questionIndex].choices
     selected = _.filter(array, (choice, index) =>
       ballotChoice = @questions[questionIndex].choices[index]
       return ballotChoice.value == true
@@ -120,12 +142,17 @@ class Ballot extends ReactiveClass(Ballots)
     return @
 
   isAbstaining: (questionIndex) ->
-    question = @questions[questionIndex]
-    if not question.options.allowAbstain
+    ballotQuestion = @questions[questionIndex]
+    electionQuestion = @election.questions[questionIndex]
+    if not electionQuestion.options.allowAbstain
       return false
-    abstainChoice = question.choices[question.choices.length - 1]
+    abstainChoice = ballotQuestion.choices[ballotQuestion.choices.length - 1]
     @depend()
     return abstainChoice.value
+
+  toString: () ->
+    return "NetId: " + @netId + ", electionId: " + @electionId +
+      ", data: " + JSON.stringify(@questions)
 
   @generateBallot = (election, user) ->
     if not election
@@ -136,31 +163,32 @@ class Ballot extends ReactiveClass(Ballots)
     if not user
       throw new Meteor.Error(500,
         "You must specify in a user to generate a ballot!")
-    ballot = new this()
-    ballot.netId = user.getNetId()
-    ballot.electionId = election._id
-    # Transform each question
-    ballot.questions = _.map(election.questions, (question) ->
-      transformedQuestion = _.omit(question,
-        "description", "name", "choices")
-      # Transform each choice
-      transformedQuestion.choices = _.map(question.choices, (choice, index) ->
-        transformedChoice = _.omit(choice,
-          "description", "image", "name", "votes")
-        transformedChoice.value = switch (question.options.type)
-          when "pick" then false
-          when "rank" then 0
-          else false
-        return transformedChoice
+    ballot = new this({
+      election: election,
+      electionId: election._id,
+      netId: user.getNetId(),
+      questions: _.map(election.questions, (question) ->
+        transformedQuestion = _.omit(question,
+          "description", "name", "choices")
+        # Transform each choice
+        transformedQuestion.choices = _.map(question.choices, (choice, index) ->
+          transformedChoice = _.omit(choice,
+            "description", "image", "name", "votes")
+          transformedChoice.value = switch (question.options.type)
+            when "pick" then false
+            when "rank" then 0
+            else false
+          return transformedChoice
+        )
+        if (transformedQuestion.options.allowAbstain)
+          transformedQuestion.choices.push({
+            name: "abstain"
+            _id: "abstain"
+            value: false
+          })
+        return transformedQuestion
       )
-      if (transformedQuestion.options.allowAbstain)
-        transformedQuestion.choices.push({
-          name: "abstain"
-          _id: "abstain"
-          value: false
-        })
-      return transformedQuestion
-    )
+    })
     return ballot
 
   # Singleton to return a ballot if it exists, or create a new one if it
@@ -194,7 +222,7 @@ class Ballot extends ReactiveClass(Ballots)
 
 Ballot.setupTransform()
 
-Ballot.addOfflineFields(["random_map"])
+Ballot.addOfflineFields(["election"])
 
 # Ballots must match the user that is submitting them, and have the right
 # fields
@@ -203,6 +231,9 @@ Ballots.allow(
     if not ballot.netId || not ballot.electionId || not ballot.questions
       return false
     if not userId
+      if (Meteor.isServer)
+        Log.warn("Someone tried to cast a ballot without being logged in" +
+          "Ballot: " + JSON.stringify(ballot))
       return false
     user = User.fetchOne(userId)
     if not user || not user.profile.netId
@@ -214,8 +245,13 @@ Ballots.allow(
         netIds: user.getNetId()
       })
       if not commonGroup
+        Log.warn(user + " tried to vote without being in the election" +
+          " groups. Ballot: " + JSON.stringify(ballot))
         return false
     if not ballot.netId == user.profile.netId
+      if (Meteor.isServer)
+        Log.warn(user + " tried to vote on behalf of " + ballot.netId +
+          "Ballot: " + JSON.stringify(ballot))
       return false
     return ballot.isValid()
 )
@@ -226,12 +262,17 @@ Ballots.deny(
   insert: (userId, ballot) ->
     if (Meteor.isServer)
       election = Election.fetchOne(ballot.electionId)
+      user = User.fetchOne(userId)
       if election.status != "open"
+        Log.warn(user + " tried to cast a ballot for election that's" +
+          " not open. Ballot: " + JSON.stringify(ballot))
         return true
       if Ballots.find({
         netId: ballot.netId,
         electionId: ballot.electionId
       }).count() > 0
+        Log.warn(user + " tried to cast a repeat ballot. Ballot: " +
+          JSON.stringify(ballot))
         return true
     return false
   update: () ->
@@ -240,11 +281,20 @@ Ballots.deny(
     return true
 )
 
-# After a ballot is inserted, we need to incremenet all the voted regions of
+# Prevent redundant data from getting duplicated into the DB
+Ballots.before.insert((userId, ballot) ->
+  for question in ballot.questions
+    delete question.options
+    for choice in question.choices
+      delete choice.name
+)
+
+# After a ballot is inserted, we need to increment all the voted regions of
 # the ballot
 Ballots.after.insert((userId, ballot) ->
   if (Meteor.isClient)
     return
+  user = User.fetchOne(userId)
   toIncrement = {}
   for i in [0...ballot.questions.length]
     question = ballot.questions[i]
@@ -255,6 +305,8 @@ Ballots.after.insert((userId, ballot) ->
   Elections.update(ballot.electionId, {
     "$inc": toIncrement
   })
+  Log.verbose("BALLOT CAST: " + user + " cast ballot. Ballot: " +
+    JSON.stringify(ballot))
 )
 
 

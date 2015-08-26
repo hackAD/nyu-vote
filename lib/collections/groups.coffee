@@ -61,14 +61,30 @@ Groups.before.insert((userId, doc) ->
     doc.creator = netId
     if netId not in doc.admins
       doc.admins.push(netId)
+  if (Meteor.isServer)
+    Log.warn((if userId then user else "server") +
+      " is creating group " + JSON.stringify(doc))
   return doc
 )
+Groups.before.update((userId, doc, fieldNames, modifier, options) ->
+  if (Meteor.isServer)
+    user = User.fetchOne(userId)
+    Log.warn(user + " is making modification " + JSON.stringify(modifier) +
+      " on group " + JSON.stringify(doc))
+)
+
 Groups.after.update((userId, doc, fieldNames, modifier, options) ->
   if doc.name != @previous.name
     newSlug = Utilities.generateSlug(doc.name, Groups)
     Groups.update(doc._id, {
       $set: {slug: newSlug}
     })
+)
+
+Groups.after.remove((userId, doc) ->
+  if (Meteor.isServer)
+    user = User.fetchOne(userId)
+    Log.warn(user + " is deleting group " + JSON.stringify(doc))
 )
 
 # They must be on the whitelist to create groups but they can edit groups that

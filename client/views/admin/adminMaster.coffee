@@ -3,7 +3,8 @@ Template.adminMaster.helpers
   loggedIn: () ->
     return Meteor.userId()
   canAccess: () ->
-    return Groups.find().count() > 0
+    # if the server is sending down anything, then we are admin
+    return Elections.find().count() > 0 || Groups.find().count() > 0
   electionsCount: () ->
     return Elections.find().count()
   groupsCount: () ->

@@ -217,7 +217,17 @@ Elections.before.insert((userId, doc) ->
     user = User.fetchOne(userId)
     netId = user.getNetId()
     doc.creator = netId
+  if (Meteor.isServer)
+    Log.warn((if userId then user else "server") +
+      " is creating election " + JSON.stringify(doc))
   return doc
+)
+
+Elections.before.update((userId, doc, fieldNames, modifier, options) ->
+  if (Meteor.isServer)
+    user = User.fetchOne(userId)
+    Log.warn(user + " is making modification " + JSON.stringify(modifier) +
+      " on election " + JSON.stringify(doc))
 )
 
 Elections.after.update((userId, doc, fieldNames, modifier, options) ->
@@ -226,6 +236,12 @@ Elections.after.update((userId, doc, fieldNames, modifier, options) ->
     Elections.update(doc._id, {
       $set: {slug: newSlug}
     })
+)
+
+Elections.after.remove((userId, doc) ->
+  if (Meteor.isServer)
+    user = User.fetchOne(userId)
+    Log.warn(user + " is deleting election " + JSON.stringify(doc))
 )
 
 # One can only create elections if they are on the whitelist. They are able to

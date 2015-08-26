@@ -26,6 +26,9 @@ class User extends ReactiveClass(Meteor.users)
   getNetId: ->
     return @profile.netId
 
+  toString: ->
+    return @getNetId() + "(" + @_id + ")"
+
 User.setupTransform()
 
 root.User = User

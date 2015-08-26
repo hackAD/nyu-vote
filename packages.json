@@ -1,0 +1,4 @@
+{
+  "winston": "1.0.1",
+  "winston-mongodb": "1.1.2"
+}
