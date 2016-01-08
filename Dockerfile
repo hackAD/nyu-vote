@@ -13,7 +13,7 @@ ADD . /srv/nyu-vote
 
 WORKDIR /srv/nyu-vote
 RUN mkdir build
-RUN meteor build .
+RUN meteor build . && echo "1"
 RUN tar -xzf nyu-vote.tar.gz
 RUN (cd bundle/programs/server && npm install)
 

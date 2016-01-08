@@ -1,3 +1,4 @@
 .git/
 packages/**/.build/
+.meteor/local
 .meteor/local/db/
