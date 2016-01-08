@@ -23,6 +23,8 @@ Template.adminMaster.helpers
       return "Group"
   username: () ->
     return Meteor.user()?.profile.name
+  superuserExists: () ->
+    return Meteor.users.findOne({username: "devAdmin"})
 
 Template.adminMaster.events
   "click .login": (e) ->
@@ -44,3 +46,12 @@ Template.adminMaster.events
     Meteor.logout(() ->
       window.location = "http://accounts.google.com/logout"
     )
+  "click #delete-super-user": (e) ->
+    e.preventDefault()
+    if confirm("This removes the superuser account to which the password " +
+      "is public (whch is a security threat). " +
+      "This must be done before the app goes live but make " +
+      "sure you have added yourself to the global admins list first. " +
+      "instructions can be found at: https://github.com/hackAD/nyu-vote"
+    )
+      Meteor.call("deleteSuperuser")

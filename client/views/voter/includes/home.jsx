@@ -9,6 +9,7 @@ Home = React.createClass({
   render: function() {
     return (
       <div className="content-wrapper purple-bg">
+        <img id="stugov-logo" src="/stugov_logo.png" />
         <div id="login-info">
           <h1>
             Student Vote

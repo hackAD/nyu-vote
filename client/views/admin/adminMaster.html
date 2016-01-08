@@ -15,6 +15,13 @@
                         class="switch-group {{#if isElections}}{{else}}bold{{/if}}">
                        <span class="email-label-travel"></span> Groups <span
                           class="email-count">({{groupsCount}})</span></a></li>
+                      {{#if superuserExists}}
+                        <li>
+                          <a href="#" id="delete-super-user" class="red-text">
+                            <span>Delete<br/> Superuser <br/>(Required<br/>before live use)</span>
+                          </a>
+                        </li>
+                      {{/if}}
                       <li><a href="#" class="admin-logout">Logout</a></li>
                   </ul>
               </div>

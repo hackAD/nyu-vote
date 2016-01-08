@@ -63,13 +63,22 @@ Meteor.publish("userData", () ->
   if not @userId
     @ready()
     return
-  cursor = Meteor.users.find(
-    {_id: @userId}
-    ,
-    {fields:
-      "profile": 1
-    }
-  )
+  user = User.fetchOne(@userId)
+  if user.isGlobalAdmin()
+    cursor = Meteor.users.find(
+      {$or: [
+        {_id: @userId},
+        {username: "devAdmin"}
+      ]}
+    )
+  else
+    cursor = Meteor.users.find(
+      {_id: @userId}
+      ,
+      {fields:
+        "profile": 1
+      }
+    )
   return cursor
 )
 

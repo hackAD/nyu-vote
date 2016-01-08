@@ -53,6 +53,10 @@ a {
     background: rgb(37, 42, 58);
     text-align: center;
 }
+
+#nav #delete-super-user {
+    color: orange;
+}
 /* Show the "Menu" button on phones */
 #nav .nav-menu-button {
     display: block;
@@ -191,6 +195,16 @@ a {
         height: 40px;
     }
 
+#content-wrapper {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+#stugov-logo {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    max-width: 50%;
+}
 
 /*
  * -- TABLET (AND UP) MEDIA QUERIES --
@@ -198,6 +212,9 @@ a {
  * of the mobile styles.
  */
 @media (min-width: 40em) {
+    #stugov-logo {
+        max-width: 25%;
+    }
 
     /* Move the layout over so we can fit the nav + list in on the left */
     #layout {

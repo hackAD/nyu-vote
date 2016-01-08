@@ -21,4 +21,10 @@ Meteor.methods(
       status:"open",
       voters: {$ne: if Meteor.user()?.profile?.netId? then Meteor.user().profile.netId else ""},
     ).count() == 1
+  'deleteSuperuser': () ->
+    if Meteor.user().isGlobalAdmin()
+      console.log "Deleting superuser!"
+      Meteor.users.remove({username: "devAdmin"})
+    else
+      console.log "Not global admin cannot delete"
 )
