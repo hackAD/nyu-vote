@@ -138,5 +138,5 @@ Check that it works by logging out, and logging back in with your
 user and seeing if you can access HOST/admin
 
 3. Once you have verified that it is working from your user, you want to
-click the "Delete Dev Superuser" button on the sidebar from the
+click the "Delete Superuser" button on the sidebar from the
 HOST/admin page. If it worked, then the button will dissapear.

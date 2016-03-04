@@ -11,6 +11,15 @@ Accounts.onCreateUser((options, user) ->
       netId: "devAdmin"
       name: "devAdmin"
     return user
+  # Manual test user creation
+  if user.emails?[0]?.address?.indexOf("testuser") == 0
+    if not Meteor.user()?.isGlobalAdmin()
+      throw new Meteor.Error("Error: Must be global admin to create users")
+    netId = user.emails[0].address.split("@")[0]
+    user.profile =
+      netId: netId
+      name: netId
+    return user
   netId = /([A-Za-z]+[0-9]+)@nyu.edu/.exec user.services.google.email
   if !netId
     throw new Meteor.Error("Error: Account does not have valid netId!")

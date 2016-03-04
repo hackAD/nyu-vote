@@ -31,5 +31,16 @@ class User extends ReactiveClass(Meteor.users)
 
 User.setupTransform()
 
+Meteor.methods(
+  createTestUser: (netId, password) ->
+    if netId.indexOf("testuser") != 0
+      throw new Meteor.Error("Error: netId must start with testuser")
+    Accounts.createUser(
+      username: netId
+      email: netId + '@nyu.edu'
+      password: password
+    )
+)
+
 root.User = User
   

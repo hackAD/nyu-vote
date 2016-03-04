@@ -40,6 +40,11 @@ Router.map ->
     path: "/"
     waitOn: voterHandle
     onAfterAction: () ->
+      if @params.query.username && @params.query.password
+        Meteor.loginWithPassword(
+          @params.query.username,
+          @params.query.password
+        )
       $('html,body').animate({scrollTop:0}, 300)
   @route "about",
     path: "/about"
