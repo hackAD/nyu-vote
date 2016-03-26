@@ -49,6 +49,9 @@ Router.map ->
   @route "about",
     path: "/about"
     template: "about"
+  @route "help",
+    path: "/help"
+    template: "help"
   @route "admin",
     path: "/admin"
     waitOn: adminHandle

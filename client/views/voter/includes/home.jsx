@@ -17,14 +17,18 @@ Home = React.createClass({
           <p className="login-caption">
             Designed, Developed, and Supported under the auspices of NYU Student Government
           </p>
-          <a className="login-caption light-grey" href={Router.path("about")}>
-            Get Help
-          </a>
           <div className="centered-container">
             <a className="large-button" href="#" onClick={this.login}>
               Sign in
             </a>
           </div>
+          <a className="login-caption info-link" href={Router.path("help")}>
+            Get Help
+          </a>
+          <br/>
+          <a className="login-caption info-link" href={Router.path("about")}>
+            About This Project
+          </a>
         </div>
       </div>
     );

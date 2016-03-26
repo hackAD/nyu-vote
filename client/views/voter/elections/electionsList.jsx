@@ -45,7 +45,13 @@ ElectionsList = React.createClass({
           <div className="centered-container">
             <a className="large-button" href="#" onClick={this.logout}>Logout</a>
           </div>
-          <a id="about-link" href={Router.path("about")} alt="about" className="light-grey">About This Project</a>
+          <a className="login-caption info-link" href={Router.path("help")}>
+            Get Help
+          </a>
+          <br/>
+          <a className="login-caption info-link" href={Router.path("about")}>
+            About This Project
+          </a>
         </div>
       </div>
     );
