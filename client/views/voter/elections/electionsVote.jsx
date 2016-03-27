@@ -35,8 +35,11 @@ ElectionsVote = React.createClass({
     return(
       <div id="voting-screen">
         <div className="header white-bg">
-          <a href={Router.path("home")}>{"<  "}Exit</a>
-          {election.name}
+          <a className="header-exit" href={Router.path("home")}>{"<  "}Exit</a>
+            {election.name}
+          <a className="header-help" href={Router.path("help")}>
+            Get Help
+          </a>
         </div>
         <div className="deep-blue-bg">
           <div className="centered-container">

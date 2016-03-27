@@ -65,8 +65,13 @@ ElectionsReview = React.createClass({
     return(
      <div id="review-screen">
         <div className="header white-bg">
-          <a href={Router.path("home")}>{"<  "}Exit</a>
+          <a className="header-exit" href={Router.path("home")}>
+            {"< "}Exit
+          </a>
           {election.name}
+          <a className="header-help" href={Router.path("help")}>
+            Get Help
+          </a>
         </div>
         <div className="deep-blue-bg">
           <h2>Please review your ballot</h2>

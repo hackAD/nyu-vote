@@ -49,7 +49,7 @@ ElectionsChoice = React.createClass({
 
 ElectionsChoiceImage = React.createClass({
   render: function() {
-    var defaultImage = "http://www.pentagram.com/en/NYUAD_Pattern_620W.gif";
+    var defaultImage = "/nyuad-pattern.jpg";
     var choice = this.props.choice;
     var style = {
       "background-image": "url(" +choice.image+")"
