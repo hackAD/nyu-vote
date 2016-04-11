@@ -60,7 +60,7 @@ class Election extends ReactiveClass(Elections)
   @findWithAdmin: (user) ->
     if not user
       return
-    groups = Group.findWithAdmin(user)
+    groups = Group.findWithAdmin(user).fetch()
     netId = user.getNetId()
     return @collection.find(
         $or:
