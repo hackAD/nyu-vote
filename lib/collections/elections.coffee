@@ -336,7 +336,7 @@ Meteor.methods(
       groups: group_ids
       voters: []
       questions: []
-      , (err, resp) -> throw new Metor.Error(500, err.reason) if err?
+      , (err, resp) -> throw new Meteor.Error(500, err.reason) if err?
     )
     return true
 )
