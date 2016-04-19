@@ -108,6 +108,16 @@
                         <input id="pickNVal-{{_id}}" type="text" name="pickNVal" value={{pickNVal}} placeholder="1" disabled="{{unlessPickN}}" class="pickNVal" data-questionId={{_id}}>
                     </label>
                   {{/if}}
+                  {{#if isRankQuestion .. }}
+                  <div class="pure-controls">
+                    <h4>{{options.type}} Parameters</h4>
+                  </div>
+                  <label for="allow-incomplete-ranking" class="pure-checkbox">
+                  <input id="allow-incomplete-ranking" name="questionAllowIncompleteRanking"
+                        class="question allowIncompleteRanking" type="checkbox"
+                        checked="{{allowIncompleteRanking}}" data-questionId={{_id}}>
+                    Allow Incomplete Rankings</label>
+                  {{/if}}
                 </div>
               </fieldset>
                 
