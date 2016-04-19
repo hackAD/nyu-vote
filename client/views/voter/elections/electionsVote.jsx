@@ -25,7 +25,7 @@ ElectionsVote = React.createClass({
       var choice = election.getRandomChoice(questionIndex, i);
       var trueIndex = randomMap[i];
       choices.push(
-        <ElectionsChoice ballot={ballot} choice={choice} choiceIndex={trueIndex} questionIndex={questionIndex} isAbstain={false} />
+        <ElectionsChoice question = {question} ballot={ballot} choice={choice} choiceIndex={trueIndex} questionIndex={questionIndex} isAbstain={false} />
       );
     }
     if (question.options.allowAbstain)
