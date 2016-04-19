@@ -27,7 +27,7 @@ ElectionsChoice = React.createClass({
             <ElectionsChoiceImage choice={choice} />
             <p className="body-text">{choice.description}</p>
             {question.options.type == "rank" ?
-              <Dropdown ballot={ballot} question={question} choice={choice}/>
+              <Dropdown ballot={ballot} question={question} choice={choice} questionIndex={this.props.questionIndex} choiceIndex={this.props.choiceIndex}/>
               :
               (isPicked ?
                 <a href="#" className="large-button" onClick={this.toggleSelect}>Selected</a>
