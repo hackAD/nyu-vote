@@ -45,16 +45,30 @@ class Ballot extends ReactiveClass(Ballots)
       if not allChoicesValid
         return false
 
+
+    if (question.options.allowAbstain && @isAbstaining(questionIndex))
+          return selectedChoices.length == 1
     if (question.options.type == "pick")
       if (question.options.voteMode == "multi")
-        if (question.options.allowAbstain && @isAbstaining(questionIndex))
-          return selectedChoices.length == 1
-        else
           return selectedChoices.length > 0
       else if (question.options.voteMode == "pickN")
         return selectedChoices.length == question.options.pickNVal
       else
         return selectedChoices.length == 1
+    if (question.options.type == "rank")
+      allRanksUnique = _.reduce(selectedChoices, (seen, selectedChoice) ->
+          if selectedChoice.value not in seen
+            seen.push(selectedChoice.value)
+          return seen
+        , []).length == selectedChoices.length
+      if not allRanksUnique
+        return false
+      allowIncompleteRanking = question.options.allowIncompleteRanking
+      if (allowIncompleteRanking)
+        return selectedChoices.length > 0
+      else
+        return selectedChoices.length == question.choices.length
+
 
     Log.error("validation logic failed, election: " + JSON.stringify(@election) +
       " ballot: " + JSON.stringify(@))
@@ -82,7 +96,10 @@ class Ballot extends ReactiveClass(Ballots)
       @election.questions[questionIndex].choices
     selected = _.filter(array, (choice, index) =>
       ballotChoice = @questions[questionIndex].choices[index]
-      return ballotChoice.value == true
+      if @questions[questionIndex].options.type == "pick"
+        return ballotChoice.value == true
+      else
+        return ballotChoice.value > 0
     )
     return selected
 
