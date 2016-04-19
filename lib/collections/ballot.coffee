@@ -96,14 +96,20 @@ class Ballot extends ReactiveClass(Ballots)
     return choice.value == true
 
   # toggling a pick on a choice
-  pick: (questionIndex, choiceIndex) ->
+  pick: (questionIndex, choiceIndex, priority = -1) ->
     @changed()
+    console.log(@questions[questionIndex]._id)
     question = @questions[questionIndex]
     choice = question.choices[choiceIndex]
-    choice.value = !choice.value
+    if priority == -1
+      console.log("pick picked")
+      choice.value = !choice.value
+    else
+      console.log("rank picked")
+      choice.value = priority
     newValue = choice.value
     # If they just selected a choice
-    if newValue == true
+    if question.options.type == "pick" and newValue == true
       # If it is not multiple choice, or they picked abstain, make sure all
       # other choices are false
       if (question.options.voteMode == "single") || choice._id == "abstain"
@@ -162,7 +168,7 @@ class Ballot extends ReactiveClass(Ballots)
     user ?= Meteor.user()
     if not user
       throw new Meteor.Error(500,
-        "You must specify in a user to generate a ballot!")
+        "You must specify a user in order to generate a ballot!")
     ballot = new this({
       election: election,
       electionId: election._id,
