@@ -12,7 +12,9 @@ ElectionsChoice = React.createClass({
   },
   render: function() {
     var choice = this.props.choice;
-    var ballot = this.props.ballot; var defaultImage = "http://www.pentagram.com/en/NYUAD_Pattern_620W.gif";
+    var ballot = this.props.ballot;
+    var defaultImage = "http://www.pentagram.com/en/NYUAD_Pattern_620W.gif";
+    var question = this.props.question;
     var isPicked;
     if (!this.props.isAbstain) {
       isPicked = ballot.isPicked(this.props.questionIndex, this.props.choiceIndex);
@@ -24,9 +26,16 @@ ElectionsChoice = React.createClass({
           <div className="centered-container">
             <ElectionsChoiceImage choice={choice} />
             <p className="body-text">{choice.description}</p>
-            {isPicked ?
-              <a href="#" className="large-button" onClick={this.toggleSelect}>Selected</a>
-              : <a href="#" className="large-button" onClick={this.toggleSelect}>Select</a>
+            {question.options.type == "rank" ?
+              (isPicked ?
+                <a href="#" className="large-button" onClick={this.toggleSelect}>Select</a>
+                : <a href="#" className="large-button" onClick={this.toggleSelect}>Selected</a>
+              )
+              :
+              (isPicked ?
+                <a href="#" className="large-button" onClick={this.toggleSelect}>Selected</a>
+                : <a href="#" className="large-button" onClick={this.toggleSelect}>Select</a>
+              )
             }
           </div>
         </div>
