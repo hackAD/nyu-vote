@@ -145,11 +145,16 @@ class Ballot extends ReactiveClass(Ballots)
   abstain: (questionIndex) ->
     @changed()
     question = @questions[questionIndex]
-    # TODO: implement rank abstain
     if (question.options.type == "pick")
       # set all choice values to false
       _.each(question.choices, (choice) ->
         choice.value = false
+      )
+      abstainChoice = question.choices[question.choices.length - 1]
+      abstainChoice.value = true
+    else if (question.options.type == "rank")
+      _.each(question.choices, (choice) ->
+        choice.value = 0
       )
       abstainChoice = question.choices[question.choices.length - 1]
       abstainChoice.value = true
