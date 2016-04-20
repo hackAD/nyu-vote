@@ -38,10 +38,14 @@ Dropdown = React.createClass({
 
 	renderDropdown: function(){
 		var items = [];
+		ballot = this.props.ballot;
+		question = this.props.question;
+		choice = ballot.questions[this.props.questionIndex].choices[this.props.choiceIndex];
 		items.push(<a href="#" className="large-button" onClick={this.pick.bind(null, 0)}>Unrank</a>);
 		for (var i = 1; i <= question.choices.length; i++){
+			var selected = choice.value == i;
 			var text = i.toString() + ". priority";
-			items.push(<a href="#" className="large-button" onClick={this.pick.bind(null, i)}>{text}</a>);
+			items.push(<a href="#" className={"large-button" + (selected ? " green-bg" : "")} onClick={this.pick.bind(null, i)}>{text}</a>);
 		}
 		return items;
 	}
