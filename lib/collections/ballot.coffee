@@ -142,6 +142,11 @@ class Ballot extends ReactiveClass(Ballots)
           if choice._id == "abstain"
             choice.value = false
         )
+    else if question.options.type == "rank" && @isAbstaining(questionIndex) && choice._id != "abstain"
+      _.find(question.choices, (choice, index) ->
+        if choice._id == "abstain"
+          choice.value = false
+        )
 
     return @
 
