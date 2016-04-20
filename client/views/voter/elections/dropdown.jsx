@@ -15,11 +15,14 @@ Dropdown = React.createClass({
         document.removeEventListener("click", this.hide);
     },
 
-    pick: function(priority){
+    pick: function(priority, takenIndex = -1){
     	console.log("Picking");
     	ballot = this.props.ballot;
     	console.log(this.props.questionIndex);
     	ballot.pick(this.props.questionIndex, this.props.choiceIndex, priority);
+    	if (takenIndex != -1){
+    		ballot.pick(this.props.questionIndex, takenIndex, 0);
+    	}
     },
 
 	render: function(){
@@ -44,8 +47,24 @@ Dropdown = React.createClass({
 		items.push(<a href="#" className="large-button" onClick={this.pick.bind(null, 0)}>Unrank</a>);
 		for (var i = 1; i <= question.choices.length; i++){
 			var selected = choice.value == i;
+			var taken = false;
+			var name;
+			var takenIndex = -1;
+			choices = ballot.questions[this.props.questionIndex].choices;
+			for (var j = 0; j < choices.length; j++){
+				currentChoice = choices[j];
+				if (j != this.props.choiceIndex && currentChoice.value == i){
+					taken = true;
+					name = ballot.election.questions[this.props.questionIndex].choices[j].name;
+					takenIndex = j;
+					break;
+				}
+			}
 			var text = i.toString() + ". priority";
-			items.push(<a href="#" className={"large-button" + (selected ? " green-bg" : "")} onClick={this.pick.bind(null, i)}>{text}</a>);
+			if (taken){
+				text += " (this is taken by " + name + ")"
+			}
+			items.push(<a href="#" className={"large-button" + (selected ? " green-bg" : "")} onClick={this.pick.bind(null, i, takenIndex)}>{text}</a>);
 		}
 		return items;
 	}
