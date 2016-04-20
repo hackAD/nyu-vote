@@ -31,7 +31,7 @@ Dropdown = React.createClass({
 		return(
 		<div>
 		<a href="#" className="large-button" onClick={this.show}>{message}</a>
-		<div>{this.renderDropdown()}</div>
+		<div>{this.state.visible ? this.renderDropdown() : <div></div>}</div>
 		</div>
 		);
 	},
