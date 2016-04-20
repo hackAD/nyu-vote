@@ -110,7 +110,10 @@ class Ballot extends ReactiveClass(Ballots)
   isPicked: (questionIndex, choiceIndex) ->
     @depend()
     choice = @questions[questionIndex].choices[choiceIndex]
-    return choice.value == true
+    question = @questions[questionIndex]
+    if question.options.type == "pick" 
+      return choice.value == true
+    return choice.value > 0
 
   # toggling a pick on a choice
   pick: (questionIndex, choiceIndex, priority = -1) ->
