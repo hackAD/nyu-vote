@@ -51,7 +51,7 @@ Dropdown = React.createClass({
 			var name;
 			var takenIndex = -1;
 			choices = ballot.questions[this.props.questionIndex].choices;
-			for (var j = 0; j < choices.length; j++){
+			for (var j = 0; j < question.choices.length; j++){
 				currentChoice = choices[j];
 				if (j != this.props.choiceIndex && currentChoice.value == i){
 					taken = true;
