@@ -15,11 +15,11 @@ Dropdown = React.createClass({
         document.removeEventListener("click", this.hide);
     },
 
-    pick: function(){
+    pick: function(priority){
     	console.log("Picking");
     	ballot = this.props.ballot;
     	console.log(this.props.questionIndex);
-    	ballot.pick(this.props.questionIndex, this.props.choiceIndex, 2);
+    	ballot.pick(this.props.questionIndex, this.props.choiceIndex, priority);
     },
 
 	render: function(){
@@ -29,14 +29,20 @@ Dropdown = React.createClass({
 		console.log(JSON.stringify(ballot));
 		var message = (choice.value == 0 ? "Rank" : choice.value.toString() + ". priority");
 		return(
-		<a href="#" className="large-button" onClick ={this.pick}>{message}</a>
+		<div>
+		<a href="#" className="large-button" onClick={this.show}>{message}</a>
+		<div>{this.renderDropdown()}</div>
+		</div>
 		);
 	},
 
 	renderDropdown: function(){
 		var items = [];
+		items.push(<a href="#" className="large-button" onClick={this.pick.bind(null, 0)}>Unrank</a>);
 		for (var i = 1; i <= question.choices.length; i++){
 			var text = i.toString() + ". priority";
+			items.push(<a href="#" className="large-button" onClick={this.pick.bind(null, i)}>{text}</a>);
 		}
+		return items;
 	}
 });
