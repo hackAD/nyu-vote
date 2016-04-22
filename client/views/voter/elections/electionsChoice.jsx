@@ -70,3 +70,21 @@ ElectionsChoiceImage = React.createClass({
       );
   }
 });
+
+RankReviewChoiceImage = React.createClass({
+  render: function() {
+    var defaultImage = "/nyuad-pattern.jpg";
+    var choice = this.props.choice;
+    var style = {
+      "background-image": "url(" +choice.image+")"
+    };
+    if (choice.image.length > 0)
+      return(
+        <div className="circular-photo-rank-review" style={style}></div>
+      );
+    else
+      return(
+        <img className="circular-photo-rank-review"  src={defaultImage} alt={choice.name} />
+      );
+  }
+});

@@ -75,9 +75,10 @@ class Ballot extends ReactiveClass(Ballots)
     return false
 
   selectedChoices: (questionIndex, returnBallots) ->
+    question = @questions[questionIndex];
     # if we are abstaining, just return the abstain object
     if @isAbstaining(questionIndex)
-      choices = @questions[questionIndex].choices
+      choices = question.choices
       if returnBallots
         return [{
           _id: "abstain"
@@ -92,11 +93,13 @@ class Ballot extends ReactiveClass(Ballots)
         }]
     if questionIndex > @questions.length - 1
       throw new Meteor.Error(500, questionIndex + " is out of bounds")
-    array = if returnBallots then @questions[questionIndex].choices else
+    array = if returnBallots then question.choices else
       @election.questions[questionIndex].choices
     selected = _.filter(array, (choice, index) =>
-      ballotChoice = @questions[questionIndex].choices[index]
-      if @questions[questionIndex].options.type == "pick"
+      ballotChoice = question.choices[index]
+      #console.log(JSON.stringify(question))
+      #console.log(questionIndex)
+      if question.options.type == "pick"
         return ballotChoice.value == true
       else
         return ballotChoice.value > 0
@@ -118,14 +121,11 @@ class Ballot extends ReactiveClass(Ballots)
   # toggling a pick on a choice
   pick: (questionIndex, choiceIndex, priority = -1) ->
     @changed()
-    console.log(@questions[questionIndex]._id)
     question = @questions[questionIndex]
     choice = question.choices[choiceIndex]
     if priority == -1
-      console.log("pick picked")
       choice.value = !choice.value
     else
-      console.log("rank picked")
       choice.value = priority
     newValue = choice.value
     # If they just selected a choice
