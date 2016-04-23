@@ -92,7 +92,7 @@
                   </label>
                   {{#if isPickQuestion .. }}
                     <div class="pure-controls">
-                      <h4>{{options.type}} Parameters</h4>
+                      <h4>Pick Parameters</h4>
                     </div>
                     <label for="single-{{_id}}" class="pure-radio">
                         <input id="single-{{_id}}" type="radio" name="pickMode" value="single" checked={{single}} class="vote-mode" data-questionId={{_id}}>
@@ -110,7 +110,7 @@
                   {{/if}}
                   {{#if isRankQuestion .. }}
                   <div class="pure-controls">
-                    <h4>{{options.type}} Parameters</h4>
+                    <h4>Rank Parameters</h4>
                   </div>
                   <label for="allow-incomplete-ranking" class="pure-checkbox">
                   <input id="allow-incomplete-ranking" name="questionAllowIncompleteRanking"
