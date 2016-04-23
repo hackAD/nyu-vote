@@ -55,14 +55,17 @@ class Ballot extends ReactiveClass(Ballots)
         return selectedChoices.length == question.options.pickNVal
       else
         return selectedChoices.length == 1
+
     if (question.options.type == "rank")
       allRanksUnique = _.reduce(selectedChoices, (seen, selectedChoice) ->
           if selectedChoice.value not in seen
             seen.push(selectedChoice.value)
           return seen
         , []).length == selectedChoices.length
+
       if not allRanksUnique
         return false
+
       allowIncompleteRanking = question.options.allowIncompleteRanking
       if (allowIncompleteRanking)
         if (selectedChoices.length == 0)
@@ -87,7 +90,6 @@ class Ballot extends ReactiveClass(Ballots)
 
   selectedChoices: (questionIndex, returnBallots) ->
     question = @questions[questionIndex];
-    console.log(JSON.stringify(question));
     # if we are abstaining, just return the abstain object
     if @isAbstaining(questionIndex)
       choices = question.choices
@@ -109,23 +111,17 @@ class Ballot extends ReactiveClass(Ballots)
       @election.questions[questionIndex].choices
     selected = _.filter(array, (choice, index) =>
       ballotChoice = question.choices[index]
-      #console.log(JSON.stringify(question))
-      #console.log(questionIndex)
       return ballotChoice.value > 0
     )
-    #console.log(JSON.stringify(selected));
     return selected
 
   getElection: () ->
     Election.fetchOne(@electionId)
 
-  # For pick mode
   isPicked: (questionIndex, choiceIndex) ->
     @depend()
     choice = @questions[questionIndex].choices[choiceIndex]
     question = @questions[questionIndex]
-    if question.options.type == "pick" 
-      return choice.value == true
     return choice.value > 0
 
   # toggling a pick on a choice
