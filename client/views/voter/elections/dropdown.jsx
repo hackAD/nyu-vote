@@ -26,7 +26,7 @@ Dropdown = React.createClass({
 	render: function(){
 		ballot = this.props.ballot;
 		question = this.props.question;
-		console.log(JSON.stringify(ballot));
+		//console.log(JSON.stringify(ballot));
 		choice = ballot.questions[this.props.questionIndex].choices[this.props.choiceIndex];
 		var message = (choice.value == 0 ? "Rank" : choice.value.toString() + ". priority");
 		return(

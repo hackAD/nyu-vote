@@ -13,7 +13,7 @@ ElectionsReview = React.createClass({
     var election = this.data.election;
     var ballot = this.data.ballot;
     var questionNodes = [];
-    var choiceMapFunction = function(choice, pick, last ) {
+    var choiceMapFunction = function(priority, choice, pick, last) {
       if (pick){
         return(
           <div className="light-green-bg">
@@ -32,11 +32,11 @@ ElectionsReview = React.createClass({
         return(
           <div className="light-green-bg">
             <div className="centered-container">
-              <h2 className="rank-review-text" id="one">1.</h2>
+              <h2 className="rank-review-text" id="one">{priority.toString() + "."}</h2>
               <RankReviewChoiceImage choice={choice} />
               <h2 className="rank-review-text" id="two">{choice.name}</h2>
-              {last ? <a className="large-button" href={Router.path("electionsVote", {slug: election.slug, questionIndex: i}) }>Change</a> : null}
             </div>
+            {last ? <div className="centered-container"><a className="large-button" href={Router.path("electionsVote", {slug: election.slug, questionIndex: i}) }>Change</a></div> : null}
           </div>
           )
       }
@@ -48,11 +48,22 @@ ElectionsReview = React.createClass({
         valid: isValid,
         invalid: !isValid
       });
+      //console.log(JSON.stringify(ballot));
       var selectedChoices = ballot.selectedChoices(i);
+      var choicesValues = ballot.selectedChoices(i, true);
+      choicesValues.sort(function(a, b){return a.value-b.value});
       var selectedChoicesNodes = [];
       for (var j = 0; j < selectedChoices.length; j++){
-        selectedChoicesNodes.push(choiceMapFunction(selectedChoices[j], question.options.type=="pick", j==selectedChoices.length-1));
+        var node;
+        for (var k = 0; k < selectedChoices.length; k++){
+          if (selectedChoices[k]._id == choicesValues[j]._id){
+            node = selectedChoices[k];
+            break;
+          }
+        }
+        selectedChoicesNodes.push(choiceMapFunction(choicesValues[j].value, node, question.options.type=="pick", j==selectedChoices.length-1));
       }
+
       // if (selectedChoicesNodes.length === 0)
       //   selectedChoicesNodes = (
       //     <div>
@@ -69,7 +80,6 @@ ElectionsReview = React.createClass({
             <div className="incomplete-bg">
               <div className="centered-container">
                 <h2>question not complete</h2>
-                <a className="large-button" href={Router.path("electionsVote", {slug: election.slug, questionIndex: i}) }>Change</a>
               </div>
             </div>
           }
