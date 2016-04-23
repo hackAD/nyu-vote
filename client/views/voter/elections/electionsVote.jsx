@@ -38,7 +38,7 @@ ElectionsVote = React.createClass({
           <a className="header-exit" href={Router.path("home")}>{"<  "}Exit</a>
             {election.name}
           <a className="header-help" href={Router.path("help")}>
-            Get Help
+            Help
           </a>
         </div>
         <div className="deep-blue-bg">

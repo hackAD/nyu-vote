@@ -111,10 +111,7 @@ class Ballot extends ReactiveClass(Ballots)
       ballotChoice = question.choices[index]
       #console.log(JSON.stringify(question))
       #console.log(questionIndex)
-      if question.options.type == "pick"
-        return ballotChoice.value == true
-      else
-        return ballotChoice.value > 0
+      return ballotChoice.value > 0
     )
     #console.log(JSON.stringify(selected));
     return selected

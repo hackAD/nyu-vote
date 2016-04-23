@@ -134,6 +134,8 @@ body
 	&:hover
 		background-color: rgba(255,255,255,0.4)
 		cursor: pointer
+.taken
+	background-color: light-grey
 
 //ABOUT SCREEN
 #about-screen
@@ -205,6 +207,9 @@ body
 	background-size: cover
 	background-position: center
 	background-repeat: no-repeat
+	.small
+		height: 100px
+		width: 100px
 #voting-screen
 	padding-bottom 140px
 	.centered-container
@@ -299,28 +304,3 @@ body
 					margin 0px 3px
 			#election-footer-button
 				padding 0 20px
-
-.circular-photo-rank-review
-	height: 100px
-	width: 100px
-	display: inline-block
-	margin-right: 5px
-	overflow: hidden
-	border-radius: 100%
-	background-size: cover
-	background-position: center
-	background-repeat: no-repeat
-	float: left
-
-.rank-review-text
-	max-width 800px
-	margin 0 auto
-	padding 30px 20px
-	display: inline-block
-#one
-	float: left
-	width: 33%
-#two
-	float: left
-	width: 33%
-

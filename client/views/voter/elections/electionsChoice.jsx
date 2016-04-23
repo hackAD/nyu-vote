@@ -24,7 +24,7 @@ ElectionsChoice = React.createClass({
             <h2 className="centered-container">{choice.name}</h2>  
           </div>
           <div className="centered-container">
-            <ElectionsChoiceImage choice={choice} />
+            <ElectionsChoiceImage choice={choice} small={false} />
             <p className="body-text">{choice.description}</p>
             {question.options.type == "rank" ?
               <Dropdown ballot={ballot} question={question} choice={choice} questionIndex={this.props.questionIndex} choiceIndex={this.props.choiceIndex}/>
@@ -41,12 +41,16 @@ ElectionsChoice = React.createClass({
       isPicked = ballot.isAbstaining(this.props.questionIndex);
       return(
         <div className={isPicked ? "light-green-bg" : "dark-blue-bg"}>
-          <h2 className={isPicked ? "green-bg" : "light-blue-bg"}>Abstain</h2>
-          <p>Abstain from answering this question</p>
-          {isPicked ?
-            <a href="#" className="large-button" onClick={this.abstain}>Selected</a>
-            : <a href="#" className="large-button" onClick={this.abstain}>Select</a>
-          }
+          <div className={isPicked ? "green-bg" : "light-blue-bg"}>
+            <h2 className="centered-container">Abstain</h2>
+          </div>
+          <div className="centered-container">
+            <p>Abstain from answering this question</p>
+            {isPicked ?
+              <a href="#" className="large-button" onClick={this.abstain}>Selected</a>
+              : <a href="#" className="large-button" onClick={this.abstain}>Select</a>
+            }
+          </div>
         </div>
       );
     }
@@ -57,6 +61,7 @@ ElectionsChoiceImage = React.createClass({
   render: function() {
     var defaultImage = "/nyuad-pattern.jpg";
     var choice = this.props.choice;
+    var small = this.props.small;
     var style = {
       "background-image": "url(" +choice.image+")"
     };
@@ -67,24 +72,6 @@ ElectionsChoiceImage = React.createClass({
     else
       return(
         <img className="circular-photo"  src={defaultImage} alt={choice.name} />
-      );
-  }
-});
-
-RankReviewChoiceImage = React.createClass({
-  render: function() {
-    var defaultImage = "/nyuad-pattern.jpg";
-    var choice = this.props.choice;
-    var style = {
-      "background-image": "url(" +choice.image+")"
-    };
-    if (choice.image.length > 0)
-      return(
-        <div className="circular-photo-rank-review" style={style}></div>
-      );
-    else
-      return(
-        <img className="circular-photo-rank-review"  src={defaultImage} alt={choice.name} />
       );
   }
 });

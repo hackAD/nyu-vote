@@ -28,10 +28,10 @@ Dropdown = React.createClass({
 		question = this.props.question;
 		//console.log(JSON.stringify(ballot));
 		choice = ballot.questions[this.props.questionIndex].choices[this.props.choiceIndex];
-		var message = (choice.value == 0 ? "Rank" : choice.value.toString() + ". priority");
+		var message = (choice.value == 0 ? "Select Rank" : "Rank " + choice.value.toString());
 		return(
 		<div>
-		<a href="#" className="large-button" onClick={this.show}>{message}</a>
+		<a href="#" className={"large-button" + (choice.value > 0 ? " green-bg" : "")} onClick={this.show}>{message}</a>
 		<div>{this.state.visible ? this.renderDropdown() : null}</div>
 		</div>
 		);
@@ -42,11 +42,10 @@ Dropdown = React.createClass({
 		ballot = this.props.ballot;
 		question = this.props.question;
 		choice = ballot.questions[this.props.questionIndex].choices[this.props.choiceIndex];
-		items.push(<a href="#" className="large-button" onClick={this.pick.bind(null, 0)}>Unrank</a>);
 		for (var i = 1; i <= question.choices.length; i++){
 			var selected = choice.value == i;
 			var taken = false;
-			var name;
+			var name = null;
 			var takenIndex = -1;
 			choices = ballot.questions[this.props.questionIndex].choices;
 			for (var j = 0; j < question.choices.length; j++){
@@ -58,12 +57,17 @@ Dropdown = React.createClass({
 					break;
 				}
 			}
-			var text = i.toString() + ". priority";
-			if (taken){
-				text += " (this is taken by " + name + ")"
-			}
-			items.push(<a href="#" className={"large-button" + (selected ? " green-bg" : "")} onClick={this.pick.bind(null, i, takenIndex)}>{text}</a>);
+			var text = i.toString();
+			var takenNode = (
+				<div>
+					({name})
+				</div>
+			);
+			var cx = React.addons.classSet;
+			var buttonClass = cx({"large-button": true,  "green-bg" : selected, "deep-blue-bg": taken});
+			items.push(<a href="#" className={buttonClass} onClick={this.pick.bind(null, i, takenIndex)}>{text} {(taken ? takenNode : null)}</a>);
 		}
+		items.push(<a href="#" className="large-button" onClick={this.pick.bind(null, 0)}>Unrank</a>);
 		return items;
 	}
 });

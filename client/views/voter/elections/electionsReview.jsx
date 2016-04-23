@@ -32,9 +32,9 @@ ElectionsReview = React.createClass({
         return(
           <div className="light-green-bg">
             <div className="centered-container">
-              <h2 className="rank-review-text" id="one">{priority.toString() + "."}</h2>
+              <h3>{priority.toString()}</h3>
               <RankReviewChoiceImage choice={choice} />
-              <h2 className="rank-review-text" id="two">{choice.name}</h2>
+              <h3>{choice.name}</h3>
             </div>
             {last ? <div className="centered-container"><a className="large-button" href={Router.path("electionsVote", {slug: election.slug, questionIndex: i}) }>Change</a></div> : null}
           </div>
