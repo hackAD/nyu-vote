@@ -13,8 +13,8 @@ ElectionsReview = React.createClass({
     var election = this.data.election;
     var ballot = this.data.ballot;
     var questionNodes = [];
-    var choiceMapFunction = function(priority, choice, pick, last) {
-      if (pick){
+    var choiceMapFunction = function(priority, choice, pick_or_abstain, last, abstain) {
+      if (pick_or_abstain){
         return(
           <div className="light-green-bg">
             <div className="green-bg">
@@ -64,7 +64,7 @@ ElectionsReview = React.createClass({
             break;
           }
         }
-        selectedChoicesNodes.push(choiceMapFunction(choicesValues[j].value, node, question.options.type=="pick", j==selectedChoices.length-1));
+        selectedChoicesNodes.push(choiceMapFunction(choicesValues[j].value, node, (question.options.type=="pick" || (choicesValues.length == 1 && choicesValues[0]._id == "abstain")), j==selectedChoices.length-1));
       }
 
       // if (selectedChoicesNodes.length === 0)

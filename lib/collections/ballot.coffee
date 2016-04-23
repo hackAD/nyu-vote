@@ -25,6 +25,8 @@ class Ballot extends ReactiveClass(Ballots)
       return true
     choices = question.choices
     selectedChoices = @selectedChoices(questionIndex, true)
+    if (selectedChoices.length == 0)
+      return false
 
     if Meteor.isServer
       # checks all IDs on the choices are unique
@@ -68,8 +70,6 @@ class Ballot extends ReactiveClass(Ballots)
 
       allowIncompleteRanking = question.options.allowIncompleteRanking
       if (allowIncompleteRanking)
-        if (selectedChoices.length == 0)
-          return false
         for i in [1...selectedChoices.length+1]
           flag = false
           for j in [0...selectedChoices.length]
