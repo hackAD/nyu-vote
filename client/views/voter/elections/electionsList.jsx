@@ -20,6 +20,7 @@ ElectionsList = React.createClass({
     });
   },
   render: function() {
+    var admin = Elections.find().count() > 0 || Groups.find().count() > 0;
     return(
       <div id="election-list">
         <div className="white-bg header">
@@ -52,6 +53,13 @@ ElectionsList = React.createClass({
           <a className="login-caption info-link" href={Router.path("about")}>
             About This Project
           </a>
+          <br/>
+          {admin ?
+            <a className="login-caption info-link" href={Router.path("admin")}>
+              Go to Admin Page
+            </a>
+            : null
+          }
         </div>
       </div>
     );
