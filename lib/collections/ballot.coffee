@@ -65,7 +65,18 @@ class Ballot extends ReactiveClass(Ballots)
         return false
       allowIncompleteRanking = question.options.allowIncompleteRanking
       if (allowIncompleteRanking)
-        return selectedChoices.length > 0
+        if (selectedChoices.length == 0)
+          return false
+        for i in [1...selectedChoices.length+1]
+          flag = false
+          for j in [0...selectedChoices.length]
+            if selectedChoices[j].value == i
+              flag = true
+              break
+          if flag == false
+            return false
+        return true
+
       else
         return selectedChoices.length == question.choices.length
 
@@ -76,6 +87,7 @@ class Ballot extends ReactiveClass(Ballots)
 
   selectedChoices: (questionIndex, returnBallots) ->
     question = @questions[questionIndex];
+    console.log(JSON.stringify(question));
     # if we are abstaining, just return the abstain object
     if @isAbstaining(questionIndex)
       choices = question.choices
@@ -104,6 +116,7 @@ class Ballot extends ReactiveClass(Ballots)
       else
         return ballotChoice.value > 0
     )
+    #console.log(JSON.stringify(selected));
     return selected
 
   getElection: () ->
