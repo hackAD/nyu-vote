@@ -67,11 +67,11 @@ ElectionsChoiceImage = React.createClass({
     };
     if (choice.image.length > 0)
       return(
-        <div className="circular-photo" style={style}></div>
+        <div className={"circular-photo" + (small ? " small" : "")} style={style}></div>
       );
     else
       return(
-        <img className="circular-photo"  src={defaultImage} alt={choice.name} />
+        <img className={"circular-photo" + (small ? " small" : "")} src={defaultImage} alt={choice.name} />
       );
   }
 });
