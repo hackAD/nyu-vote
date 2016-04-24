@@ -76,7 +76,7 @@ class Ballot extends ReactiveClass(Ballots)
             if selectedChoices[j].value == i
               flag = true
               break
-          if not flag
+          if not flag 
             return false
         return true
 
@@ -338,33 +338,15 @@ Ballots.after.insert((userId, ballot) ->
     return
   user = User.fetchOne(userId)
   toIncrement = {}
-  votesObject = Election.fetchOne(ballot.electionId).votes
   for i in [0...ballot.questions.length]
-    ballotToPush = {}
-    for j in [1...ballot.questions[i].choices.length+1]
-      ballotToPush[j] = ""
     question = ballot.questions[i]
-    choices = @transform().selectedChoices(i, true)
+    choices = @transform().selectedChoices(i)
     _.each(choices, (choice) ->
-      rank = choice.value
-      if rank == true
-        rank = 1
-      ballotToPush[rank] = choice._id
-      incrementString = "votes." + question._id + "." + choice._id
-      if (choice._id != "abstain")
-        incrementString += "." + rank.toString()
-      toIncrement[incrementString] = 1
+      toIncrement["votes." + question._id + "." + choice._id] = 1
     )
-    votesObject["ballots"][question._id].push(ballotToPush)
-
-  Elections.update(ballot.electionId, {
-    "$set": {votes: votesObject}
-  })
-
   Elections.update(ballot.electionId, {
     "$inc": toIncrement
   })
-
   Log.verbose("BALLOT CAST: " + user + " cast ballot. Ballot: " +
     JSON.stringify(ballot))
 )
