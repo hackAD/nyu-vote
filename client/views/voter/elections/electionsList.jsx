@@ -20,7 +20,7 @@ ElectionsList = React.createClass({
     });
   },
   render: function() {
-    var admin = Meteor.call("isglobaladmin");
+    var admin = false; //Find proper way to check for admin here
     console.log(admin);
     return(
       <div id="election-list">
