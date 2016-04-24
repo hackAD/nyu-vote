@@ -61,17 +61,17 @@ ElectionsChoiceImage = React.createClass({
   render: function() {
     var defaultImage = "/nyuad-pattern.jpg";
     var choice = this.props.choice;
-    var small = this.props.small;
+    var className = "circular-photo" + (this.props.small ? " small-image" : "");
     var style = {
       "background-image": "url(" +choice.image+")"
     };
     if (choice.image.length > 0)
       return(
-        <div className={"circular-photo" + (small ? " small" : "")} style={style}></div>
+        <div className={className} style={style}></div>
       );
     else
       return(
-        <img className={"circular-photo" + (small ? " small" : "")} src={defaultImage} alt={choice.name} />
+        <img className={className} src={defaultImage} alt={choice.name} />
       );
   }
 });

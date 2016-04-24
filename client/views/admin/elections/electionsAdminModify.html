@@ -59,7 +59,7 @@
               {{#each questions}}
               <fieldset>
                 <div class="pure-controls">
-                  <h3>Question #{{questionCount 1}}</h3>
+                  <h3>Question #{{questionCount true}}</h3>
                 </div>
                 <div class="pure-control-group">
                   <label for="question-{{_id}}-name">Name</label>
@@ -74,8 +74,8 @@
                     Description">{{description}}</textarea>
                 </div>
                 <div class="pure-controls">
-                  <label for="allow-abstain-{{questionCount 0}}" class="pure-checkbox">
-                  <input id="allow-abstain-{{questionCount 0}}" name="questionAllowAbstain"
+                  <label for="allow-abstain-{{questionCount false}}" class="pure-checkbox">
+                  <input id="allow-abstain-{{questionCount false}}" name="questionAllowAbstain"
                         class="question allowAbstain" type="checkbox"
                         checked="{{allowAbstain}}" data-questionId={{_id}}>
                     Allow Abstention</label>
@@ -112,8 +112,8 @@
                   <div class="pure-controls">
                     <h4>Rank Parameters</h4>
                   </div>
-                  <label for="allow-incomplete-ranking-{{questionCount 0}}" class="pure-checkbox">
-                  <input id="allow-incomplete-ranking-{{questionCount 0}}" name="questionAllowIncompleteRanking"
+                  <label for="allow-incomplete-ranking-{{questionCount false}}" class="pure-checkbox">
+                  <input id="allow-incomplete-ranking-{{questionCount false}}" name="questionAllowIncompleteRanking"
                         class="question allowIncompleteRanking" type="checkbox"
                         checked="{{allowIncompleteRanking}}" data-questionId={{_id}}>
                     Allow Incomplete Rankings</label>

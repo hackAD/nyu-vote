@@ -5,33 +5,32 @@ Dropdown = React.createClass({
 		};
 	},
 
-    show: function() {
-        this.setState({ visible: true });
-        document.addEventListener("click", this.hide);
-    },
+	toggle: function() {
+		this.setState({ visible: true });
+		document.addEventListener("click", this.hide);
+	},
 
-    hide: function() {
-        this.setState({ visible: false });
-        document.removeEventListener("click", this.hide);
-    },
+	hide: function() {
+		this.setState({ visible: false });
+		document.removeEventListener("click", this.hide);
+	},
 
-    pick: function(priority, takenIndex = -1){
-    	ballot = this.props.ballot;
-    	ballot.pick(this.props.questionIndex, this.props.choiceIndex, priority);
-    	if (takenIndex != -1){
-    		ballot.pick(this.props.questionIndex, takenIndex, 0);
-    	}
-    },
+	pick: function(priority, takenIndex = -1){
+		var ballot = this.props.ballot;
+		ballot.pick(this.props.questionIndex, this.props.choiceIndex, priority);
+		if (takenIndex != -1){
+			ballot.pick(this.props.questionIndex, takenIndex, 0);
+		}
+	},
 
 	render: function(){
-		ballot = this.props.ballot;
-		question = this.props.question;
-		//console.log(JSON.stringify(ballot));
-		choice = ballot.questions[this.props.questionIndex].choices[this.props.choiceIndex];
+		var ballot = this.props.ballot;
+		var question = this.props.question;
+		var choice = ballot.questions[this.props.questionIndex].choices[this.props.choiceIndex];
 		var message = (choice.value == 0 ? "Select Rank" : "Rank " + choice.value.toString());
 		return(
 		<div>
-		<a href="#" className={"large-button" + (choice.value > 0 ? " green-bg" : "")} onClick={this.show}>{message}</a>
+		<a href="#" className={"large-button" + (choice.value > 0 ? " green-bg" : "")} onClick={this.toggle}>{message}</a>
 		<div>{this.state.visible ? this.renderDropdown() : null}</div>
 		</div>
 		);
@@ -39,15 +38,15 @@ Dropdown = React.createClass({
 
 	renderDropdown: function(){
 		var items = [];
-		ballot = this.props.ballot;
-		question = this.props.question;
-		choice = ballot.questions[this.props.questionIndex].choices[this.props.choiceIndex];
+		var ballot = this.props.ballot;
+		var question = this.props.question;
+		var choice = ballot.questions[this.props.questionIndex].choices[this.props.choiceIndex];
 		for (var i = 1; i <= question.choices.length; i++){
 			var selected = choice.value == i;
 			var taken = false;
 			var name = null;
 			var takenIndex = -1;
-			choices = ballot.questions[this.props.questionIndex].choices;
+			var choices = ballot.questions[this.props.questionIndex].choices;
 			for (var j = 0; j < question.choices.length; j++){
 				currentChoice = choices[j];
 				if (j != this.props.choiceIndex && currentChoice.value == i){

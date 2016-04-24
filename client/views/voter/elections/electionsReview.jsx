@@ -3,7 +3,6 @@ ElectionsReview = React.createClass({
   getMeteorData: function() {
     var activeElection = Election.getActive();
     var activeBallot = Ballot.getActive();
-    //console.log(JSON.stringify(activeBallot));
     return {
       election: activeElection,
       ballot: activeBallot,
@@ -28,6 +27,7 @@ ElectionsReview = React.createClass({
           </div>
         );
       }
+
       else{
         return(
           <div className="light-green-bg">
@@ -41,9 +41,10 @@ ElectionsReview = React.createClass({
             </div>
             {last ? <div className="centered-container"><a className="large-button" href={Router.path("electionsVote", {slug: election.slug, questionIndex: i}) }>Change</a></div> : null}
           </div>
-          )
+          );
       }
     };
+
     for (var i = 0, length = election.questions.length; i < length; i++) {
       var question = election.questions[i];
       var isValid = ballot.validate(i);
@@ -51,7 +52,6 @@ ElectionsReview = React.createClass({
         valid: isValid,
         invalid: !isValid
       });
-      //console.log(JSON.stringify(ballot));
       var selectedChoices = ballot.selectedChoices(i);
       var choicesValues = ballot.selectedChoices(i, true);
       choicesValues.sort(function(a, b){return a.value-b.value});
@@ -64,7 +64,9 @@ ElectionsReview = React.createClass({
             break;
           }
         }
-        selectedChoicesNodes.push(choiceMapFunction(choicesValues[j].value, node, (question.options.type=="pick" || (choicesValues.length == 1 && choicesValues[0]._id == "abstain")), j==selectedChoices.length-1));
+        var is_pick_or_abstain = question.options.type=="pick" || (choicesValues.length == 1 && choicesValues[0]._id == "abstain");
+        var is_last_node = j==selectedChoices.length-1;
+        selectedChoicesNodes.push(choiceMapFunction(choicesValues[j].value, node, is_pick_or_abstain, is_last_node));
       }
 
       // if (selectedChoicesNodes.length === 0)

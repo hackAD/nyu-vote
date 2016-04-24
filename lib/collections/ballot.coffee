@@ -58,7 +58,7 @@ class Ballot extends ReactiveClass(Ballots)
       else
         return selectedChoices.length == 1
 
-    if (question.options.type == "rank")
+    else if (question.options.type == "rank")
       allRanksUnique = _.reduce(selectedChoices, (seen, selectedChoice) ->
           if selectedChoice.value not in seen
             seen.push(selectedChoice.value)
@@ -69,14 +69,14 @@ class Ballot extends ReactiveClass(Ballots)
         return false
 
       allowIncompleteRanking = question.options.allowIncompleteRanking
-      if (allowIncompleteRanking)
+      if allowIncompleteRanking
         for i in [1...selectedChoices.length+1]
           flag = false
           for j in [0...selectedChoices.length]
             if selectedChoices[j].value == i
               flag = true
               break
-          if flag == false
+          if not flag
             return false
         return true
 

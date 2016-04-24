@@ -50,7 +50,7 @@ Template.electionsAdminEdit.helpers
     return if id in groups then "checked" else null
   questionCount: (increment) ->
     choiceCount = 0
-    if increment == 1 
+    if increment 
       questionCount += 1
     return questionCount
   resetChoiceCount: () ->
