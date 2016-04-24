@@ -74,8 +74,8 @@
                     Description">{{description}}</textarea>
                 </div>
                 <div class="pure-controls">
-                  <label for="allow-abstain" class="pure-checkbox">
-                  <input id="allow-abstain" name="questionAllowAbstain"
+                  <label for="allow-abstain-{{questionCount}}" class="pure-checkbox">
+                  <input id="allow-abstain-{{questionCount}}" name="questionAllowAbstain"
                         class="question allowAbstain" type="checkbox"
                         checked="{{allowAbstain}}" data-questionId={{_id}}>
                     Allow Abstention</label>
@@ -112,8 +112,8 @@
                   <div class="pure-controls">
                     <h4>Rank Parameters</h4>
                   </div>
-                  <label for="allow-incomplete-ranking" class="pure-checkbox">
-                  <input id="allow-incomplete-ranking" name="questionAllowIncompleteRanking"
+                  <label for="allow-incomplete-ranking-{{questionCount}}" class="pure-checkbox">
+                  <input id="allow-incomplete-ranking-{{questionCount}}" name="questionAllowIncompleteRanking"
                         class="question allowIncompleteRanking" type="checkbox"
                         checked="{{allowIncompleteRanking}}" data-questionId={{_id}}>
                     Allow Incomplete Rankings</label>
