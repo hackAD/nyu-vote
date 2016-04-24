@@ -341,6 +341,8 @@ Ballots.after.insert((userId, ballot) ->
   votesObject = Election.fetchOne(ballot.electionId).votes
   for i in [0...ballot.questions.length]
     ballotToPush = {}
+    for j in [1...ballot.questions[i].choices.length+1]
+      ballotToPush[j] = ""
     question = ballot.questions[i]
     choices = @transform().selectedChoices(i, true)
     _.each(choices, (choice) ->

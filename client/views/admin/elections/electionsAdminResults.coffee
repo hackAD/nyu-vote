@@ -31,7 +31,6 @@ Template.electionsAdminResults.helpers
         ranks.push(object)
     return ranks
   votes: (choiceId, questionId, votes, rank) ->
-    console.log(JSON.stringify(votes))
     if choiceId == "abstain"
         return votes[questionId][choiceId]
     return votes[questionId][choiceId][rank]
