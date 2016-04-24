@@ -27,10 +27,16 @@ class Election extends ReactiveClass(Elections)
       for question in @questions
         question_object = {}
         for choice in question.choices
-          question_object[choice._id] = 0
+          choice_object = {}
+          for i in [1...question.choices.length+1]
+            choice_object[i] = 0
+          question_object[choice._id] = choice_object
         if question.options.allowAbstain
           question_object["abstain"] = 0
         @votes[question._id] = question_object
+      @votes["ballots"] = {}
+      for question in @questions
+        @votes["ballots"][question._id] = []
       @update({$set:
         {
           status: @status,

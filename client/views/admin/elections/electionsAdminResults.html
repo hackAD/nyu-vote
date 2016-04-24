@@ -35,12 +35,20 @@
                 {{#each choices}}
                   <tr class="pure-table-odd"><td>Name</td><td>{{name}}</td></tr>
                   <tr><td>Description</td><td>{{description}}</td></tr>
-                  <tr><td>Votes</td><td>{{votes _id ../_id ../../votes }}</td></tr>
+                  {{#if isPick _id ../_id}}
+                    <tr><td>Votes</td><td>{{votes _id ../_id ../../votes 1}}</td></tr>
+                  {{/if}}
+                  {{#if isRank _id ../_id}}
+                    <tr><td>Votes by rank:</td><td></td></tr>
+                    {{#each choiceLength _id ../_id ../../votes}}
+                      <tr><td>{{rank}}</td><td>{{votes choiceId questionId votesObject rank}}</td></tr>
+                    {{/each}}
+                  {{/if}}
                 {{/each}}
                 {{#if allowAbstain}}
                   <tr class="pure-table-odd"><td>Name</td><td>Abstain</td></tr>
                   <tr><td>Description</td><td>Abstaining From This Vote</td></tr>
-                  <tr><td>Votes</td><td>{{votes "abstain" _id ../votes }}</td></tr>
+                  <tr><td>Votes</td><td>{{votes "abstain" _id ../votes 1}}</td></tr>
                 {{/if}}
             </tbody>
           </table>

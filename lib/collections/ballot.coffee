@@ -338,15 +338,32 @@ Ballots.after.insert((userId, ballot) ->
     return
   user = User.fetchOne(userId)
   toIncrement = {}
+  votesObject = Election.fetchOne(ballot.electionId).votes
+  console.log(JSON.stringify(votesObject))
   for i in [0...ballot.questions.length]
+    ballotToPush = {}
     question = ballot.questions[i]
-    choices = @transform().selectedChoices(i)
+    choices = @transform().selectedChoices(i, true)
     _.each(choices, (choice) ->
-      toIncrement["votes." + question._id + "." + choice._id] = 1
+      rank = choice.value
+      if rank == true
+        rank = 1
+      ballotToPush[rank] = choice._id
+      incrementString = "votes." + question._id + "." + choice._id
+      if (choice._id != "abstain")
+        incrementString += "." + rank.toString()
+      toIncrement[incrementString] = 1
     )
+    votesObject["ballots"][question._id].push(ballotToPush)
+
+  Elections.update(ballot.electionId, {
+    "$set": {votes: votesObject}
+  })
+
   Elections.update(ballot.electionId, {
     "$inc": toIncrement
   })
+
   Log.verbose("BALLOT CAST: " + user + " cast ballot. Ballot: " +
     JSON.stringify(ballot))
 )
