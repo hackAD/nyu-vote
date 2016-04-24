@@ -339,7 +339,6 @@ Ballots.after.insert((userId, ballot) ->
   user = User.fetchOne(userId)
   toIncrement = {}
   votesObject = Election.fetchOne(ballot.electionId).votes
-  console.log(JSON.stringify(votesObject))
   for i in [0...ballot.questions.length]
     ballotToPush = {}
     question = ballot.questions[i]

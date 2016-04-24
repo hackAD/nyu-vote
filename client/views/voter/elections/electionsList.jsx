@@ -20,7 +20,8 @@ ElectionsList = React.createClass({
     });
   },
   render: function() {
-    var admin = Elections.find().count() > 0 || Groups.find().count() > 0;
+    var admin = Meteor.call("isglobaladmin");
+    console.log(admin);
     return(
       <div id="election-list">
         <div className="white-bg header">

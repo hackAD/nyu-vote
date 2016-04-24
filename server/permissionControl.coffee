@@ -2,7 +2,7 @@ Meteor.methods(
   'isElectionAdmin': (election_id) ->
     return Elections.find({"_id": election_id, "admins": Meteor.user().profile.netId}).count() == 1
   'isglobaladmin': () ->
-    return Groups.find({"name": "global", "admins": Meteor.user().profile.netId}).count() == 1
+    return Groups.find({"name": "Global Admins", "admins": Meteor.user().profile.netId}).count() == 1
   'isGroupAdminOf': (group_ids) ->
     if typeof(group_ids) == "string"
       group_ids = [group_ids]
