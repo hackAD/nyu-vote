@@ -66,7 +66,9 @@ Dropdown = React.createClass({
             var buttonClass = cx({"large-button": true,  "green-bg" : selected, "deep-blue-bg": taken});
             items.push(<a href="#" className={buttonClass} onClick={this.pick.bind(null, i, takenIndex)}>{text} {(taken ? takenNode : null)}</a>);
         }
-        items.push(<a href="#" className="large-button" onClick={this.pick.bind(null, 0)}>Unrank</a>);
+        if (choice.value) {
+            items.push(<a href="#" className="large-button" onClick={this.pick.bind(null, 0)}>Unrank</a>);
+        }
         return items;
     }
 });

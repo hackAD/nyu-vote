@@ -125,11 +125,11 @@ class Ballot extends ReactiveClass(Ballots)
     return choice.value > 0
 
   # toggling a pick on a choice
-  pick: (questionIndex, choiceIndex, priority = null) ->
+  pick: (questionIndex, choiceIndex, priority = -1) ->
     @changed()
     question = @questions[questionIndex]
     choice = question.choices[choiceIndex]
-    if not priority
+    if priority == -1
       # if no priority, we are in pick mode
       choice.value = !choice.value
     else
