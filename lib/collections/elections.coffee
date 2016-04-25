@@ -325,7 +325,11 @@ Meteor.methods(
             if choice._id != "abstain" and choice.value and not eliminated[choice._id]
               totalVotes += 1
               roundResult[choice._id] += 1
-              break            
+              break
+        #don't count people with no votes
+        for choice in questionObject.choices
+          if roundResult[choice._id] == 0
+            eliminated[choice._id] = true       
         questionResults.push(roundResult)
         leader = null
         loser = null
