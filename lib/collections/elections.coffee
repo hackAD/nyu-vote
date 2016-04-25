@@ -90,12 +90,14 @@ class Election extends ReactiveClass(Elections)
     if (options.type == "pick")
       options.voteMode ?= "single"
     options.allowAbstain ?= false
+    rankResults = [{round: 1}]
     @questions.push(
       _id: id
       name: name
       description: description
       options: options
       choices: []
+      rankResults: rankResults
     )
     return id
   
@@ -110,6 +112,7 @@ class Election extends ReactiveClass(Elections)
     question = _.find(@questions, (question) ->
       return question._id == questionId
     )
+    question.rankResults[0][id] = 0
     question.choices.push(
       _id: id
       name: name
@@ -197,7 +200,7 @@ class Election extends ReactiveClass(Elections)
     trueChoiceIndex = getRandomElectionMap(@)[questionIndex][choiceIndex]
     return @get("questions")[questionIndex].choices[trueChoiceIndex]
 
-Election.addOfflineFields(["_activeQuestionIndex", "creator", "votes", "status"])
+Election.addOfflineFields(["_activeQuestionIndex", "creator", "votes", "status", "rankResults"])
 
 Election.setupTransform()
 # Promote it to the global scope
@@ -279,6 +282,64 @@ Elections.deny(
 )
 
 Meteor.methods(
+  getRankResults: (electionId) ->
+    ballots = Ballots.find(electionId: electionId).fetch()
+    rankResults = {}
+    if ballots.length == 0
+      return rankResults
+    for questionObject in ballots[0].election.questions
+      questionId = questionObject._id
+      questions = []
+      for i in [0...ballots.length]
+        ballot = ballots[i]
+        for j in [0...ballot.questions.length]
+          question = ballot.questions[j]
+          if question._id == questionId
+            questions.push(question)
+      questionResults = []
+      eliminated = []
+      if questions.length == 0
+        rankResults[questionId] = questionResults
+        continue
+
+      for i in [0...ballots[0].election.questions.length] #already checked at least one ballot
+        if ballots[0].election.questions[i]._id == questionId
+          questionInfo = ballots[0].election.questions[i]
+          break
+
+      for i in [0...questions.length]
+        questions[i].choices.sort (a, b) ->
+          return a.value-b.value
+
+      for cnt in [0...questionInfo.choices.length-1]
+        roundResult = {}
+        for i in [0...questionInfo.choices.length]
+          roundResult[questionInfo.choices[i]._id] = 0
+
+        totalVotes = 0
+        for i in [0...questions.length]
+          ballot = questions[i].choices
+          j = 0
+          while ((ballot[j]._id == "abstain" and not ballot[j].value) or ballot[j].value == 0 or ballot[j]._id in eliminated) and j < ballot.length and not (ballot[j]._id == "abstain" and ballot[j].value)
+            j++
+          if not (j == ballot.length or (ballot[j]._id == "abstain" and ballot[j].value))
+            totalVotes += 1
+            roundResult[ballot[j]._id] += 1
+        questionResults.push(roundResult)
+        leader = questionInfo.choices[0]._id
+        loser = questionInfo.choices[0]._id
+        for i in [1...questionInfo.choices.length]
+          if roundResult[questionInfo.choices[i]._id] > roundResult[leader]
+            leader = questionInfo.choices[i]._id
+          if questionInfo.choices[i]._id not in eliminated and roundResult[questionInfo.choices[i]._id] < roundResult[loser]
+            loser = questionInfo.choices[i]._id
+        if roundResult[leader] == roundResult[loser] or roundResult[leader] > (totalVotes//2)
+          rankResults[questionId] = questionResults
+          break
+        else
+          eliminated.push(loser)
+    return rankResults
+
   toggleElectionStatus: (electionId) ->
     election = Election.fetchOne(electionId)
     if election.status == "closed" || election.status == "unopened"
@@ -336,7 +397,7 @@ Meteor.methods(
       groups: group_ids
       voters: []
       questions: []
-      , (err, resp) -> throw new Metor.Error(500, err.reason) if err?
+      , (err, resp) -> throw new Meteor.Error(500, err.reason) if err?
     )
     return true
 )

@@ -24,6 +24,11 @@
             <tr><td>Description</td><td>{{description}}</td></tr>
           </tbody>
         </table>
+        <div>
+          <h2>Refresh results</h2>
+          <p>If you are running a rank election the results on the rank questions are not live, they are only refreshed by clicking the button below. All pick elections have live rankings though</p>
+          <a class="large-button" onClick={{getRankResults false false}}>Refresh Rank Results</a>
+        </div>
         <h2>Questions</h2>
         {{#each questions}}
           <table class="pure-table pure-table-horizontal">
@@ -35,7 +40,14 @@
                 {{#each choices}}
                   <tr class="pure-table-odd"><td>Name</td><td>{{name}}</td></tr>
                   <tr><td>Description</td><td>{{description}}</td></tr>
-                  <tr><td>Votes</td><td>{{votes _id ../_id ../../votes }}</td></tr>
+                  {{#if isPick ../_id}}
+                    <tr><td>Votes</td><td>{{votes _id ../_id ../../votes }}</td></tr>
+                  {{/if}}
+                  {{#if isRank ../_id}}
+                    {{#each getRankResults _id ../_id}}
+                      <tr><td>Round {{round}}:</td><td>{{votesNumber}}</td></tr>
+                    {{/each}}
+                  {{/if}}
                 {{/each}}
                 {{#if allowAbstain}}
                   <tr class="pure-table-odd"><td>Name</td><td>Abstain</td></tr>

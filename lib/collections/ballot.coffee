@@ -25,6 +25,8 @@ class Ballot extends ReactiveClass(Ballots)
       return true
     choices = question.choices
     selectedChoices = @selectedChoices(questionIndex, true)
+    if (selectedChoices.length == 0)
+      return false
 
     if Meteor.isServer
       # checks all IDs on the choices are unique
@@ -45,25 +47,52 @@ class Ballot extends ReactiveClass(Ballots)
       if not allChoicesValid
         return false
 
+
+    if (question.options.allowAbstain && @isAbstaining(questionIndex))
+          return selectedChoices.length == 1
     if (question.options.type == "pick")
       if (question.options.voteMode == "multi")
-        if (question.options.allowAbstain && @isAbstaining(questionIndex))
-          return selectedChoices.length == 1
-        else
           return selectedChoices.length > 0
       else if (question.options.voteMode == "pickN")
         return selectedChoices.length == question.options.pickNVal
       else
         return selectedChoices.length == 1
 
+    else if (question.options.type == "rank")
+      allRanksUnique = _.reduce(selectedChoices, (seen, selectedChoice) ->
+          if selectedChoice.value not in seen
+            seen.push(selectedChoice.value)
+          return seen
+        , []).length == selectedChoices.length
+
+      if not allRanksUnique
+        return false
+
+      allowIncompleteRanking = question.options.allowIncompleteRanking
+      if allowIncompleteRanking
+        for i in [1...selectedChoices.length+1]
+          flag = false
+          for j in [0...selectedChoices.length]
+            if selectedChoices[j].value == i
+              flag = true
+              break
+          if not flag 
+            return false
+        return true
+
+      else
+        return selectedChoices.length == question.choices.length
+
+
     Log.error("validation logic failed, election: " + JSON.stringify(@election) +
       " ballot: " + JSON.stringify(@))
     return false
 
   selectedChoices: (questionIndex, returnBallots) ->
+    question = @questions[questionIndex];
     # if we are abstaining, just return the abstain object
     if @isAbstaining(questionIndex)
-      choices = @questions[questionIndex].choices
+      choices = question.choices
       if returnBallots
         return [{
           _id: "abstain"
@@ -78,32 +107,35 @@ class Ballot extends ReactiveClass(Ballots)
         }]
     if questionIndex > @questions.length - 1
       throw new Meteor.Error(500, questionIndex + " is out of bounds")
-    array = if returnBallots then @questions[questionIndex].choices else
+    array = if returnBallots then question.choices else
       @election.questions[questionIndex].choices
     selected = _.filter(array, (choice, index) =>
-      ballotChoice = @questions[questionIndex].choices[index]
-      return ballotChoice.value == true
+      ballotChoice = question.choices[index]
+      return ballotChoice.value > 0
     )
     return selected
 
   getElection: () ->
     Election.fetchOne(@electionId)
 
-  # For pick mode
   isPicked: (questionIndex, choiceIndex) ->
     @depend()
     choice = @questions[questionIndex].choices[choiceIndex]
-    return choice.value == true
+    question = @questions[questionIndex]
+    return choice.value > 0
 
   # toggling a pick on a choice
-  pick: (questionIndex, choiceIndex) ->
+  pick: (questionIndex, choiceIndex, priority = -1) ->
     @changed()
     question = @questions[questionIndex]
     choice = question.choices[choiceIndex]
-    choice.value = !choice.value
+    if priority == -1
+      choice.value = !choice.value
+    else
+      choice.value = priority
     newValue = choice.value
     # If they just selected a choice
-    if newValue == true
+    if question.options.type == "pick" and newValue == true
       # If it is not multiple choice, or they picked abstain, make sure all
       # other choices are false
       if (question.options.voteMode == "single") || choice._id == "abstain"
@@ -116,17 +148,27 @@ class Ballot extends ReactiveClass(Ballots)
           if choice._id == "abstain"
             choice.value = false
         )
+    else if question.options.type == "rank" && @isAbstaining(questionIndex) && choice._id != "abstain"
+      _.find(question.choices, (choice, index) ->
+        if choice._id == "abstain"
+          choice.value = false
+        )
 
     return @
 
   abstain: (questionIndex) ->
     @changed()
     question = @questions[questionIndex]
-    # TODO: implement rank abstain
     if (question.options.type == "pick")
       # set all choice values to false
       _.each(question.choices, (choice) ->
         choice.value = false
+      )
+      abstainChoice = question.choices[question.choices.length - 1]
+      abstainChoice.value = true
+    else if (question.options.type == "rank")
+      _.each(question.choices, (choice) ->
+        choice.value = 0
       )
       abstainChoice = question.choices[question.choices.length - 1]
       abstainChoice.value = true
@@ -162,7 +204,7 @@ class Ballot extends ReactiveClass(Ballots)
     user ?= Meteor.user()
     if not user
       throw new Meteor.Error(500,
-        "You must specify in a user to generate a ballot!")
+        "You must specify a user in order to generate a ballot!")
     ballot = new this({
       election: election,
       electionId: election._id,

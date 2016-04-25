@@ -25,7 +25,7 @@ ElectionsVote = React.createClass({
       var choice = election.getRandomChoice(questionIndex, i);
       var trueIndex = randomMap[i];
       choices.push(
-        <ElectionsChoice ballot={ballot} choice={choice} choiceIndex={trueIndex} questionIndex={questionIndex} isAbstain={false} />
+        <ElectionsChoice question = {question} ballot={ballot} choice={choice} choiceIndex={trueIndex} questionIndex={questionIndex} isAbstain={false} />
       );
     }
     if (question.options.allowAbstain)
@@ -38,7 +38,7 @@ ElectionsVote = React.createClass({
           <a className="header-exit" href={Router.path("home")}>{"<  "}Exit</a>
             {election.name}
           <a className="header-help" href={Router.path("help")}>
-            Get Help
+            Help
           </a>
         </div>
         <div className="deep-blue-bg">

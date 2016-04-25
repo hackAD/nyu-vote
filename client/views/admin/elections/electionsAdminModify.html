@@ -59,7 +59,7 @@
               {{#each questions}}
               <fieldset>
                 <div class="pure-controls">
-                  <h3>Question #{{questionCount}}</h3>
+                  <h3>Question #{{questionCount true}}</h3>
                 </div>
                 <div class="pure-control-group">
                   <label for="question-{{_id}}-name">Name</label>
@@ -74,8 +74,8 @@
                     Description">{{description}}</textarea>
                 </div>
                 <div class="pure-controls">
-                  <label for="allow-abstain" class="pure-checkbox">
-                  <input id="allow-abstain" name="questionAllowAbstain"
+                  <label for="allow-abstain-{{questionCount false}}" class="pure-checkbox">
+                  <input id="allow-abstain-{{questionCount false}}" name="questionAllowAbstain"
                         class="question allowAbstain" type="checkbox"
                         checked="{{allowAbstain}}" data-questionId={{_id}}>
                     Allow Abstention</label>
@@ -92,7 +92,7 @@
                   </label>
                   {{#if isPickQuestion .. }}
                     <div class="pure-controls">
-                      <h4>{{options.type}} Parameters</h4>
+                      <h4>Pick Parameters</h4>
                     </div>
                     <label for="single-{{_id}}" class="pure-radio">
                         <input id="single-{{_id}}" type="radio" name="pickMode" value="single" checked={{single}} class="vote-mode" data-questionId={{_id}}>
@@ -108,12 +108,23 @@
                         <input id="pickNVal-{{_id}}" type="text" name="pickNVal" value={{pickNVal}} placeholder="1" disabled="{{unlessPickN}}" class="pickNVal" data-questionId={{_id}}>
                     </label>
                   {{/if}}
+                  {{#if isRankQuestion .. }}
+                  <div class="pure-controls">
+                    <h4>Rank Parameters</h4>
+                  </div>
+                  <label for="allow-incomplete-ranking-{{questionCount false}}" class="pure-checkbox">
+                  <input id="allow-incomplete-ranking-{{questionCount false}}" name="questionAllowIncompleteRanking"
+                        class="question allowIncompleteRanking" type="checkbox"
+                        checked="{{allowIncompleteRanking}}" data-questionId={{_id}}>
+                    Allow Incomplete Rankings</label>
+                  {{/if}}
                 </div>
               </fieldset>
                 
               <div class="pure-controls">
                 <h4>Choices</h4>
               </div>
+                {{resetChoiceCount}}
                 {{#each choices}}
                 <fieldset>
                   <div class="pure-controls">

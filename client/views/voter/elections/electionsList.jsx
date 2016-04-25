@@ -3,13 +3,13 @@ ElectionsList = React.createClass({
   getMeteorData: function() {
     var votedElections = Ballots.find().map(function(ballot) {return ballot.electionId;});
     var openElections = Elections.find({_id: {$nin: votedElections}});
-    var closedEections = Elections.find({_id: {$in: votedElections}});
+    var closedElections = Elections.find({_id: {$in: votedElections}});
     return {
       openElectionsCount: openElections.count(),
       openElectionNodes: openElections.map(function(election) {
         return <ElectionsItem election={election} open={true} />;
       }),
-      closedElectionNodes: closedEections.map(function(election) {
+      closedElectionNodes: closedElections.map(function(election) {
         return <ElectionsItem election={election} open={false} />;
       })
     };
@@ -20,6 +20,7 @@ ElectionsList = React.createClass({
     });
   },
   render: function() {
+    var admin = false; //Find proper way to check for admin here
     return(
       <div id="election-list">
         <div className="white-bg header">
@@ -52,6 +53,13 @@ ElectionsList = React.createClass({
           <a className="login-caption info-link" href={Router.path("about")}>
             About This Project
           </a>
+          <br/>
+          {admin ?
+            <a className="login-caption info-link" href={Router.path("admin")}>
+              Go to Admin Page
+            </a>
+            : null
+          }
         </div>
       </div>
     );
