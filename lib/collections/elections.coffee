@@ -90,14 +90,12 @@ class Election extends ReactiveClass(Elections)
     if (options.type == "pick")
       options.voteMode ?= "single"
     options.allowAbstain ?= false
-    rankResults = [{round: 1}]
     @questions.push(
       _id: id
       name: name
       description: description
       options: options
       choices: []
-      rankResults: rankResults
     )
     return id
   
@@ -112,7 +110,6 @@ class Election extends ReactiveClass(Elections)
     question = _.find(@questions, (question) ->
       return question._id == questionId
     )
-    question.rankResults[0][id] = 0
     question.choices.push(
       _id: id
       name: name
@@ -288,6 +285,8 @@ Meteor.methods(
     if ballots.length == 0
       return rankResults
     for questionObject in ballots[0].election.questions
+      if questionObject.options.type != "rank"
+        continue
       questionId = questionObject._id
       questions = []
       for i in [0...ballots.length]
