@@ -55,6 +55,7 @@ Template.electionsAdminEdit.helpers
     return questionCount
   resetChoiceCount: () ->
     choiceCount = 0
+    return null
   choiceCount: () ->
     choiceCount += 1
     return choiceCount
