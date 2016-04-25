@@ -280,63 +280,68 @@ Elections.deny(
 
 Meteor.methods(
   getRankResults: (electionId) ->
-    ballots = Ballots.find(electionId: electionId).fetch()
+    ballots = Ballots.find({electionId: electionId}, {transform: null}).fetch()
+    election = Elections.find(_id: electionId).fetch()[0]
     rankResults = {}
     if ballots.length == 0
       return rankResults
-    for questionObject in ballots[0].election.questions
+    #fill rankResults for every rank question
+    for questionObject in election.questions
       if questionObject.options.type != "rank"
         continue
       questionId = questionObject._id
+      #find all the relevant questions
       questions = []
-      for i in [0...ballots.length]
-        ballot = ballots[i]
-        for j in [0...ballot.questions.length]
-          question = ballot.questions[j]
+      for ballot in ballots
+        for question in ballot.questions
           if question._id == questionId
             questions.push(question)
+
       questionResults = []
-      eliminated = []
+      eliminated = {}
+
       if questions.length == 0
         rankResults[questionId] = questionResults
         continue
 
-      for i in [0...ballots[0].election.questions.length] #already checked at least one ballot
-        if ballots[0].election.questions[i]._id == questionId
-          questionInfo = ballots[0].election.questions[i]
-          break
-
-      for i in [0...questions.length]
-        questions[i].choices.sort (a, b) ->
+      #sort votes for easy tallying
+      for question in questions
+        question.choices.sort (a, b) ->
           return a.value-b.value
-
-      for cnt in [0...questionInfo.choices.length-1]
+      #maximum keep eliminating until there are 2 left
+      for cnt in [0...questionObject.choices.length-1]
         roundResult = {}
-        for i in [0...questionInfo.choices.length]
-          roundResult[questionInfo.choices[i]._id] = 0
+        #initialize round result so we always have a score
+        #even if someone didn't get a vote
+        for i in [0...questionObject.choices.length]
+          roundResult[questionObject.choices[i]._id] = 0
 
         totalVotes = 0
-        for i in [0...questions.length]
-          ballot = questions[i].choices
-          j = 0
-          while ((ballot[j]._id == "abstain" and not ballot[j].value) or ballot[j].value == 0 or ballot[j]._id in eliminated) and j < ballot.length and not (ballot[j]._id == "abstain" and ballot[j].value)
-            j++
-          if not (j == ballot.length or (ballot[j]._id == "abstain" and ballot[j].value))
-            totalVotes += 1
-            roundResult[ballot[j]._id] += 1
+        #tally votes finding highest priority at all times
+        for question in questions
+          ballot = question.choices
+          for choice in ballot
+            if choice._id != "abstain" and choice.value and not eliminated[choice._id]
+              totalVotes += 1
+              roundResult[choice._id] += 1
+              break            
         questionResults.push(roundResult)
-        leader = questionInfo.choices[0]._id
-        loser = questionInfo.choices[0]._id
-        for i in [1...questionInfo.choices.length]
-          if roundResult[questionInfo.choices[i]._id] > roundResult[leader]
-            leader = questionInfo.choices[i]._id
-          if questionInfo.choices[i]._id not in eliminated and roundResult[questionInfo.choices[i]._id] < roundResult[loser]
-            loser = questionInfo.choices[i]._id
+        leader = null
+        loser = null
+        #find top scorer and bottom scorer
+        for choice in questionObject.choices
+          if eliminated[choice._id]
+            continue
+          if roundResult[choice._id] > roundResult[leader] or not leader
+            leader = choice._id
+          if roundResult[choice._id] < roundResult[loser] or not loser
+            loser = choice._id
+        #if its a tie or there's a winner we are done with this question
         if roundResult[leader] == roundResult[loser] or roundResult[leader] > (totalVotes//2)
           rankResults[questionId] = questionResults
           break
         else
-          eliminated.push(loser)
+          eliminated[loser] = true
     return rankResults
 
   toggleElectionStatus: (electionId) ->

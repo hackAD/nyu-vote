@@ -1,5 +1,8 @@
 <template name="electionsAdminResults">
   {{#with election}}
+  {{#if hasRank}}
+    {{retrieveRankResults}}
+  {{/if}}
     <div class="email-content">
       <div class="email-content-header pure-g">
           <div class="pure-u-1-2">
@@ -24,11 +27,6 @@
             <tr><td>Description</td><td>{{description}}</td></tr>
           </tbody>
         </table>
-        <div>
-          <h2>Refresh results</h2>
-          <p>If you are running a rank election the results on the rank questions are not live, they are only refreshed by clicking the button below. All pick elections have live rankings though</p>
-          <a class="large-button" onClick={{getRankResults false false}}>Refresh Rank Results</a>
-        </div>
         <h2>Questions</h2>
         {{#each questions}}
           <table class="pure-table pure-table-horizontal">
