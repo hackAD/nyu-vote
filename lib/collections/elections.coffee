@@ -296,7 +296,7 @@ Meteor.methods(
           if question._id == questionId
             questions.push(question)
       questionResults = []
-      eliminated = []
+      eliminated = {}
       if questions.length == 0
         rankResults[questionId] = questionResults
         continue
@@ -325,18 +325,23 @@ Meteor.methods(
             totalVotes += 1
             roundResult[ballot[j]._id] += 1
         questionResults.push(roundResult)
-        leader = questionInfo.choices[0]._id
-        loser = questionInfo.choices[0]._id
-        for i in [1...questionInfo.choices.length]
-          if roundResult[questionInfo.choices[i]._id] > roundResult[leader]
-            leader = questionInfo.choices[i]._id
-          if questionInfo.choices[i]._id not in eliminated and roundResult[questionInfo.choices[i]._id] < roundResult[loser]
-            loser = questionInfo.choices[i]._id
+        leader = null
+        loser = null
+        for choice in questionInfo.choices
+          if eliminated[choice._id]
+            continue
+          if not leader or (roundResult[choice._id] > roundResult[leader])
+            leader = choice._id
+          if not loser or (roundResult[choice._id] < roundResult[loser])
+            loser = choice._id
+        # first condition is for ties
+        # second is that we've found a winner
         if roundResult[leader] == roundResult[loser] or roundResult[leader] > (totalVotes//2)
           rankResults[questionId] = questionResults
           break
+        # otherwise go for another round
         else
-          eliminated.push(loser)
+          eliminated[loser] = true
     return rankResults
 
   toggleElectionStatus: (electionId) ->
