@@ -1,8 +1,5 @@
 <template name="electionsAdminResults">
   {{#with election}}
-  {{#if hasRank}}
-    {{retrieveRankResults}}
-  {{/if}}
     <div class="email-content">
       <div class="email-content-header pure-g">
           <div class="pure-u-1-2">
@@ -19,6 +16,16 @@
       <div class="email-content-body">
         <!-- start -->
         <h1>Election Results</h1>
+        {{#if hasRank}}
+          {{retrieveRankResults}}
+          <div>
+            <p>Rank results are not updated live</p>
+            <p>Last update: {{getRankTime}}</p>
+            <a id="refresh-rank" class="large-button">Refresh Rank Results</a>
+            <br/>
+            <br/>
+          </div>
+        {{/if}}
         <table class="pure-table pure-table-bordered">
           <thead>
             <tr><th>Name</th><th>{{name}}</th></tr>

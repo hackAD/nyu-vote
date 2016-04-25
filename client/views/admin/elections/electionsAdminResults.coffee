@@ -4,6 +4,18 @@ getQuestion = (questionId) ->
     if election.questions[i]._id == questionId
       return election.questions[i]
 
+calculateRank = () =>
+  election = Election.getActive()
+  Meteor.call("getRankResults", election._id, (error, result) ->
+    election.set("rankResults", result)
+    election.set("rankResultsTimestamp", Date().toString())
+  )
+
+Template.electionsAdminResults.events
+  "click #refresh-rank": (e) ->
+    e.preventDefault()
+    calculateRank()
+
 Template.electionsAdminResults.helpers
   election: () ->
     election = Election.getActive()
@@ -28,10 +40,12 @@ Template.electionsAdminResults.helpers
     return false
   retrieveRankResults: () ->
     election = Election.getActive()
-    Meteor.call("getRankResults", election._id, (error, result) ->
-      election.set("rankResults", result)
-    )
-    return
+    rankResults = election.get("rankResults")
+    if not rankResults
+      calculateRank()
+  getRankTime: () ->
+    election = Election.getActive()
+    return election.get("rankResultsTimestamp")
   getRankResults: (choiceId, questionId) ->
     election = Election.getActive()
     # get results
@@ -59,5 +73,3 @@ Template.electionsAdminResults.helpers
         }
         information.push(roundInfo)
       return information
-
-

@@ -197,7 +197,8 @@ class Election extends ReactiveClass(Elections)
     trueChoiceIndex = getRandomElectionMap(@)[questionIndex][choiceIndex]
     return @get("questions")[questionIndex].choices[trueChoiceIndex]
 
-Election.addOfflineFields(["_activeQuestionIndex", "creator", "votes", "status", "rankResults"])
+Election.addOfflineFields(["_activeQuestionIndex", "creator", "votes",
+	"status", "rankResults", "rankResultsTimestamp"])
 
 Election.setupTransform()
 # Promote it to the global scope
