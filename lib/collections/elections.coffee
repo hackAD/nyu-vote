@@ -319,7 +319,7 @@ Meteor.methods(
         for i in [0...questions.length]
           ballot = questions[i].choices
           j = 0
-          while ((ballot[j]._id == "abstain" and not ballot[j].value) or ballot[j].value == 0 or ballot[j]._id in eliminated) and j < ballot.length and not (ballot[j]._id == "abstain" and ballot[j].value)
+          while ((ballot[j]._id == "abstain" and not ballot[j].value) or ballot[j].value == 0 or eliminated[ballot[j]._id]) and j < ballot.length and not (ballot[j]._id == "abstain" and ballot[j].value)
             j++
           if not (j == ballot.length or (ballot[j]._id == "abstain" and ballot[j].value))
             totalVotes += 1
@@ -336,6 +336,9 @@ Meteor.methods(
             loser = choice._id
         # first condition is for ties
         # second is that we've found a winner
+        console.log(eliminated)
+        console.log(leader)
+        console.log(loser)
         if roundResult[leader] == roundResult[loser] or roundResult[leader] > (totalVotes//2)
           rankResults[questionId] = questionResults
           break
