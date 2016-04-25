@@ -198,7 +198,7 @@ class Election extends ReactiveClass(Elections)
     return @get("questions")[questionIndex].choices[trueChoiceIndex]
 
 Election.addOfflineFields(["_activeQuestionIndex", "creator", "votes",
-	"status", "rankResults", "rankResultsTimestamp"])
+  "status"])
 
 Election.setupTransform()
 # Promote it to the global scope
