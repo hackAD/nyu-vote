@@ -6,10 +6,15 @@ getQuestion = (questionId) ->
 
 calculateRank = () =>
   election = Election.getActive()
-  Meteor.call("getRankResults", election._id, (error, result) ->
-    election.set("rankResults", result)
-    election.set("rankResultsTimestamp", Date().toString())
-  )
+  ((id) ->
+    Meteor.call("getRankResults", id, (error, result) ->
+      Session.set("rankResults", {
+        result: result,
+        timestamp: Date().toString(),
+        id: id
+      })
+    )
+  )(election._id)
 
 Template.electionsAdminResults.events
   "click #refresh-rank": (e) ->
@@ -40,16 +45,17 @@ Template.electionsAdminResults.helpers
     return false
   retrieveRankResults: () ->
     election = Election.getActive()
-    rankResults = election.get("rankResults")
-    if not rankResults
+    results = Session.get("rankResults")
+    if not results or results.id != election._id
       calculateRank()
   getRankTime: () ->
-    election = Election.getActive()
-    return election.get("rankResultsTimestamp")
+    results = Session.get("rankResults")
+    return results?.timestamp
   getRankResults: (choiceId, questionId) ->
     election = Election.getActive()
+    results = Session.get("rankResults")
     # get results
-    rankResults = election.get("rankResults")
+    rankResults = results?.result
     # if we don't already have them, calculate them
     # and generate loading information
     if not rankResults
