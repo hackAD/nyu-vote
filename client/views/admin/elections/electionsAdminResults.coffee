@@ -60,16 +60,17 @@ Template.electionsAdminResults.helpers
     # and generate loading information
     if not rankResults
       return ([{
-          round: 0
-          votesNumber: "Loading"
-        }])
+        round: 0
+        votesNumber: "Loading"
+      }])
     #if there are no ballots, or in these ballots
     #no one answered this question then just output 0 votes
-    else if rankResults == {} or rankResults[questionId] == []
+    else if not rankResults[questionId]? or rankResults[questionId].length == 0
       return ([{
           round: 1
           votesNumber: 0
         }])
+
     else
       information = []
       for i in [0...rankResults[questionId].length]

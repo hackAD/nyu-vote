@@ -59,13 +59,13 @@ ElectionsReview = React.createClass({
       for (var j = 0; j < selectedChoices.length; j++){
         var node;
         for (var k = 0; k < selectedChoices.length; k++){
-          if (selectedChoices[k]._id == choicesValues[j]._id){
+          if (selectedChoices[k]._id === choicesValues[j]._id){
             node = selectedChoices[k];
             break;
           }
         }
-        var is_pick_or_abstain = question.options.type=="pick" || (choicesValues.length == 1 && choicesValues[0]._id == "abstain");
-        var is_last_node = j==selectedChoices.length-1;
+        var is_pick_or_abstain = question.options.type === "pick" || (choicesValues.length === 1 && choicesValues[0]._id === "abstain");
+        var is_last_node = j === selectedChoices.length-1;
         selectedChoicesNodes.push(choiceMapFunction(choicesValues[j].value, node, is_pick_or_abstain, is_last_node));
       }
       

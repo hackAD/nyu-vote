@@ -15,10 +15,10 @@ Dropdown = React.createClass({
         document.removeEventListener("click", this.hide);
     },
 
-    pick: function(priority, takenIndex = -1){
+    pick: function(priority, takenIndex = null){
         var ballot = this.props.ballot;
         ballot.pick(this.props.questionIndex, this.props.choiceIndex, priority);
-        if (takenIndex != -1){
+        if (takenIndex !== null){
             ballot.pick(this.props.questionIndex, takenIndex, 0);
         }
     },
@@ -27,7 +27,7 @@ Dropdown = React.createClass({
         var ballot = this.props.ballot;
         var question = this.props.question;
         var choice = ballot.questions[this.props.questionIndex].choices[this.props.choiceIndex];
-        var message = (choice.value == 0 ? "Select Rank" : "Rank " + choice.value.toString());
+        var message = (choice.value === 0 ? "Select Rank" : "Rank " + choice.value.toString());
         return(
         <div>
         <a href="#" className={"large-button" + (choice.value > 0 ? " green-bg" : "")} onClick={this.toggle}>{message}</a>
@@ -42,14 +42,14 @@ Dropdown = React.createClass({
         var question = this.props.question;
         var choice = ballot.questions[this.props.questionIndex].choices[this.props.choiceIndex];
         for (var i = 1; i <= question.choices.length; i++){
-            var selected = choice.value == i;
+            var selected = choice.value === i;
             var taken = false;
             var name = null;
-            var takenIndex = -1;
+            var takenIndex = null;
             var choices = ballot.questions[this.props.questionIndex].choices;
             for (var j = 0; j < question.choices.length; j++){
                 currentChoice = choices[j];
-                if (j != this.props.choiceIndex && currentChoice.value == i){
+                if (j !== this.props.choiceIndex && currentChoice.value === i){
                     taken = true;
                     name = ballot.election.questions[this.props.questionIndex].choices[j].name;
                     takenIndex = j;
@@ -64,7 +64,7 @@ Dropdown = React.createClass({
             );
             var cx = React.addons.classSet;
             var buttonClass = cx({"large-button": true,  "green-bg" : selected, "deep-blue-bg": taken});
-            items.push(<a href="#" className={buttonClass} onClick={this.pick.bind(null, i, takenIndex)}>{text} {(taken ? takenNode : null)}</a>);
+            items.push(<a href="#" className={buttonClass} onClick={this.pick.bind(null, i, takenIndex)}>{text} {taken ? takenNode : null}</a>);
         }
         if (choice.value) {
             items.push(<a href="#" className="large-button" onClick={this.pick.bind(null, 0)}>Unrank</a>);

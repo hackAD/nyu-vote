@@ -47,7 +47,6 @@ class Ballot extends ReactiveClass(Ballots)
       if not allChoicesValid
         return false
 
-
     if (question.options.allowAbstain && @isAbstaining(questionIndex))
           return selectedChoices.length == 1
     if (question.options.type == "pick")
@@ -125,11 +124,11 @@ class Ballot extends ReactiveClass(Ballots)
     return choice.value > 0
 
   # toggling a pick on a choice
-  pick: (questionIndex, choiceIndex, priority = -1) ->
+  pick: (questionIndex, choiceIndex, priority = null) ->
     @changed()
     question = @questions[questionIndex]
     choice = question.choices[choiceIndex]
-    if priority == -1
+    if priority == null
       # if no priority, we are in pick mode
       choice.value = !choice.value
     else
@@ -341,6 +340,8 @@ Ballots.after.insert((userId, ballot) ->
   toIncrement = {}
   for i in [0...ballot.questions.length]
     question = ballot.questions[i]
+    if question?.options?.type != "pick"
+      continue
     choices = @transform().selectedChoices(i)
     _.each(choices, (choice) ->
       toIncrement["votes." + question._id + "." + choice._id] = 1

@@ -26,7 +26,7 @@ ElectionsChoice = React.createClass({
           <div className="centered-container">
             <ElectionsChoiceImage choice={choice} small={false} />
             <p className="body-text">{choice.description}</p>
-            {question.options.type == "rank" ?
+            {question.options.type === "rank" ?
               <Dropdown ballot={ballot} question={question} choice={choice} questionIndex={this.props.questionIndex} choiceIndex={this.props.choiceIndex}/>
               :
               (isPicked ?
