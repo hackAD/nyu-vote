@@ -15,7 +15,7 @@ Dropdown = React.createClass({
         document.removeEventListener("click", this.hide);
     },
 
-    pick: function(priority, takenIndex = null){
+    pick: function(priority, takenIndex = null)  {
         var ballot = this.props.ballot;
         ballot.pick(this.props.questionIndex, this.props.choiceIndex, priority);
         if (takenIndex !== null){
@@ -23,11 +23,44 @@ Dropdown = React.createClass({
         }
     },
 
+    getNumberPostfix: function(number) {
+        if (number%100 <= 20) {
+            switch(number) {
+                case 1:
+                    return "st";
+                    break;
+                case 2:
+                    return "nd";
+                    break;
+                case 3:
+                    return "rd";
+                    break;
+                default:
+                    return "th";
+            }
+        }
+        else {
+            switch(number%10) {
+                case 1:
+                    return "st";
+                    break;
+                case 2:
+                    return "nd";
+                    break;
+                case 3:
+                    return "rd";
+                    break;
+                default:
+                    return "th";
+            }
+        }
+    },
+
     render: function(){
         var ballot = this.props.ballot;
         var question = this.props.question;
         var choice = ballot.questions[this.props.questionIndex].choices[this.props.choiceIndex];
-        var message = (choice.value === 0 ? "Select Rank" : "Rank " + choice.value.toString());
+        var message = (choice.value === 0 ? "Select Rank" : choice.value.toString() + this.getNumberPostfix(choice.value) + " Choice");
         return(
         <div>
         <a href="#" className={"large-button" + (choice.value > 0 ? " green-bg" : "")} onClick={this.toggle}>{message}</a>
@@ -56,7 +89,7 @@ Dropdown = React.createClass({
                     break;
                 }
             }
-            var text = i.toString();
+            var text = i.toString() + this.getNumberPostfix(i) + " Choice";
             var takenNode = (
                 <div>
                     ({name})
@@ -67,8 +100,8 @@ Dropdown = React.createClass({
             items.push(<a href="#" className={buttonClass} onClick={this.pick.bind(null, i, takenIndex)}>{text} {taken ? takenNode : null}</a>);
         }
         if (choice.value) {
-            items.push(<a href="#" className="large-button" onClick={this.pick.bind(null, 0)}>Unrank</a>);
+            items.push(<a href="#" className="large-button" onClick={this.pick.bind(null, 0)}>Reset</a>);
         }
         return items;
-    }
+    },
 });
