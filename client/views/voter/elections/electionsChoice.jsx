@@ -3,7 +3,7 @@ ElectionsChoice = React.createClass({
     var ballot = this.props.ballot;
     if (ballot.isAbstaining(this.props.questionIndex))
       ballot.unAbstain(this.props.questionIndex);
-    else
+    else if (window.confirm("Are you sure you want to abstain from this question?"))
       ballot.abstain(this.props.questionIndex);
   },
   toggleSelect: function() {
@@ -21,7 +21,7 @@ ElectionsChoice = React.createClass({
       return(
         <div className={isPicked ? "light-green-bg" : "dark-blue-bg"}>
           <div className={isPicked ? "green-bg" : "light-blue-bg"}>
-            <h2 className="centered-container">{choice.name}</h2>  
+            <h2 className="centered-container">{choice.name}</h2>
           </div>
           <div className="centered-container">
             <ElectionsChoiceImage choice={choice} small={false} />
@@ -40,8 +40,8 @@ ElectionsChoice = React.createClass({
     } else {
       isPicked = ballot.isAbstaining(this.props.questionIndex);
       return(
-        <div className={isPicked ? "light-green-bg" : "dark-blue-bg"}>
-          <div className={isPicked ? "green-bg" : "light-blue-bg"}>
+        <div className={isPicked ? "light-green-bg" : "abstain-header-bg"}>
+          <div className={isPicked ? "green-bg" : "abstain-bg"}>
             <h2 className="centered-container">Abstain</h2>
           </div>
           <div className="centered-container">
