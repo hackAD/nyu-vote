@@ -51,11 +51,29 @@ ElectionsVote = React.createClass({
 
     var choices = [];
     var randomMap = election.getRandomQuestionMap(questionIndex);
+    var hasNoConfidence = false;
     for (var i = 0, length = question.choices.length; i < length; i++) {
       var choice = election.getRandomChoice(questionIndex, i);
       var trueIndex = randomMap[i];
+      if (choice.name !== "No Confidence") {
+        choices.push(
+          <ElectionsChoice question={question} ballot={ballot} choice={choice} choiceIndex={trueIndex} questionIndex={questionIndex} isAbstain={false} />
+        );
+      }
+      else {
+        // Don't add No Confidence now as we want it to be the last option for aesthetics
+        // but make sure we know that we have to add it later
+        if (hasNoConfidence) {
+          // Can't have more than one No Confidence option
+          throw new Error("There was more than one No Confidence option");
+        }
+        hasNoConfidence = true;
+      }
+    }
+    // Put No Confidence option last, but before Abstain
+    if (hasNoConfidence) {
       choices.push(
-        <ElectionsChoice question = {question} ballot={ballot} choice={choice} choiceIndex={trueIndex} questionIndex={questionIndex} isAbstain={false} />
+        <ElectionsChoice question={question} ballot={ballot} choice={choice} choiceIndex={trueIndex} questionIndex={questionIndex} isAbstain={false} />
       );
     }
     if (question.options.allowAbstain)

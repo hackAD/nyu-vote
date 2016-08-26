@@ -28,6 +28,8 @@ Template.electionsAdminEdit.helpers
     return if isPickN then null else "disabled"
   forceFullRanking: () ->
     return if @options.forceFullRanking then "checked" else null
+  includeNoConfidence: () ->
+    return if @options.includeNoConfidence then "checked" else null
   canEdit: () ->
     @status == "unopened"
   groups: () ->
@@ -63,6 +65,8 @@ Template.electionsAdminEdit.helpers
   choiceCount: () ->
     choiceCount += 1
     return choiceCount
+  isNotConfidenceChoice: (choice) ->
+    return choice.name != "No Confidence"
   isPickQuestion: (election) ->
     election.depend()
     return @options.type == "pick"
@@ -118,7 +122,9 @@ Template.electionsAdminEdit.events
         voteMode: "single"
         allowAbstain: true
         forceFullRanking: false
-      }
+        includeNoConfidence: true
+      },
+      choices: [{name: "No Confidence", description: "", image: ""}],
     })
     election.update((err) ->
       if not err
@@ -135,19 +141,22 @@ Template.electionsAdminEdit.events
     name = $("#new-choice-name-" + id).val()
     description = $("#new-choice-description-" + id).val()
     image = $("#new-choice-image-" + id).val()
-    election.addChoice(questionId, {
-      name: name
-      description: description
-      image: image
-    })
-    election.update((err) ->
-      if not err
-        $("#new-choice-name-" + id).val("")
-        $("#new-choice-description-" + id).val("")
-        $("#new-choice-image-" + id).val("")
-      else
-        alert("Error: " + err.message)
-    )
+    if name != "No Confidence"
+      election.addChoice(questionId, {
+        name: name
+        description: description
+        image: image
+      })
+      election.update((err) ->
+        if not err
+          $("#new-choice-name-" + id).val("")
+          $("#new-choice-description-" + id).val("")
+          $("#new-choice-image-" + id).val("")
+        else
+          alert("Error: " + err.message)
+      )
+    else
+      alert("You cannot add No Confidence vote here, use the option in the question parameters to add it")
 
   "click .delete-election": (e) ->
     e.preventDefault()
@@ -174,6 +183,12 @@ Template.electionsAdminEdit.events
     question = election.getQuestion($(e.target).attr("data-questionId"))
     question.options.forceFullRanking = $(e.target).prop("checked")
     election.changed()
+
+  "change .includeNoConfidence": (e) ->
+    election = Election.getActive()
+    questionId = $(e.target).attr("data-questionId")
+    question = election.getQuestion(questionId)
+    election.toggleNoConfidence(questionId, $(e.target).prop("checked"))
 
   "change .vote-type": (e) ->
     election = Election.getActive()

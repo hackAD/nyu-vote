@@ -98,7 +98,7 @@ class Election extends ReactiveClass(Elections)
       choices: []
     )
     return id
-  
+
   addChoice: (questionId, {name, description, image}) ->
     if not questionId
       throw new Meteor.Error(500, "You must specify a question to add this choice to")
@@ -117,6 +117,40 @@ class Election extends ReactiveClass(Elections)
       image: image
     )
     return id
+
+  toggleNoConfidence: (questionId) ->
+    if not questionId
+      throw new Meteor.Error(500, "You must specify a question to toggle No Confidence for")
+
+    question = _.find(@questions, (question) ->
+      return question._id == questionId
+    )
+    noConfidenceIndex = -1
+    for i in [0...question.choices.length]
+      if question.choices[i].name == "No Confidence"
+        noConfidenceIndex = i
+        break
+
+    hasNoConfidenceOption = noConfidenceIndex != -1
+
+    if not question.options.includeNoConfidence
+      if hasNoConfidenceOption
+        throw new Meteor.Error(500, "Can't add No Confidence when it already is an option")
+
+      id = new Meteor.Collection.ObjectID().toHexString()
+      question.choices.push(
+        _id: id
+        name: "No Confidence"
+        description: ""
+        image: ""
+      )
+      question.options.includeNoConfidence = true;
+      return id
+    else
+      if not hasNoConfidenceOption
+        throw new Meteor.Error(500, "Tried removing a no confidence option when none existed")
+      question.choices.splice(noConfidenceIndex, 1)
+      question.options.includeNoConfidence = false;
 
   # Stateful tracking of the active election
   activeElection = {
@@ -329,7 +363,7 @@ Meteor.methods(
         #don't count people with no votes
         for choice in questionObject.choices
           if roundResult[choice._id] == 0
-            eliminated[choice._id] = true       
+            eliminated[choice._id] = true
         questionResults.push(roundResult)
         leader = null
         loser = null

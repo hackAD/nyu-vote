@@ -107,6 +107,11 @@
                         Pick N
                         <input id="pickNVal-{{_id}}" type="text" name="pickNVal" value={{pickNVal}} placeholder="1" disabled="{{unlessPickN}}" class="pickNVal" data-questionId={{_id}}>
                     </label>
+                    <label for="include-no-confidence-{{questionCount false}}" class="pure-checkbox">
+                      <input id="include-no-confidence-{{questionCount false}}" name="questionIncludeNoConfidence"
+                          class="question includeNoConfidence" type="checkbox"
+                          checked="{{includeNoConfidence}}" data-questionId={{_id}}>
+                        Include No Confidence Option</label>
                   {{/if}}
                   {{#if isRankQuestion .. }}
                   <div class="pure-controls">
@@ -117,6 +122,11 @@
                         class="question forceFullRanking" type="checkbox"
                         checked="{{forceFullRanking}}" data-questionId={{_id}}>
                     Require Ranking All Candidates</label>
+                  <label for="include-no-confidence-{{questionCount false}}" class="pure-checkbox">
+                    <input id="include-no-confidence-{{questionCount false}}" name="questionIncludeNoConfidence"
+                        class="question includeNoConfidence" type="checkbox"
+                        checked="{{includeNoConfidence}}" data-questionId={{_id}}>
+                      Include No Confidence Option</label>
                   {{/if}}
                 </div>
               </fieldset>
@@ -126,27 +136,29 @@
               </div>
                 {{resetChoiceCount}}
                 {{#each choices}}
-                <fieldset>
-                  <div class="pure-controls">
-                    <h4>Choice #{{choiceCount}}</h4>
-                  </div>
-                  <div class="pure-control-group">
-                    <label for="choice-{{_id}}-name">Name</label>
-                    <input id="choice-{{_id}}-name"  name="choiceName" class="pure-input-1-2 choice name" type="text" placeholder="{{name}}" value="{{name}}">
-                  </div>
-                  <div class="pure-control-group">
-                    <label for="choice-{{_id}}-description">Description</label>
-                    <textarea id="choice-{{_id}}-description"
-                        name="choiceDescription" class="pure-input-1-2 choice
-                        description" type="text" placeholder="Choice
-                        Description"
-                        >{{description}}</textarea>
-                  </div>
-                  <div class="pure-control-group">
-                    <label for="choice-{{_id}}-url">Image url</label>
-                    <input id="choice-{{_id}}-url" name="choiceImage" class="pure-input-1-2 choice image" type="text" placeholder="{{image}}" value="{{image}}">
-                  </div>
-                </fieldset>
+                  {{#if isNotConfidenceChoice .}}
+                  <fieldset>
+                    <div class="pure-controls">
+                      <h4>Choice #{{choiceCount}}</h4>
+                    </div>
+                    <div class="pure-control-group">
+                      <label for="choice-{{_id}}-name">Name</label>
+                      <input id="choice-{{_id}}-name"  name="choiceName" class="pure-input-1-2 choice name" type="text" placeholder="{{name}}" value="{{name}}">
+                    </div>
+                    <div class="pure-control-group">
+                      <label for="choice-{{_id}}-description">Description</label>
+                      <textarea id="choice-{{_id}}-description"
+                          name="choiceDescription" class="pure-input-1-2 choice
+                          description" type="text" placeholder="Choice
+                          Description"
+                          >{{description}}</textarea>
+                    </div>
+                    <div class="pure-control-group">
+                      <label for="choice-{{_id}}-url">Image url</label>
+                      <input id="choice-{{_id}}-url" name="choiceImage" class="pure-input-1-2 choice image" type="text" placeholder="{{image}}" value="{{image}}">
+                    </div>
+                  </fieldset>
+                  {{/if}}
                 {{/each}}
 
               <div class="pure-controls">
