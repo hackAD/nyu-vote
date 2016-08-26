@@ -28,12 +28,12 @@
           <input type="hidden" name="_id" value="{{_id}}">
               <fieldset>
                 <div class="pure-control-group">
-                  <label 
+                  <label
                     for="election-name">Name</label><input id="election-name"
                   name="name" class="election name pure-input-1-2" type="text" placeholder="{{name}}" value="{{name}}">
                 </div>
                 <div class="pure-control-group">
-                  <label 
+                  <label
                     for="election-description">Description</label>
                   <textarea
                       id="election-description" name="description"
@@ -43,7 +43,7 @@
                 </div>
                 <div class="pure-controls">
                   <h2>
-                    Groups 
+                    Groups
                   </h2>
                   {{#each groups}}
                     <label for="{{_id}}" class="pure-checkbox">
@@ -52,7 +52,7 @@
                   {{/each}}
                 </div>
               </fieldset>
-              
+
               <div class="pure-controls">
                 <h2>Questions </h2>
               </div>
@@ -112,15 +112,15 @@
                   <div class="pure-controls">
                     <h4>Rank Parameters</h4>
                   </div>
-                  <label for="allow-incomplete-ranking-{{questionCount false}}" class="pure-checkbox">
-                  <input id="allow-incomplete-ranking-{{questionCount false}}" name="questionAllowIncompleteRanking"
-                        class="question allowIncompleteRanking" type="checkbox"
-                        checked="{{allowIncompleteRanking}}" data-questionId={{_id}}>
-                    Allow Incomplete Rankings</label>
+                  <label for="force-full-ranking-{{questionCount false}}" class="pure-checkbox">
+                  <input id="force-full-ranking-{{questionCount false}}" name="questionForceFullRanking"
+                        class="question forceFullRanking" type="checkbox"
+                        checked="{{forceFullRanking}}" data-questionId={{_id}}>
+                    Require Ranking All Candidates</label>
                   {{/if}}
                 </div>
               </fieldset>
-                
+
               <div class="pure-controls">
                 <h4>Choices</h4>
               </div>
@@ -152,7 +152,7 @@
               <div class="pure-controls">
                 <h4>New Choice</h4>
               </div>
-                  
+
               <fieldset>
                 <div class="pure-control-group">
                   <label for="new-choice-name-{{_id}}">Choice Name</label>

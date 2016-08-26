@@ -67,15 +67,15 @@ class Ballot extends ReactiveClass(Ballots)
       if not allRanksUnique
         return false
 
-      allowIncompleteRanking = question.options.allowIncompleteRanking
-      if allowIncompleteRanking
+      forceFullRanking = question.options.forceFullRanking
+      if not forceFullRanking
         for i in [1...selectedChoices.length+1]
           flag = false
           for j in [0...selectedChoices.length]
             if selectedChoices[j].value == i
               flag = true
               break
-          if not flag 
+          if not flag
             return false
         return true
 

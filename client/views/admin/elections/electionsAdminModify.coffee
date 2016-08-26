@@ -50,7 +50,7 @@ Template.electionsAdminEdit.helpers
     return if id in groups then "checked" else null
   questionCount: (increment) ->
     choiceCount = 0
-    if increment 
+    if increment
       questionCount += 1
     return questionCount
   resetChoiceCount: () ->
@@ -113,7 +113,7 @@ Template.electionsAdminEdit.events
         type: "pick"
         voteMode: "single"
         allowAbstain: true
-        allowIncompleteRanking: false
+        forceFullRanking: false
       }
     })
     election.update((err) ->
@@ -165,10 +165,10 @@ Template.electionsAdminEdit.events
     question.options.allowAbstain = $(e.target).prop("checked")
     election.changed()
 
-  "change .allowIncompleteRanking": (e) ->
+  "change .forceFullRanking": (e) ->
     election = Election.getActive()
     question = election.getQuestion($(e.target).attr("data-questionId"))
-    question.options.allowIncompleteRanking = $(e.target).prop("checked")
+    question.options.forceFullRanking = $(e.target).prop("checked")
     election.changed()
 
   "change .vote-type": (e) ->
