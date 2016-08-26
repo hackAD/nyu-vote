@@ -18,6 +18,36 @@ ElectionsVote = React.createClass({
     var questionIndex = this.data.questionIndex;
     var ballot = this.data.ballot;
     var question = this.data.question;
+    var options = question.options;
+
+    var optionsMessage;
+    switch (options.type) {
+      case "pick":
+        switch(options.voteMode) {
+          case "single":
+            optionsMessage = "Pick Single Candidate";
+            break;
+          case "multi":
+            optionsMessage = "Pick Any Amount of Candidates";
+            break;
+          case "pickN":
+            optionsMessage = "Pick " + options.pickNVal.toString() + " Candidate" + (options.pickNVal === 1 ? "" : "s");
+            break;
+          default:
+            throw new Error("voteMode during single pick not one of three possible modes");
+        }
+        break;
+      case "rank":
+        if (options.forceFullRanking) {
+          optionsMessage = "Rank All Candidates";
+        }
+        else {
+          optionsMessage = "Rank Any Amount of Candidates";
+        }
+        break;
+      default:
+        throw new Error("Vote type was neither rank nor pick");
+    }
 
     var choices = [];
     var randomMap = election.getRandomQuestionMap(questionIndex);
@@ -44,6 +74,7 @@ ElectionsVote = React.createClass({
         <div className="deep-blue-bg">
           <div className="centered-container">
             <h2>{question.name}</h2>
+            <h3 id="options-message">{optionsMessage}</h3>
             <p className="body-text">{question.description}</p>
           </div>
         </div>
