@@ -9,6 +9,8 @@ Template.electionsAdminEdit.helpers
     return if @options.allowAbstain then "checked" else null
   pick: () ->
     return if @options.type == "pick" then "checked" else null
+  rank: () ->
+    return if @options.type == "rank" then "checked" else null
   single: () ->
     return if @options.voteMode == "single" then "checked" else null
   multi: () ->
@@ -24,6 +26,8 @@ Template.electionsAdminEdit.helpers
     election.depend()
     isPickN = @options.voteMode == "pickN"
     return if isPickN then null else "disabled"
+  forceFullRanking: () ->
+    return if @options.forceFullRanking then "checked" else null
   canEdit: () ->
     @status == "unopened"
   groups: () ->
