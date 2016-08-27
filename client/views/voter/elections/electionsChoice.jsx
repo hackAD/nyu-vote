@@ -1,4 +1,20 @@
 ElectionsChoice = React.createClass({
+  getInitialState: function() {
+    return{
+      informationVisible: false,
+    };
+  },
+
+  showInformation: function() {
+    this.setState({ informationVisible: true });
+    document.addEventListener("click", this.hideInformation);
+  },
+
+  hideInformation: function() {
+    this.setState({ informationVisible: false });
+    document.removeEventListener("click", this.hideInformation);
+  },
+
   abstain: function() {
     var ballot = this.props.ballot;
     if (ballot.isAbstaining(this.props.questionIndex))
@@ -6,13 +22,16 @@ ElectionsChoice = React.createClass({
     else if (window.confirm("Are you sure you want to abstain from this question?"))
       ballot.abstain(this.props.questionIndex);
   },
+
   toggleSelect: function() {
     var ballot = this.props.ballot;
     ballot.pick(this.props.questionIndex, this.props.choiceIndex);
   },
+
   render: function() {
     var choice = this.props.choice;
     var ballot = this.props.ballot;
+    var infoMessage = this.props.infoMessage;
     var defaultImage = "http://www.pentagram.com/en/NYUAD_Pattern_620W.gif";
     var question = this.props.question;
     var isPicked;
@@ -21,7 +40,16 @@ ElectionsChoice = React.createClass({
       return(
         <div className={isPicked ? "light-green-bg" : "dark-blue-bg"}>
           <div className={isPicked ? "green-bg" : "light-blue-bg"}>
-            <h2 className="centered-container">{choice.name}</h2>
+            <h2 className="centered-container" style={this.state.informationVisible ? {paddingBottom: 0} : {}}>
+              {/* Information is not broken out into it's own react element because it made styling easier when putting some
+              things inside the h2 tag and some outside. If the info button was to be used other places than for No Confidence
+              it would be smart to break it out to be it's own element and handle this differently*/}
+              {choice.name}&nbsp;
+              {infoMessage ? <img src="/info.png" className="info-message-icon" onClick={this.showInformation} /> : null}
+            </h2>
+            {this.state.informationVisible ?
+              <p style={{paddingBottom: 10, paddingLeft: 5}}>{infoMessage}</p> : null
+            }
           </div>
           <div className="centered-container">
             <ElectionsChoiceImage choice={choice} small={false} />
@@ -43,6 +71,10 @@ ElectionsChoice = React.createClass({
         <div className={isPicked ? "light-green-bg" : "abstain-header-bg"}>
           <div className={isPicked ? "green-bg" : "abstain-bg"}>
             <h2 className="centered-container">Abstain</h2>
+            {infoMessage ?
+              <Information message={infoMessage} />
+              : null
+            }
           </div>
           <div className="centered-container">
             <p>Abstain from answering this question</p>

@@ -72,8 +72,16 @@ ElectionsVote = React.createClass({
     }
     // Put No Confidence option last, but before Abstain
     if (hasNoConfidence) {
+      var infoMessage = "";
+      if (options.type === "rank") {
+        infoMessage = "\
+All candidates ranked lower than this No Confidence option will be considered as you having no confidence in them. \
+These lower ranks will function as: \"in the worst case that one of these candidates will be elected, I would rather have this candidate\"\
+";
+      }
       choices.push(
-        <ElectionsChoice question={question} ballot={ballot} choice={choice} choiceIndex={trueIndex} questionIndex={questionIndex} isAbstain={false} />
+        // Adding the infoMessage prop adds the info button to the right of the title
+        <ElectionsChoice question={question} ballot={ballot} choice={choice} choiceIndex={trueIndex} questionIndex={questionIndex} isAbstain={false} infoMessage={infoMessage} />
       );
     }
     if (question.options.allowAbstain)
