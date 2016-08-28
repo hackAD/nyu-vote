@@ -83,11 +83,11 @@
                     <h4>Voting Mode</h4>
                   </div>
                   <label for="pick-{{_id}}" class="pure-radio">
-                      <input id="pick-{{_id}}" type="radio" name="type" value="pick" checked={{pick}} class="vote-type" data-questionId={{_id}}>
+                      <input id="pick-{{_id}}" type="radio" name="type-{{_id}}" value="pick" checked={{pick}} class="vote-type" data-questionId={{_id}}>
                       Pick Candidates
                   </label>
                   <label for="rank-{{_id}}" class="pure-radio">
-                      <input id="rank-{{_id}}" type="radio" name="type" value="rank" checked={{rank}} class="vote-type" data-questionId={{_id}}>
+                      <input id="rank-{{_id}}" type="radio" name="type-{{_id}}" value="rank" checked={{rank}} class="vote-type" data-questionId={{_id}}>
                       Rank Candidates
                   </label>
                   {{#if isPickQuestion .. }}
@@ -95,15 +95,15 @@
                       <h4>Pick Parameters</h4>
                     </div>
                     <label for="single-{{_id}}" class="pure-radio">
-                        <input id="single-{{_id}}" type="radio" name="pickMode" value="single" checked={{single}} class="vote-mode" data-questionId={{_id}}>
+                        <input id="single-{{_id}}" type="radio" name="pickMode-{{_id}}" value="single" checked={{single}} class="vote-mode" data-questionId={{_id}}>
                         Pick One
                     </label>
                     <label for="multi-{{_id}}" class="pure-radio">
-                      <input id="multi-{{_id}}" type="radio" name="pickMode" value="multi" checked={{multi}} class="vote-mode" data-questionId={{_id}}>
+                      <input id="multi-{{_id}}" type="radio" name="pickMode-{{_id}}" value="multi" checked={{multi}} class="vote-mode" data-questionId={{_id}}>
                         Pick Many
                     </label>
                     <label for="pickN-{{_id}}" class="pure-radio">
-                        <input id="pickN-{{_id}}" type="radio" name="pickMode" value="pickN" checked={{pickN}} class="vote-mode" data-questionId={{_id}} >
+                        <input id="pickN-{{_id}}" type="radio" name="pickMode-{{_id}}" value="pickN" checked={{pickN}} class="vote-mode" data-questionId={{_id}} >
                         Pick N
                         <input id="pickNVal-{{_id}}" type="text" name="pickNVal" value={{pickNVal}} placeholder="1" disabled="{{unlessPickN}}" class="pickNVal" data-questionId={{_id}}>
                     </label>
