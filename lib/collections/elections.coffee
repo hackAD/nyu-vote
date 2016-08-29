@@ -99,6 +99,21 @@ class Election extends ReactiveClass(Elections)
     )
     return id
 
+  removeQuestion: (questionId) ->
+    if not questionId
+      throw new Meteor.Error(500, "You must specify a question to add this choice to")
+
+    questionIndex = -1
+    for i in [0...@questions.length]
+      if @questions[i]._id == questionId
+        questionIndex = i
+        break
+    if questionIndex == -1
+      throw new Meteor.Error(500, "Question did not exist so can't be removed")
+
+    @questions.splice(questionIndex, 1)
+
+
   addChoice: (questionId, {name, description, image}) ->
     if not questionId
       throw new Meteor.Error(500, "You must specify a question to add this choice to")
@@ -110,6 +125,8 @@ class Election extends ReactiveClass(Elections)
     question = _.find(@questions, (question) ->
       return question._id == questionId
     )
+    if question == undefined
+      throw new Meteor.Error(500, "Question didn't exist")
     question.choices.push(
       _id: id
       name: name
@@ -118,6 +135,28 @@ class Election extends ReactiveClass(Elections)
     )
     return id
 
+  removeChoice: (questionId, choiceId) ->
+    if not questionId
+      throw new Meteor.Error(500, "You must specify a question to remove the choice from")
+    if not choiceId
+      throw new Meteor.Error(500, "You must specify a choice to remove")
+
+    question = _.find(@questions, (question) ->
+      return question._id == questionId
+    )
+    if question == undefined
+      throw new Meteor.Error(500, "Question didn't exist")
+
+    choiceIndex = -1
+    for i in [0...question.choices.length]
+      if question.choices[i]._id == choiceId
+        choiceIndex = i
+        break
+    if choiceIndex == -1
+      throw new Meteor.Error(500, "The choice does not exist, and can therefore not be removed")
+
+    question.choices.splice(choiceIndex, 1)
+
   toggleNoConfidence: (questionId) ->
     if not questionId
       throw new Meteor.Error(500, "You must specify a question to toggle No Confidence for")
@@ -125,6 +164,9 @@ class Election extends ReactiveClass(Elections)
     question = _.find(@questions, (question) ->
       return question._id == questionId
     )
+    if question == undefined
+      throw new Meteor.Error(500, "Question didn't exist")
+
     noConfidenceIndex = -1
     for i in [0...question.choices.length]
       if question.choices[i].name == "No Confidence"

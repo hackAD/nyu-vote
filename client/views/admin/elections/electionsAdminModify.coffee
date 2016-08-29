@@ -133,6 +133,18 @@ Template.electionsAdminEdit.events
       else
         alert("Error: " + err.message)
     )
+
+  "click .removeQuestion": (e) ->
+    e.preventDefault()
+    if confirm("Are you sure you want to delete this question? It will autosave the delete")
+      election = Election.getActive()
+      id = $(e.target).attr("data-questionId")
+      election.removeQuestion(id)
+      election.update((err) ->
+        if err
+          alert("Error: " + err.message)
+      )
+
   "click .submitChoice": (e, template) ->
     e.preventDefault()
     id = e.target.value
@@ -157,6 +169,18 @@ Template.electionsAdminEdit.events
       )
     else
       alert("You cannot add No Confidence vote here, use the option in the question parameters to add it")
+
+  "click .removeChoice": (e) ->
+    e.preventDefault()
+    if confirm("Are you sure you want to delete this choice? It will autosave the delete")
+      election = Election.getActive()
+      questionId = $(e.target).attr("data-questionId")
+      choiceId = $(e.target).attr("data-choiceId")
+      election.removeChoice(questionId, choiceId)
+      election.update((err) ->
+        if err
+          alert("Error: " + err.message)
+      )
 
   "click .delete-election": (e) ->
     e.preventDefault()

@@ -158,6 +158,9 @@
                       <input id="choice-{{_id}}-url" name="choiceImage" class="pure-input-1-2 choice image" type="text" placeholder="{{image}}" value="{{image}}">
                     </div>
                   </fieldset>
+                  <div class="pure-controls">
+                    <button class="removeChoice pure-button" data-choiceId={{_id}} data-questionId={{../_id}} href="#">Delete Choice</button>
+                  </div>
                   {{/if}}
                 {{/each}}
 
@@ -186,6 +189,9 @@
                     href="#" value={{_id}}>Add Choice</button>
                 </div>
               </fieldset>
+              <div class="pure-controls">
+                <button class="removeQuestion pure-button button-secondary" data-questionId={{_id}} href="#">Delete Question</button>
+              </div>
               {{/each}}
               <fieldset>
                 <div class="pure-controls">
