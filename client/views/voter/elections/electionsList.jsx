@@ -1,4 +1,10 @@
 ElectionsList = React.createClass({
+  getInitialState: function() {
+    return {
+      isAdmin: false,
+      lastUserNetId: null
+    };
+  },
   mixins: [ReactMeteorData],
   getMeteorData: function() {
     var votedElections = Ballots.find().map(function(ballot) {return ballot.electionId;});
@@ -20,7 +26,25 @@ ElectionsList = React.createClass({
     });
   },
   render: function() {
-    var admin = false; //Find proper way to check for admin here
+    var user = Meteor.user()
+    // The if statement is to avoid an infinite loop of renders.
+    // Since it is being done asynchronously if we don't do a check here
+    // it will be running the render function 100 times per second
+    if (user.profile.netId !== this.state.lastUserNetId) {
+      Meteor.call("getAdminGroups", user, function(error, result) {
+        var whitelist = result.whitelist;
+        var globalAdminGroup = result.globalAdminGroup;
+        var isAdmin =
+          _.contains(globalAdminGroup.netIds, user.profile.netId) ||
+          _.contains(globalAdminGroup.admins, user.profile.netId) ||
+          _.contains(whitelist.netIds, user.profile.netId);
+        this.setState({
+          isAdmin: isAdmin,
+          lastUserNetId: user.profile.netId,
+        });
+      }.bind(this));
+    }
+
     return(
       <div id="election-list">
         <div className="white-bg header">
@@ -54,7 +78,7 @@ ElectionsList = React.createClass({
             About This Project
           </a>
           <br/>
-          {admin ?
+          {this.state.isAdmin ?
             <a className="login-caption info-link" href={Router.path("admin")}>
               Go to Admin Page
             </a>
