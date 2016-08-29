@@ -164,12 +164,13 @@ class Ballot extends ReactiveClass(Ballots)
           if index != choiceIndex
             choice.value = false
         )
-      else if (choice._id != "abstain") && @isAbstaining(questionIndex)
+      else if (choice._id != "abstain") and @isAbstaining(questionIndex)
         _.find(question.choices, (choice, index) ->
           if choice._id == "abstain"
             choice.value = false
         )
-    else if question.options.type == "rank" && @isAbstaining(questionIndex) && choice._id != "abstain"
+    # If we rank something else while we were abstaining, we should not be abstaining anymore
+    else if question.options.type == "rank" and @isAbstaining(questionIndex) and choice._id != "abstain"
       _.find(question.choices, (choice, index) ->
         if choice._id == "abstain"
           choice.value = false
@@ -359,17 +360,17 @@ Ballots.after.insert((userId, ballot) ->
     return
   user = User.fetchOne(userId)
   toIncrement = {}
-  for i in [0...ballot.questions.length]
-    question = ballot.questions[i]
+  for question in ballot.questions
     if question?.options?.type != "pick"
       continue
     choices = @transform().selectedChoices(i)
     _.each(choices, (choice) ->
       toIncrement["votes." + question._id + "." + choice._id] = 1
     )
-  Elections.update(ballot.electionId, {
-    "$inc": toIncrement
-  })
+  if Object.keys(toIncrement).length != 0
+    Elections.update(ballot.electionId, {
+      "$inc": toIncrement
+    })
   Log.verbose("BALLOT CAST: " + user + " cast ballot. Ballot: " +
     JSON.stringify(ballot))
 )
