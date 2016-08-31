@@ -40,11 +40,6 @@ Meteor.methods(
       email: netId + '@nyu.edu'
       password: password
     )
-
-  getAdminGroups: (user) ->
-    whitelist = Group.fetchOne({slug: "global-whitelist"})
-    globalAdminGroup = Group.fetchOne({slug: "global-admins"})
-    return {whitelist: whitelist, globalAdminGroup: globalAdminGroup}
 )
 
 root.User = User

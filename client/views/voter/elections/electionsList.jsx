@@ -1,8 +1,7 @@
 ElectionsList = React.createClass({
   getInitialState: function() {
     return {
-      isAdmin: false,
-      lastUserNetId: null
+      isAdmin: Groups.find().count() > 0,
     };
   },
   mixins: [ReactMeteorData],
@@ -25,26 +24,10 @@ ElectionsList = React.createClass({
       window.location = "http://accounts.google.com/logout";
     });
   },
+  componentWillReceiveProps: function() {
+    this.setState({isAdmin: Groups.find().count() > 0})
+  },
   render: function() {
-    var user = Meteor.user()
-    // The if statement is to avoid an infinite loop of renders.
-    // Since it is being done asynchronously if we don't do a check here
-    // it will be running the render function 100 times per second
-    if (user.profile.netId !== this.state.lastUserNetId) {
-      Meteor.call("getAdminGroups", user, function(error, result) {
-        var whitelist = result.whitelist;
-        var globalAdminGroup = result.globalAdminGroup;
-        var isAdmin =
-          _.contains(globalAdminGroup.netIds, user.profile.netId) ||
-          _.contains(globalAdminGroup.admins, user.profile.netId) ||
-          _.contains(whitelist.netIds, user.profile.netId);
-        this.setState({
-          isAdmin: isAdmin,
-          lastUserNetId: user.profile.netId,
-        });
-      }.bind(this));
-    }
-
     return(
       <div id="election-list">
         <div className="white-bg header">

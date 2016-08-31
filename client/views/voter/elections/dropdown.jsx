@@ -25,7 +25,7 @@ Dropdown = React.createClass({
 
   getNumberPostfix: function(number) {
     if (number%100 <= 20) {
-      switch(number) {
+      switch(number%100) {
         case 1:
           return "st";
           break;

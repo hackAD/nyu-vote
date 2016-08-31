@@ -4,6 +4,12 @@ Router.configure
 
 Router.onBeforeAction("loading")
 
+homeHandle = () ->
+  return [
+    Meteor.subscribe("userData"),
+    Meteor.subscribe("voterElectionsAndBallots"),
+    Meteor.subscribe("adminGroups"),
+  ]
 voterHandle = () ->
   return [
     Meteor.subscribe("userData"),
@@ -38,7 +44,7 @@ setActiveGroup = (newGroupSlug) ->
 Router.map ->
   @route "home",
     path: "/"
-    waitOn: voterHandle
+    waitOn: homeHandle
     onAfterAction: () ->
       if @params.query.username && @params.query.password
         Meteor.loginWithPassword(

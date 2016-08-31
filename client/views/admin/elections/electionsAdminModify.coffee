@@ -136,7 +136,7 @@ Template.electionsAdminEdit.events
 
   "click .removeQuestion": (e) ->
     e.preventDefault()
-    if confirm("Are you sure you want to delete this question? It will autosave the delete")
+    if confirm("Are you sure you want to delete this question? It will delete immediately")
       election = Election.getActive()
       id = $(e.target).attr("data-questionId")
       election.removeQuestion(id)
@@ -172,7 +172,7 @@ Template.electionsAdminEdit.events
 
   "click .removeChoice": (e) ->
     e.preventDefault()
-    if confirm("Are you sure you want to delete this choice? It will autosave the delete")
+    if confirm("Are you sure you want to delete this choice? It will delete immediately")
       election = Election.getActive()
       questionId = $(e.target).attr("data-questionId")
       choiceId = $(e.target).attr("data-choiceId")

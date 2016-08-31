@@ -28,7 +28,7 @@ ElectionsVote = React.createClass({
             optionsMessage = "Pick Single Candidate";
             break;
           case "multi":
-            optionsMessage = "Pick Any Amount of Candidates";
+            optionsMessage = "Pick Any Number of Candidates";
             break;
           case "pickN":
             optionsMessage = "Pick " + options.pickNVal.toString() + " Candidate" + (options.pickNVal === 1 ? "" : "s");
@@ -42,7 +42,7 @@ ElectionsVote = React.createClass({
           optionsMessage = "Rank All Candidates";
         }
         else {
-          optionsMessage = "Rank Any Amount of Candidates";
+          optionsMessage = "Rank Any Number of Candidates";
         }
         break;
       default:
@@ -86,7 +86,7 @@ These lower ranks will function as: \"in the worst case that one of these candid
     }
     if (question.options.allowAbstain)
       choices.push(
-        <ElectionsChoice ballot={ballot} questionIndex={questionIndex} isAbstain={true} />
+        <ElectionsChoice question={question} ballot={ballot} questionIndex={questionIndex} isAbstain={true} />
       );
     return(
       <div id="voting-screen">

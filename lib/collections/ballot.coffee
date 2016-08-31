@@ -80,12 +80,12 @@ class Ballot extends ReactiveClass(Ballots)
         return true
 
       else
-        # If all other choices but No Confidence have been picked validate the ballot so you
-        # don't need to redundantly rank no confidence as the last one.
-        # Of course we could always just validate when all but one have been ranked as the last one
-        # is always redundant as there is only 1 possibility for the rank and by instant-runoff-voting
-        # your vote will never go to the last person on your ballot. But it would feel weirder if you
-        # didn't have to rank the last candidate instead of not ranking No Confidence.
+        # If everything but No Confidence has been ranked it is obvious that No Confidence
+        # will be the last rank, so we can validate the ballot.
+        # We don't need to assign No Confidence a value as in instant-runoff voting your
+        # vote will never go to your last choice as that means they won already.
+        # We could do this for all candidates not only No Confidence but it doesn't
+        # feel intuitive.
         if question.options.includeNoConfidence && selectedChoices.length == question.choices.length-1
           noConfidenceSelected = true
           ballotValid = true;

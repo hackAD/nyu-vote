@@ -19,8 +19,23 @@ ElectionsChoice = React.createClass({
     var ballot = this.props.ballot;
     if (ballot.isAbstaining(this.props.questionIndex))
       ballot.unAbstain(this.props.questionIndex);
-    else if (window.confirm("Are you sure you want to abstain from this question?"))
-      ballot.abstain(this.props.questionIndex);
+    else {
+      var isPickQuestion = this.props.question.type === "pick";
+      // If it is not a pick question there will be several choices,
+      // and it could therefore be a pain to lose all that information
+      if (!isPickQuestion) {
+        var selectedChoices = this.props.ballot.selectedChoices(this.props.questionIndex);
+        // Since this is the abstain part any selected choice would not be an abstain choice
+        // and would therefore be annoying to lose.
+        var hasSelectedChoices = selectedChoices.length > 0;
+        if (!hasSelectedChoices || hasSelectedChoices && confirm("Abstaining will reset all your current choices, are you sure you wish to proceed?")) {
+          ballot.abstain(this.props.questionIndex);
+        }
+      }
+      else {
+        ballot.abstain(this.props.questionIndex);
+      }
+    }
   },
 
   toggleSelect: function() {
@@ -77,7 +92,7 @@ ElectionsChoice = React.createClass({
             }
           </div>
           <div className="centered-container">
-            <p>Abstain from answering this question</p>
+            <p>By abstaining you declare no opinion regarding this question</p>
             {isPicked ?
               <a href="#" className="large-button" onClick={this.abstain}>Selected</a>
               : <a href="#" className="large-button" onClick={this.abstain}>Select</a>
