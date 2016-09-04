@@ -136,7 +136,7 @@
               </div>
                 {{resetChoiceCount}}
                 {{#each choices}}
-                  {{#if isNotConfidenceChoice .}}
+                  {{#if isNotNoConfidenceChoice .}}
                   <fieldset>
                     <div class="pure-controls">
                       <h4>Choice #{{choiceCount}}</h4>
@@ -156,6 +156,30 @@
                     <div class="pure-control-group">
                       <label for="choice-{{_id}}-url">Image url</label>
                       <input id="choice-{{_id}}-url" name="choiceImage" class="pure-input-1-2 choice image" type="text" placeholder="{{image}}" value="{{image}}">
+                    </div>
+                  </fieldset>
+                  <div class="pure-controls">
+                    <button class="removeChoice pure-button" data-choiceId={{_id}} data-questionId={{../_id}} href="#">Delete Choice</button>
+                  </div>
+                  {{else}}
+                  <fieldset>
+                    <div class="pure-controls">
+                      <h4>No Confidence Choice</h4>
+                    </div>
+                    <div class="pure-control-group">
+                      <label for="choice-{{_id}}-name">Name</label>
+                      <input id="choice-{{_id}}-name"  name="choiceName" class="pure-input-1-2 choice name" type="text" placeholder="{{name}}" value="{{name}}" disabled>
+                    </div>
+                    <div class="pure-control-group">
+                      <label for="choice-{{_id}}-description">Description</label>
+                      <textarea id="choice-{{_id}}-description"
+                          name="choiceDescription" class="pure-input-1-2 choice
+                          description" type="text" disabled
+                          >The No Confidence Option</textarea>
+                    </div>
+                    <div class="pure-control-group">
+                      <label for="choice-{{_id}}-url">Image url</label>
+                      <input id="choice-{{_id}}-url" name="choiceImage" class="pure-input-1-2 choice image" type="text" placeholder="{{image}}" value="{{image}}" disabled>
                     </div>
                   </fieldset>
                   <div class="pure-controls">

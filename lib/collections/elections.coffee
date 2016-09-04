@@ -175,10 +175,7 @@ class Election extends ReactiveClass(Elections)
 
     hasNoConfidenceOption = noConfidenceIndex != -1
 
-    if not question.options.includeNoConfidence
-      if hasNoConfidenceOption
-        throw new Meteor.Error(500, "Can't add No Confidence when it already is an option")
-
+    if not hasNoConfidenceOption
       id = new Meteor.Collection.ObjectID().toHexString()
       question.choices.push(
         _id: id
@@ -186,13 +183,9 @@ class Election extends ReactiveClass(Elections)
         description: ""
         image: ""
       )
-      question.options.includeNoConfidence = true;
       return id
     else
-      if not hasNoConfidenceOption
-        throw new Meteor.Error(500, "Tried removing a no confidence option when none existed")
       question.choices.splice(noConfidenceIndex, 1)
-      question.options.includeNoConfidence = false;
 
   # Stateful tracking of the active election
   activeElection = {

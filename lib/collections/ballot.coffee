@@ -86,7 +86,12 @@ class Ballot extends ReactiveClass(Ballots)
         # vote will never go to your last choice as that means they won already.
         # We could do this for all candidates not only No Confidence but it doesn't
         # feel intuitive.
-        if question.options.includeNoConfidence && selectedChoices.length == question.choices.length-1
+        hasNoConfidence = false
+        for choice in question.choices
+          if choice.name == "No Confidence"
+            hasNoConfidence = true
+            break
+        if hasNoConfidence && selectedChoices.length == question.choices.length-1
           noConfidenceSelected = true
           ballotValid = true;
           for choice in selectedChoices

@@ -29,7 +29,12 @@ Template.electionsAdminEdit.helpers
   forceFullRanking: () ->
     return if @options.forceFullRanking then "checked" else null
   includeNoConfidence: () ->
-    return if @options.includeNoConfidence then "checked" else null
+    hasNoConfidence = false
+    for choice in @choices
+      if choice.name == "No Confidence"
+        hasNoConfidence = true
+        break
+    return if hasNoConfidence then "checked" else null
   canEdit: () ->
     @status == "unopened"
   groups: () ->
@@ -65,7 +70,7 @@ Template.electionsAdminEdit.helpers
   choiceCount: () ->
     choiceCount += 1
     return choiceCount
-  isNotConfidenceChoice: (choice) ->
+  isNotNoConfidenceChoice: (choice) ->
     return choice.name != "No Confidence"
   isPickQuestion: (election) ->
     election.depend()
@@ -122,7 +127,6 @@ Template.electionsAdminEdit.events
         voteMode: "single"
         allowAbstain: true
         forceFullRanking: false
-        includeNoConfidence: true
       },
       choices: [{name: "No Confidence", description: "", image: ""}],
     })
@@ -212,7 +216,8 @@ Template.electionsAdminEdit.events
     election = Election.getActive()
     questionId = $(e.target).attr("data-questionId")
     question = election.getQuestion(questionId)
-    election.toggleNoConfidence(questionId, $(e.target).prop("checked"))
+    election.toggleNoConfidence(questionId)
+    election.changed();
 
   "change .vote-type": (e) ->
     election = Election.getActive()
