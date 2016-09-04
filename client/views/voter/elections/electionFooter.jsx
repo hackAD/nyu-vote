@@ -12,7 +12,7 @@ ElectionsFooter = React.createClass({
     this.setState({voting: true});
     ballot.put(function(err) {
       if (err) {
-        self.setState({hasVoted: false, voting: true});
+        self.setState({hasVoted: false, voting: false});
         $('html,body').animate({scrollTop:0}, 300);
         alert("Error: " + err.reason);
       }
@@ -91,7 +91,7 @@ ElectionsFooter = React.createClass({
     return(
       <div id="election-footer">
         <div id="election-footer-wrapper">
-          { questionIndex > -1 ? 
+          { questionIndex > -1 ?
             <p>Progress: {questionIndex+1}/{totalQuestions}</p>
             : <p>Review Ballot</p>
           }

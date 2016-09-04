@@ -67,7 +67,7 @@ For dev, it actually mounts the drive so you only need to build once
 Then just run the starting script
 
 ```
-./scripts/start.sh
+./scripts/dev.sh
 meteor
 ```
 

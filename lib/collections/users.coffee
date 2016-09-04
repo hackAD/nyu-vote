@@ -43,4 +43,4 @@ Meteor.methods(
 )
 
 root.User = User
-  
+

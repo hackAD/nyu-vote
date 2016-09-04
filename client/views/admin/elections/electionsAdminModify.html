@@ -28,12 +28,12 @@
           <input type="hidden" name="_id" value="{{_id}}">
               <fieldset>
                 <div class="pure-control-group">
-                  <label 
+                  <label
                     for="election-name">Name</label><input id="election-name"
                   name="name" class="election name pure-input-1-2" type="text" placeholder="{{name}}" value="{{name}}">
                 </div>
                 <div class="pure-control-group">
-                  <label 
+                  <label
                     for="election-description">Description</label>
                   <textarea
                       id="election-description" name="description"
@@ -43,7 +43,7 @@
                 </div>
                 <div class="pure-controls">
                   <h2>
-                    Groups 
+                    Groups
                   </h2>
                   {{#each groups}}
                     <label for="{{_id}}" class="pure-checkbox">
@@ -52,7 +52,7 @@
                   {{/each}}
                 </div>
               </fieldset>
-              
+
               <div class="pure-controls">
                 <h2>Questions </h2>
               </div>
@@ -83,11 +83,11 @@
                     <h4>Voting Mode</h4>
                   </div>
                   <label for="pick-{{_id}}" class="pure-radio">
-                      <input id="pick-{{_id}}" type="radio" name="type" value="pick" checked={{pick}} class="vote-type" data-questionId={{_id}}>
+                      <input id="pick-{{_id}}" type="radio" name="type-{{_id}}" value="pick" checked={{pick}} class="vote-type" data-questionId={{_id}}>
                       Pick Candidates
                   </label>
                   <label for="rank-{{_id}}" class="pure-radio">
-                      <input id="rank-{{_id}}" type="radio" name="type" value="rank" checked={{rank}} class="vote-type" data-questionId={{_id}}>
+                      <input id="rank-{{_id}}" type="radio" name="type-{{_id}}" value="rank" checked={{rank}} class="vote-type" data-questionId={{_id}}>
                       Rank Candidates
                   </label>
                   {{#if isPickQuestion .. }}
@@ -95,64 +95,103 @@
                       <h4>Pick Parameters</h4>
                     </div>
                     <label for="single-{{_id}}" class="pure-radio">
-                        <input id="single-{{_id}}" type="radio" name="pickMode" value="single" checked={{single}} class="vote-mode" data-questionId={{_id}}>
+                        <input id="single-{{_id}}" type="radio" name="pickMode-{{_id}}" value="single" checked={{single}} class="vote-mode" data-questionId={{_id}}>
                         Pick One
                     </label>
                     <label for="multi-{{_id}}" class="pure-radio">
-                      <input id="multi-{{_id}}" type="radio" name="pickMode" value="multi" checked={{multi}} class="vote-mode" data-questionId={{_id}}>
+                      <input id="multi-{{_id}}" type="radio" name="pickMode-{{_id}}" value="multi" checked={{multi}} class="vote-mode" data-questionId={{_id}}>
                         Pick Many
                     </label>
                     <label for="pickN-{{_id}}" class="pure-radio">
-                        <input id="pickN-{{_id}}" type="radio" name="pickMode" value="pickN" checked={{pickN}} class="vote-mode" data-questionId={{_id}} >
+                        <input id="pickN-{{_id}}" type="radio" name="pickMode-{{_id}}" value="pickN" checked={{pickN}} class="vote-mode" data-questionId={{_id}} >
                         Pick N
                         <input id="pickNVal-{{_id}}" type="text" name="pickNVal" value={{pickNVal}} placeholder="1" disabled="{{unlessPickN}}" class="pickNVal" data-questionId={{_id}}>
                     </label>
+                    <label for="include-no-confidence-{{questionCount false}}" class="pure-checkbox">
+                      <input id="include-no-confidence-{{questionCount false}}" name="questionIncludeNoConfidence"
+                          class="question includeNoConfidence" type="checkbox"
+                          checked="{{includeNoConfidence}}" data-questionId={{_id}}>
+                        Include No Confidence Option</label>
                   {{/if}}
                   {{#if isRankQuestion .. }}
                   <div class="pure-controls">
                     <h4>Rank Parameters</h4>
                   </div>
-                  <label for="allow-incomplete-ranking-{{questionCount false}}" class="pure-checkbox">
-                  <input id="allow-incomplete-ranking-{{questionCount false}}" name="questionAllowIncompleteRanking"
-                        class="question allowIncompleteRanking" type="checkbox"
-                        checked="{{allowIncompleteRanking}}" data-questionId={{_id}}>
-                    Allow Incomplete Rankings</label>
+                  <label for="force-full-ranking-{{questionCount false}}" class="pure-checkbox">
+                  <input id="force-full-ranking-{{questionCount false}}" name="questionForceFullRanking"
+                        class="question forceFullRanking" type="checkbox"
+                        checked="{{forceFullRanking}}" data-questionId={{_id}}>
+                    Require Ranking All Candidates</label>
+                  <label for="include-no-confidence-{{questionCount false}}" class="pure-checkbox">
+                    <input id="include-no-confidence-{{questionCount false}}" name="questionIncludeNoConfidence"
+                        class="question includeNoConfidence" type="checkbox"
+                        checked="{{includeNoConfidence}}" data-questionId={{_id}}>
+                      Include No Confidence Option</label>
                   {{/if}}
                 </div>
               </fieldset>
-                
+
               <div class="pure-controls">
                 <h4>Choices</h4>
               </div>
                 {{resetChoiceCount}}
                 {{#each choices}}
-                <fieldset>
+                  {{#if isNotNoConfidenceChoice .}}
+                  <fieldset>
+                    <div class="pure-controls">
+                      <h4>Choice #{{choiceCount}}</h4>
+                    </div>
+                    <div class="pure-control-group">
+                      <label for="choice-{{_id}}-name">Name</label>
+                      <input id="choice-{{_id}}-name"  name="choiceName" class="pure-input-1-2 choice name" type="text" placeholder="{{name}}" value="{{name}}">
+                    </div>
+                    <div class="pure-control-group">
+                      <label for="choice-{{_id}}-description">Description</label>
+                      <textarea id="choice-{{_id}}-description"
+                          name="choiceDescription" class="pure-input-1-2 choice
+                          description" type="text" placeholder="Choice
+                          Description"
+                          >{{description}}</textarea>
+                    </div>
+                    <div class="pure-control-group">
+                      <label for="choice-{{_id}}-url">Image url</label>
+                      <input id="choice-{{_id}}-url" name="choiceImage" class="pure-input-1-2 choice image" type="text" placeholder="{{image}}" value="{{image}}">
+                    </div>
+                  </fieldset>
                   <div class="pure-controls">
-                    <h4>Choice #{{choiceCount}}</h4>
+                    <button class="removeChoice pure-button" data-choiceId={{_id}} data-questionId={{../_id}} href="#">Delete Choice</button>
                   </div>
-                  <div class="pure-control-group">
-                    <label for="choice-{{_id}}-name">Name</label>
-                    <input id="choice-{{_id}}-name"  name="choiceName" class="pure-input-1-2 choice name" type="text" placeholder="{{name}}" value="{{name}}">
+                  {{else}}
+                  <fieldset>
+                    <div class="pure-controls">
+                      <h4>No Confidence Choice</h4>
+                    </div>
+                    <div class="pure-control-group">
+                      <label for="choice-{{_id}}-name">Name</label>
+                      <input id="choice-{{_id}}-name"  name="choiceName" class="pure-input-1-2 choice name" type="text" placeholder="{{name}}" value="{{name}}" disabled>
+                    </div>
+                    <div class="pure-control-group">
+                      <label for="choice-{{_id}}-description">Description</label>
+                      <textarea id="choice-{{_id}}-description"
+                          name="choiceDescription" class="pure-input-1-2 choice
+                          description" type="text" disabled
+                          >The No Confidence Option</textarea>
+                    </div>
+                    <div class="pure-control-group">
+                      <label for="choice-{{_id}}-url">Image url</label>
+                      <input id="choice-{{_id}}-url" name="choiceImage" class="pure-input-1-2 choice image" type="text" placeholder="{{image}}" value="{{image}}" disabled>
+                    </div>
+                  </fieldset>
+                  <div class="pure-controls">
+                    <button class="removeChoice pure-button" data-choiceId={{_id}} data-questionId={{../_id}} href="#">Delete Choice</button>
                   </div>
-                  <div class="pure-control-group">
-                    <label for="choice-{{_id}}-description">Description</label>
-                    <textarea id="choice-{{_id}}-description"
-                        name="choiceDescription" class="pure-input-1-2 choice
-                        description" type="text" placeholder="Choice
-                        Description"
-                        >{{description}}</textarea>
-                  </div>
-                  <div class="pure-control-group">
-                    <label for="choice-{{_id}}-url">Image url</label>
-                    <input id="choice-{{_id}}-url" name="choiceImage" class="pure-input-1-2 choice image" type="text" placeholder="{{image}}" value="{{image}}">
-                  </div>
-                </fieldset>
+                  {{/if}}
                 {{/each}}
 
               <div class="pure-controls">
                 <h4>New Choice</h4>
               </div>
-                  
+
               <fieldset>
                 <div class="pure-control-group">
                   <label for="new-choice-name-{{_id}}">Choice Name</label>
@@ -174,6 +213,9 @@
                     href="#" value={{_id}}>Add Choice</button>
                 </div>
               </fieldset>
+              <div class="pure-controls">
+                <button class="removeQuestion pure-button button-secondary" data-questionId={{_id}} href="#">Delete Question</button>
+              </div>
               {{/each}}
               <fieldset>
                 <div class="pure-controls">

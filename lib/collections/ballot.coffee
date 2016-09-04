@@ -47,7 +47,6 @@ class Ballot extends ReactiveClass(Ballots)
       if not allChoicesValid
         return false
 
-
     if (question.options.allowAbstain && @isAbstaining(questionIndex))
           return selectedChoices.length == 1
     if (question.options.type == "pick")
@@ -68,19 +67,45 @@ class Ballot extends ReactiveClass(Ballots)
       if not allRanksUnique
         return false
 
-      allowIncompleteRanking = question.options.allowIncompleteRanking
-      if allowIncompleteRanking
+      forceFullRanking = question.options.forceFullRanking
+      if not forceFullRanking
         for i in [1...selectedChoices.length+1]
           flag = false
           for j in [0...selectedChoices.length]
             if selectedChoices[j].value == i
               flag = true
               break
-          if not flag 
+          if not flag
             return false
         return true
 
       else
+        # If everything but No Confidence has been ranked it is obvious that No Confidence
+        # will be the last rank, so we can validate the ballot.
+        # We don't need to assign No Confidence a value as in instant-runoff voting your
+        # vote will never go to your last choice as that means they won already.
+        # We could do this for all candidates not only No Confidence but it doesn't
+        # feel intuitive.
+        hasNoConfidence = false
+        for choice in question.choices
+          if choice.name == "No Confidence"
+            hasNoConfidence = true
+            break
+        if hasNoConfidence && selectedChoices.length == question.choices.length-1
+          noConfidenceSelected = true
+          ballotValid = true;
+          for choice in selectedChoices
+            if choice.name == "No Confidence"
+              noConfidenceSelected = false
+              break
+            if not (choice.value in [1...question.choices.length])
+              ballotValid = false
+              break
+          if ballotValid && noConfidenceSelected
+            return true
+
+        # Else since we already have code in place that assures correct boundaries on choice values
+        # and that they are all unique, we just need to check they have ranked everyone and it must be valid
         return selectedChoices.length == question.choices.length
 
 
@@ -125,11 +150,11 @@ class Ballot extends ReactiveClass(Ballots)
     return choice.value > 0
 
   # toggling a pick on a choice
-  pick: (questionIndex, choiceIndex, priority = -1) ->
+  pick: (questionIndex, choiceIndex, priority = null) ->
     @changed()
     question = @questions[questionIndex]
     choice = question.choices[choiceIndex]
-    if priority == -1
+    if priority == null
       # if no priority, we are in pick mode
       choice.value = !choice.value
     else
@@ -144,12 +169,13 @@ class Ballot extends ReactiveClass(Ballots)
           if index != choiceIndex
             choice.value = false
         )
-      else if (choice._id != "abstain") && @isAbstaining(questionIndex)
+      else if (choice._id != "abstain") and @isAbstaining(questionIndex)
         _.find(question.choices, (choice, index) ->
           if choice._id == "abstain"
             choice.value = false
         )
-    else if question.options.type == "rank" && @isAbstaining(questionIndex) && choice._id != "abstain"
+    # If we rank something else while we were abstaining, we should not be abstaining anymore
+    else if question.options.type == "rank" and @isAbstaining(questionIndex) and choice._id != "abstain"
       _.find(question.choices, (choice, index) ->
         if choice._id == "abstain"
           choice.value = false
@@ -339,15 +365,17 @@ Ballots.after.insert((userId, ballot) ->
     return
   user = User.fetchOne(userId)
   toIncrement = {}
-  for i in [0...ballot.questions.length]
-    question = ballot.questions[i]
+  for question in ballot.questions
+    if question?.options?.type != "pick"
+      continue
     choices = @transform().selectedChoices(i)
     _.each(choices, (choice) ->
       toIncrement["votes." + question._id + "." + choice._id] = 1
     )
-  Elections.update(ballot.electionId, {
-    "$inc": toIncrement
-  })
+  if Object.keys(toIncrement).length != 0
+    Elections.update(ballot.electionId, {
+      "$inc": toIncrement
+    })
   Log.verbose("BALLOT CAST: " + user + " cast ballot. Ballot: " +
     JSON.stringify(ballot))
 )

@@ -1,4 +1,9 @@
 ElectionsList = React.createClass({
+  getInitialState: function() {
+    return {
+      isAdmin: Groups.find().count() > 0,
+    };
+  },
   mixins: [ReactMeteorData],
   getMeteorData: function() {
     var votedElections = Ballots.find().map(function(ballot) {return ballot.electionId;});
@@ -19,8 +24,10 @@ ElectionsList = React.createClass({
       window.location = "http://accounts.google.com/logout";
     });
   },
+  componentWillReceiveProps: function() {
+    this.setState({isAdmin: Groups.find().count() > 0})
+  },
   render: function() {
-    var admin = false; //Find proper way to check for admin here
     return(
       <div id="election-list">
         <div className="white-bg header">
@@ -54,7 +61,7 @@ ElectionsList = React.createClass({
             About This Project
           </a>
           <br/>
-          {admin ?
+          {this.state.isAdmin ?
             <a className="login-caption info-link" href={Router.path("admin")}>
               Go to Admin Page
             </a>

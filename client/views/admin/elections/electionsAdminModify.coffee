@@ -9,6 +9,8 @@ Template.electionsAdminEdit.helpers
     return if @options.allowAbstain then "checked" else null
   pick: () ->
     return if @options.type == "pick" then "checked" else null
+  rank: () ->
+    return if @options.type == "rank" then "checked" else null
   single: () ->
     return if @options.voteMode == "single" then "checked" else null
   multi: () ->
@@ -24,6 +26,15 @@ Template.electionsAdminEdit.helpers
     election.depend()
     isPickN = @options.voteMode == "pickN"
     return if isPickN then null else "disabled"
+  forceFullRanking: () ->
+    return if @options.forceFullRanking then "checked" else null
+  includeNoConfidence: () ->
+    hasNoConfidence = false
+    for choice in @choices
+      if choice.name == "No Confidence"
+        hasNoConfidence = true
+        break
+    return if hasNoConfidence then "checked" else null
   canEdit: () ->
     @status == "unopened"
   groups: () ->
@@ -50,7 +61,7 @@ Template.electionsAdminEdit.helpers
     return if id in groups then "checked" else null
   questionCount: (increment) ->
     choiceCount = 0
-    if increment 
+    if increment
       questionCount += 1
     return questionCount
   resetChoiceCount: () ->
@@ -59,6 +70,8 @@ Template.electionsAdminEdit.helpers
   choiceCount: () ->
     choiceCount += 1
     return choiceCount
+  isNotNoConfidenceChoice: (choice) ->
+    return choice.name != "No Confidence"
   isPickQuestion: (election) ->
     election.depend()
     return @options.type == "pick"
@@ -113,8 +126,9 @@ Template.electionsAdminEdit.events
         type: "pick"
         voteMode: "single"
         allowAbstain: true
-        allowIncompleteRanking: false
-      }
+        forceFullRanking: false
+      },
+      choices: [{name: "No Confidence", description: "", image: ""}],
     })
     election.update((err) ->
       if not err
@@ -123,6 +137,18 @@ Template.electionsAdminEdit.events
       else
         alert("Error: " + err.message)
     )
+
+  "click .removeQuestion": (e) ->
+    e.preventDefault()
+    if confirm("Are you sure you want to delete this question? It will delete immediately")
+      election = Election.getActive()
+      id = $(e.target).attr("data-questionId")
+      election.removeQuestion(id)
+      election.update((err) ->
+        if err
+          alert("Error: " + err.message)
+      )
+
   "click .submitChoice": (e, template) ->
     e.preventDefault()
     id = e.target.value
@@ -131,19 +157,34 @@ Template.electionsAdminEdit.events
     name = $("#new-choice-name-" + id).val()
     description = $("#new-choice-description-" + id).val()
     image = $("#new-choice-image-" + id).val()
-    election.addChoice(questionId, {
-      name: name
-      description: description
-      image: image
-    })
-    election.update((err) ->
-      if not err
-        $("#new-choice-name-" + id).val("")
-        $("#new-choice-description-" + id).val("")
-        $("#new-choice-image-" + id).val("")
-      else
-        alert("Error: " + err.message)
-    )
+    if name != "No Confidence"
+      election.addChoice(questionId, {
+        name: name
+        description: description
+        image: image
+      })
+      election.update((err) ->
+        if not err
+          $("#new-choice-name-" + id).val("")
+          $("#new-choice-description-" + id).val("")
+          $("#new-choice-image-" + id).val("")
+        else
+          alert("Error: " + err.message)
+      )
+    else
+      alert("You cannot add No Confidence vote here, use the option in the question parameters to add it")
+
+  "click .removeChoice": (e) ->
+    e.preventDefault()
+    if confirm("Are you sure you want to delete this choice? It will delete immediately")
+      election = Election.getActive()
+      questionId = $(e.target).attr("data-questionId")
+      choiceId = $(e.target).attr("data-choiceId")
+      election.removeChoice(questionId, choiceId)
+      election.update((err) ->
+        if err
+          alert("Error: " + err.message)
+      )
 
   "click .delete-election": (e) ->
     e.preventDefault()
@@ -165,11 +206,18 @@ Template.electionsAdminEdit.events
     question.options.allowAbstain = $(e.target).prop("checked")
     election.changed()
 
-  "change .allowIncompleteRanking": (e) ->
+  "change .forceFullRanking": (e) ->
     election = Election.getActive()
     question = election.getQuestion($(e.target).attr("data-questionId"))
-    question.options.allowIncompleteRanking = $(e.target).prop("checked")
+    question.options.forceFullRanking = $(e.target).prop("checked")
     election.changed()
+
+  "change .includeNoConfidence": (e) ->
+    election = Election.getActive()
+    questionId = $(e.target).attr("data-questionId")
+    question = election.getQuestion(questionId)
+    election.toggleNoConfidence(questionId)
+    election.changed();
 
   "change .vote-type": (e) ->
     election = Election.getActive()
