@@ -1,7 +1,8 @@
-The NYU Voting System
+Student Vote
 =====================
 
-Available for use by anyone in the NYU GNU.
+Open source student voting system.
+Used throughout NYU global campuses.
 
 Allows for live balloting, and with strict access controls to
 allow concurrent elections to occur without information leakage.
