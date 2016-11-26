@@ -61,11 +61,13 @@ ElectionsList = React.createClass({
             About This Project
           </a>
           <br/>
-          {this.state.isAdmin ?
+          { // This was uncommented as the reactive routing made elections go haywire due to
+            // Tracker.recompute if you fix it just uncomment this to get the go to admin page working again
+          /*this.state.isAdmin ?
             <a className="login-caption info-link" href={Router.path("admin")}>
               Go to Admin Page
             </a>
-            : null
+            : null */ null
           }
         </div>
       </div>

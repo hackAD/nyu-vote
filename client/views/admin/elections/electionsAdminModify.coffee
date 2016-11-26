@@ -104,6 +104,11 @@ Template.electionsAdminEdit.events
           oldElection.questions[questionIndex].description = field.value
         when "choiceName"
           choiceIndex += 1
+          # If the choiceIndex is at the disabled No Confidence choice
+          # we have to increment an extra time since it is disabled and doesn't
+          # show up in the fields
+          if oldElection.questions[questionIndex].choices[choiceIndex].name == "No Confidence"
+            choiceIndex += 1
           oldElection.questions[questionIndex].choices[choiceIndex].name = field.value
         when "choiceDescription"
           oldElection.questions[questionIndex].choices[choiceIndex].description = field.value
@@ -127,8 +132,10 @@ Template.electionsAdminEdit.events
         voteMode: "single"
         allowAbstain: true
         forceFullRanking: false
+        # Include No Confidence is also added by default
+        # but this is done in the createQuestion function
+        # in elections.coffee
       },
-      choices: [{name: "No Confidence", description: "", image: ""}],
     })
     election.update((err) ->
       if not err
@@ -217,7 +224,10 @@ Template.electionsAdminEdit.events
     questionId = $(e.target).attr("data-questionId")
     question = election.getQuestion(questionId)
     election.toggleNoConfidence(questionId)
-    election.changed();
+    election.update((err) ->
+      if err
+        alert("Error: " + err.message)
+    )
 
   "change .vote-type": (e) ->
     election = Election.getActive()

@@ -51,7 +51,8 @@ ElectionsVote = React.createClass({
 
     var choices = [];
     var randomMap = election.getRandomQuestionMap(questionIndex);
-    var hasNoConfidence = false;
+    var noConfidenceOption = null;
+    var noConfidenceTrueIndex = null;
     for (var i = 0, length = question.choices.length; i < length; i++) {
       var choice = election.getRandomChoice(questionIndex, i);
       var trueIndex = randomMap[i];
@@ -63,15 +64,16 @@ ElectionsVote = React.createClass({
       else {
         // Don't add No Confidence now as we want it to be the last option for aesthetics
         // but make sure we know that we have to add it later
-        if (hasNoConfidence) {
+        if (noConfidenceOption !== null || noConfidenceTrueIndex !== null) {
           // Can't have more than one No Confidence option
           throw new Error("There was more than one No Confidence option");
         }
-        hasNoConfidence = true;
+        noConfidenceOption = choice;
+        noConfidenceTrueIndex = trueIndex;
       }
     }
     // Put No Confidence option last, but before Abstain
-    if (hasNoConfidence) {
+    if (noConfidenceOption) {
       var infoMessage = "";
       if (options.type === "rank") {
         infoMessage = "\
@@ -81,7 +83,7 @@ These lower ranks will function as: \"in the worst case that one of these candid
       }
       choices.push(
         // Adding the infoMessage prop adds the info button to the right of the title
-        <ElectionsChoice question={question} ballot={ballot} choice={choice} choiceIndex={trueIndex} questionIndex={questionIndex} isAbstain={false} infoMessage={infoMessage} />
+        <ElectionsChoice question={question} ballot={ballot} choice={noConfidenceOption} choiceIndex={noConfidenceTrueIndex} questionIndex={questionIndex} isAbstain={false} infoMessage={infoMessage} />
       );
     }
     if (question.options.allowAbstain)

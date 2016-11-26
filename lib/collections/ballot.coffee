@@ -86,23 +86,25 @@ class Ballot extends ReactiveClass(Ballots)
         # vote will never go to your last choice as that means they won already.
         # We could do this for all candidates not only No Confidence but it doesn't
         # feel intuitive.
-        hasNoConfidence = false
+        noConfidenceChoice = null
         for choice in question.choices
           if choice.name == "No Confidence"
-            hasNoConfidence = true
+            noConfidenceChoice = choice
             break
-        if hasNoConfidence && selectedChoices.length == question.choices.length-1
-          noConfidenceSelected = true
+        if noConfidenceChoice && selectedChoices.length == question.choices.length-1
+          noConfidenceSelected = false
           ballotValid = true;
           for choice in selectedChoices
-            if choice.name == "No Confidence"
-              noConfidenceSelected = false
+            if choice._id == noConfidenceChoice._id
+              noConfidenceSelected = true
               break
             if not (choice.value in [1...question.choices.length])
               ballotValid = false
               break
-          if ballotValid && noConfidenceSelected
+          if ballotValid && not noConfidenceSelected
             return true
+          else
+            return false
 
         # Else since we already have code in place that assures correct boundaries on choice values
         # and that they are all unique, we just need to check they have ranked everyone and it must be valid
