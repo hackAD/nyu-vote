@@ -51,7 +51,7 @@ Deployment (full stack)
 =========
 
 To deploy the app with the reverse router visit the repo here:
-[https://github.com/hackAD/docker-nyu-vote-server](hackAD/docker-nyu-vote-server)
+[https://github.com/hackAD/docker-nyu-vote-server](https://github.com/hackAD/docker-nyu-vote-server)
 for instructions.
 
 ### Configuration
