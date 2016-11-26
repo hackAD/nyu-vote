@@ -11,6 +11,8 @@ RUN curl https://install.meteor.com/ | sh
 
 ADD . /srv/nyu-vote
 
+ENV METEOR_ALLOW_SUPERUSER 1
+
 WORKDIR /srv/nyu-vote
 RUN mkdir build
 RUN meteor build . && echo "1"
