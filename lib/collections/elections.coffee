@@ -83,7 +83,8 @@ class Election extends ReactiveClass(Elections)
   addQuestion: ({name, description, options}) ->
     if (!name || name.length < 1)
       throw new Meteor.Error(500, "Questions must have a name")
-    id = new Meteor.Collection.ObjectID().toHexString()
+    questionId = new Meteor.Collection.ObjectID().toHexString()
+    noConfidenceId = new Meteor.Collection.ObjectID().toHexString()
     description ?= ""
     options ?= {}
     options.type ?= "pick"
@@ -91,13 +92,19 @@ class Election extends ReactiveClass(Elections)
       options.voteMode ?= "single"
     options.allowAbstain ?= false
     @questions.push(
-      _id: id
+      _id: questionId
       name: name
       description: description
       options: options
-      choices: []
+      # This is so No Confidence is added by default
+      choices: [{
+        _id: noConfidenceId,
+        name: "No Confidence",
+        description: "",
+        image: "",
+      }]
     )
-    return id
+    return questionId
 
   removeQuestion: (questionId) ->
     if not questionId

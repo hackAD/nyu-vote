@@ -72,6 +72,7 @@ Template.electionsAdminResults.helpers
         }])
 
     else
+      # get all the information
       information = []
       for i in [0...rankResults[questionId].length]
         roundInfo = {
@@ -80,3 +81,36 @@ Template.electionsAdminResults.helpers
         }
         information.push(roundInfo)
       return information
+  getWinner: () ->
+    questionId = @_id
+    choices = @choices
+    results = Session.get("rankResults")
+    rankResults = results?.result
+    if not rankResults
+      return "Loading"
+    else if not rankResults[questionId]?
+      # This should be appropriate in this situation
+      # as we assume we are displaying all 0 votes
+      return "Tie"
+    else
+      # calculate winner
+      questionResults = rankResults[questionId]
+      lastRoundResults = questionResults[questionResults.length-1]
+      winnerId = null
+      winnerVotes = -1
+      _.each(lastRoundResults, (votes, choiceId) ->
+        if votes > winnerVotes
+          winnerVotes = votes
+          winnerId = choiceId
+        else if votes == winnerVotes
+          winnerId = "tie"
+      )
+      if winnerId == null
+        throw new Meteor.Error(500, "didn't find a winner for unknown reasons")
+      else if winnerId == "tie"
+        return "Tie";
+      else
+        for choice in choices
+          if choice._id == winnerId
+            return choice.name
+        throw new Meteor.Error(500, "Winner choice wasn't to be found in choices array")
