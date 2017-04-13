@@ -4,11 +4,11 @@ getQuestion = (questionId) ->
     if election.questions[i]._id == questionId
       return election.questions[i]
 
-calculateRank = () =>
+calculatePick = () =>
   election = Election.getActive()
   ((id) ->
-    Meteor.call("getRankResults", id, (error, result) ->
-      Session.set("rankResults", {
+    Meteor.call("getPickResults", id, (error, result) ->
+      Session.set("pickResults", {
         result: result,
         timestamp: Date().toString(),
         id: id
@@ -16,10 +16,26 @@ calculateRank = () =>
     )
   )(election._id)
 
+calculateRank = () =>
+   election = Election.getActive()
+   ((id) ->
+     Meteor.call("getRankResults", id, (error, result) ->
+       Session.set("rankResults", {
+         result: result,
+         timestamp: Date().toString(),
+         id: id
+       })
+     )
+   )(election._id)
+
 Template.electionsAdminResults.events
   "click #refresh-rank": (e) ->
     e.preventDefault()
     calculateRank()
+
+  "click #refresh-pick": (e) ->
+    e.preventDefault()
+    calculatePick()
 
 Template.electionsAdminResults.helpers
   election: () ->
@@ -27,8 +43,8 @@ Template.electionsAdminResults.helpers
     return election
   canEdit: () ->
     this.status == "unopened" && this.hasAdmin(Meteor.user())
-  votes: (choiceId, questionId, votes) ->
-    return votes[questionId][choiceId]
+  votes: (choiceId, questionId) ->
+    return Session.get("pickResults")?.result.votes[questionId][choiceId]
   allowAbstain: () ->
     return @options.allowAbstain
   isRank: (questionId) ->
@@ -43,6 +59,13 @@ Template.electionsAdminResults.helpers
       if question.options.type == "rank"
         return true
     return false
+  hasPick: () ->
+    election = Election.getActive()
+    for question in election.questions
+      if question.options.type == "pick"
+        return true
+    return false
+
   retrieveRankResults: () ->
     election = Election.getActive()
     results = Session.get("rankResults")
@@ -51,6 +74,16 @@ Template.electionsAdminResults.helpers
   getRankTime: () ->
     results = Session.get("rankResults")
     return results?.timestamp
+
+  getPickTime: () ->
+    results = Session.get("pickResults")
+    return results?.timestamp
+
+  getPickResults: () ->
+      election = Election.getActive()
+      results = Session.get("pickResults")
+      if not results or results.id != election._id
+        calculatePick()
   getRankResults: (choiceId, questionId) ->
     election = Election.getActive()
     results = Session.get("rankResults")
@@ -83,6 +116,29 @@ Template.electionsAdminResults.helpers
       return information
   getWinner: () ->
     questionId = @_id
+    election = Election.getActive()
+    question = getQuestion(questionId)
+    if question.options.type == "pick"
+         # get current election
+        results = Session.get("pickResults")
+        pickResults = results?.result
+        if not pickResults
+          return "Loading"
+        votes = pickResults.votes
+        ## get votes for the question
+        winner = ""
+        winnerscore = 0
+        for v in question.choices
+            if votes[questionId][v._id] > winnerscore
+                winnerscore = votes[questionId][v._id]
+                winner = v.name
+            else if votes[questionId][v._id] == winnerscore
+                winner = ""
+        if winner == ""
+            return "Tie"
+        else
+            return winner
+
     choices = @choices
     results = Session.get("rankResults")
     rankResults = results?.result
