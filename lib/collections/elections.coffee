@@ -356,6 +356,42 @@ Elections.deny(
 )
 
 Meteor.methods(
+  getPickResults: (electionId) ->
+    ballots = Ballots.find({electionId: electionId}, {transform: null}).fetch()
+    election = Elections.find(_id: electionId).fetch()[0]
+    rankResults = {}
+    #console.log (JSON.stringify(ballots));
+    if ballots.length == 0
+      return rankResults
+    #fill rankResults for every rank question
+    #console.log (election);
+    for questionObject in election.questions
+      questionId = questionObject._id
+      #find all the relevant questions
+      questions = []
+      for ballot in ballots
+        for question in ballot.questions
+          if question._id == questionId
+            questions.push(question)
+
+
+      for question in questions
+        question.choices.sort (a, b) ->
+          return a.value-b.value
+
+      #console.log (JSON.stringify(questions));
+      for question in questions
+        ballot = question.choices
+        for choice in ballot
+          if choice.value
+            election.votes[questionId][choice._id] += 1
+            break
+
+    #console.log(election);
+
+    return election
+
+
   getRankResults: (electionId) ->
     ballots = Ballots.find({electionId: electionId}, {transform: null}).fetch()
     election = Elections.find(_id: electionId).fetch()[0]
