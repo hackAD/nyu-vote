@@ -367,10 +367,12 @@ Ballots.after.insert((userId, ballot) ->
     return
   user = User.fetchOne(userId)
   toIncrement = {}
+
+  i = 0
   for question in ballot.questions
-    if question?.options?.type != "pick"
+    if Election.fetchOne(ballot.electionId).questions[0].options.type != "pick"
       continue
-    choices = @transform().selectedChoices(i)
+    choices = @transform().selectedChoices(i++)
     _.each(choices, (choice) ->
       toIncrement["votes." + question._id + "." + choice._id] = 1
     )
