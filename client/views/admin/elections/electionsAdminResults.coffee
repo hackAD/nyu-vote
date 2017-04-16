@@ -83,6 +83,25 @@ Template.electionsAdminResults.helpers
       return information
   getWinner: () ->
     questionId = @_id
+    election = Election.getActive()
+    question = getQuestion(questionId)
+    if question?.options?.type == "pick"
+         # get current election
+        votes = election.votes
+        ## get votes for the question
+        winner = ""
+        winnerscore = 0
+        for choice in question.choices
+            if votes[questionId][choice._id] > winnerscore
+                winnerscore = votes[questionId][choice._id]
+                winner = choice.name
+            else if votes[questionId][choice._id] == winnerscore
+                winner = ""
+        if winner == ""
+            return "Tie"
+        else
+            return winner
+
     choices = @choices
     results = Session.get("rankResults")
     rankResults = results?.result

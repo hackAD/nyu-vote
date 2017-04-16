@@ -367,7 +367,9 @@ Ballots.after.insert((userId, ballot) ->
     return
   user = User.fetchOne(userId)
   toIncrement = {}
-  for question in ballot.questions
+
+  for i in [0...ballot.questions.length]
+    question = ballot.questions[i]
     if question?.options?.type != "pick"
       continue
     choices = @transform().selectedChoices(i)
